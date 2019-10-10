@@ -1,0 +1,17 @@
+description: >
+  Run all tests your project and produce a test results report.
+
+usage:
+  version: 2.1
+  orbs:
+    matlab: mathworks/matlab@0.1
+  jobs:
+    build:
+      machine:
+        image: ubuntu-1604:201903-01
+      steps:
+        - checkout
+        - matlab/run-tests:
+            results-junit: test-results/matlab/results.xml
+        - store_test_results:
+            path: test-results

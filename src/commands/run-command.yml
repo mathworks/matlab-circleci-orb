@@ -1,0 +1,42 @@
+description: >
+  Execute MATLAB script, statement, or function. MATLAB exits with exit code 0 if the command
+  executes successfully. Otherwise, MATLAB terminates with a non-zero exit code.
+
+parameters:
+  command:
+    description: >
+      Script, statement, or function to execute. If the command is the name of a MATLAB function or
+      script, do not specify the file extension. Any required file must be on the MATLAB search path
+      or in the startup folder.
+    type: string
+  
+  startup-folder:
+    description: >
+      Current folder when MATLAB starts. Defaults to the current working folder.
+    type: string
+    default: .
+
+steps:
+  - run:
+      name: Run MATLAB command
+      command: |
+        # install MATLAB if necessary
+        if ! command -v matlab >> /dev/null 2>&1; then
+          if awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
+            echo 'The Docker executor type is not supported.'
+            exit 1
+          fi
+          wget -qO- --retry-connrefused https://storage.googleapis.com/matlabimagesus/public/install.sh | sudo -E bash
+        fi
+
+        # write command to file to better support YAML literal blocks
+        tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
+        cmdscript=$(mktemp -u cmd_XXXXXXXXXX)
+        cat > "${tmpdir}/${cmdscript}.m" \<<EOF
+        try
+        <<parameters.command>>
+        catch e, throwAsCaller(e); end
+        EOF
+
+        # execute MATLAB command in batch mode
+        matlab -sd "<<parameters.startup-folder>>" -batch "addpath('$tmpdir'); $cmdscript"

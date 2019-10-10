@@ -1,0 +1,56 @@
+description: >
+  Run all tests in your project.
+
+parameters:
+  results-junit:
+    description: >
+      Path to write test results report using JUnit XML format.
+    type: string
+    default: ""
+
+steps:
+  - run:
+      name: Run MATLAB tests
+      command: |
+        # install MATLAB if necessary
+        if ! command -v matlab >> /dev/null 2>&1; then
+          if awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
+            echo 'The Docker executor type is not supported.'
+            exit 1
+          fi
+          wget -qO- --retry-connrefused https://storage.googleapis.com/matlabimagesus/public/install.sh | sudo -E bash
+        fi
+
+        # create the MATLAB script which will run the tests
+        tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
+        testscript=$(mktemp -u test_XXXXXXXXXX)
+
+        cat > "${tmpdir}/${testscript}.m" \<<"EOF"
+        try
+            import matlab.unittest.*;
+            import matlab.unittest.plugins.*;
+
+            runner = TestRunner.withTextOutput("Verbosity", 3);
+
+            if ~isempty("<<parameters.results-junit>>")
+                [~,~] = mkdir(fileparts("<<parameters.results-junit>>"));
+                runner.addPlugin(XMLPlugin.producingJUnitFormat("<<parameters.results-junit>>"));
+            end
+
+            suite = testsuite(pwd, ...
+                "IncludeSubfolders", true, ...
+                "IncludeReferencedProjects", true);
+
+            results = runner.run(suite);
+
+            nfailed = nnz([results.Failed]);
+            if nfailed ~= 0
+                error(nfailed + " test(s) failed.");
+            end
+        catch e
+            throwAsCaller(e);
+        end
+        EOF
+        
+        # execute the MATLAB statement in batch mode
+        matlab -batch "addpath('$tmpdir'); $testscript"
