@@ -19,6 +19,7 @@ commands:
   test-run-command:
     description: Test running MATLAB commands.
     steps:
+      - matlab/install
       - matlab/run-command:
           name: Verify MATLAB runs literal block
           command: |
@@ -42,6 +43,7 @@ commands:
   test-run-tests:
     description: Test running MATLAB tests.
     steps:
+      - matlab/install
       - run:
           command: |
             mkdir tests
@@ -63,14 +65,6 @@ commands:
           command: |
             set -e
             grep -q FirstTest $RESULTS
-  
-  test-install-then-run:
-    description: Test explicitly installing MATLAB and then running.
-    steps:
-      - matlab/install
-      - matlab/run-command:
-          command: assert(true)
-      - matlab/run-tests
 
 jobs:
   test-install-machine:
