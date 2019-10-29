@@ -24,10 +24,13 @@ steps:
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
         cmdscript=$(mktemp -u cmd_XXXXXXXXXX)
         cat > "${tmpdir}/${cmdscript}.m" \<<EOF
-        try
         <<parameters.command>>
-        catch e, throwAsCaller(e); end
         EOF
 
+        # download helper toolbox
+        wget -q -O "${tmpdir}/ci_helpers.mltbx" https://github.com/mcafaro/ci-helpers/releases/download/v0.0.1/ci_helpers.mltbx
+
         # execute MATLAB command in batch mode
-        matlab -sd "<<parameters.startup-folder>>" -batch "addpath('$tmpdir'); $cmdscript"
+        matlab -sd "<<parameters.startup-folder>>" -batch "\
+          matlab.addons.toolbox.installToolbox('${tmpdir}/ci_helpers.mltbx');\
+          cihelpers.run('${tmpdir}/${cmdscript}')"

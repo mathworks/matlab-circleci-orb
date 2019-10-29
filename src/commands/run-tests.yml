@@ -12,36 +12,11 @@ steps:
   - run:
       name: Run MATLAB tests
       command: |
-        # create the MATLAB script which will run the tests
-        tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
-        testscript=$(mktemp -u test_XXXXXXXXXX)
-
-        cat > "${tmpdir}/${testscript}.m" \<<"EOF"
-        try
-            import matlab.unittest.*;
-            import matlab.unittest.plugins.*;
-
-            runner = TestRunner.withTextOutput("Verbosity", 3);
-
-            if ~isempty("<<parameters.results-junit>>")
-                [~,~] = mkdir(fileparts("<<parameters.results-junit>>"));
-                runner.addPlugin(XMLPlugin.producingJUnitFormat("<<parameters.results-junit>>"));
-            end
-
-            suite = testsuite(pwd, ...
-                "IncludeSubfolders", true, ...
-                "IncludeReferencedProjects", true);
-
-            results = runner.run(suite);
-
-            nfailed = nnz([results.Failed]);
-            if nfailed ~= 0
-                error(nfailed + " test(s) failed.");
-            end
-        catch e
-            throwAsCaller(e);
-        end
-        EOF
+        # download helper toolbox
+        wget -q -O "${tmpdir}/ci_helpers.mltbx" https://github.com/mcafaro/ci-helpers/releases/download/v0.0.1/ci_helpers.mltbx
         
         # execute the MATLAB statement in batch mode
-        matlab -batch "addpath('$tmpdir'); $testscript"
+        matlab -batch "\
+          matlab.addons.toolbox.installToolbox('${tmpdir}/ci_helpers.mltbx');\
+          results = cihelpers.runTests();\
+          cihelpers.assertNoFailure(results);"
