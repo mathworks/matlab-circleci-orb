@@ -1,5 +1,5 @@
 description: >
-  Run all tests your project and produce a test results report.
+  Run all tests in your project and produce a test results report.
 
 usage:
   version: 2.1
@@ -11,6 +11,7 @@ usage:
         image: ubuntu-1604:201903-01
       steps:
         - checkout
+        - matlab/install
         - matlab/run-tests:
             results-junit: test-results/matlab/results.xml
         - store_test_results:

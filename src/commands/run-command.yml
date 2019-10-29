@@ -20,15 +20,6 @@ steps:
   - run:
       name: Run MATLAB command
       command: |
-        # install MATLAB if necessary
-        if ! command -v matlab >> /dev/null 2>&1; then
-          if awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
-            echo 'The Docker executor type is not supported.'
-            exit 1
-          fi
-          wget -qO- --retry-connrefused https://storage.googleapis.com/matlabimagesus/public/install.sh | sudo -E bash
-        fi
-
         # write command to file to better support YAML literal blocks
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
         cmdscript=$(mktemp -u cmd_XXXXXXXXXX)
