@@ -20,8 +20,9 @@ steps:
   - run:
       name: Run MATLAB command
       command: |
-        # write command to file to better support YAML literal blocks
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
+
+        # write command to file to better support YAML literal blocks
         cmdscript=$(mktemp -u cmd_XXXXXXXXXX)
         cat > "${tmpdir}/${cmdscript}.m" \<<EOF
         <<parameters.command>>

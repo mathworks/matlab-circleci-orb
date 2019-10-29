@@ -12,6 +12,8 @@ steps:
   - run:
       name: Run MATLAB tests
       command: |
+        tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
+
         # download helper toolbox
         wget -q -O "${tmpdir}/ci_helpers.mltbx" https://github.com/mcafaro/ci-helpers/releases/download/v0.0.1/ci_helpers.mltbx
         
