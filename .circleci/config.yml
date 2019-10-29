@@ -21,14 +21,12 @@ commands:
     steps:
       - matlab/install
       - matlab/run-command:
-          name: Verify MATLAB runs literal block
           command: |
             mkdir('dir');
             f = fopen(fullfile('dir','myscript.m'), 'w')
             fwrite(f, 'assert(true)'); 
             fclose(f)
       - matlab/run-command:
-          name: Verify MATLAB runs script
           command: myscript
           startup-folder: dir
       - run:
@@ -36,7 +34,6 @@ commands:
             echo 'export CMD=myscript' >> $BASH_ENV
             echo 'export DIR=dir' >> $BASH_ENV
       - matlab/run-command:
-          name: Verify variable expansion 
           command: $CMD
           startup-folder: $DIR
   
@@ -59,7 +56,6 @@ commands:
           command: |
             echo 'export RESULTS=results.xml' >> $BASH_ENV
       - matlab/run-tests:
-          name: Verify variable expansion 
           test-results-junit: $RESULTS
       - run:
           command: |
