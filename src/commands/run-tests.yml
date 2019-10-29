@@ -20,5 +20,5 @@ steps:
         # execute the MATLAB statement in batch mode
         matlab -batch "\
           matlab.addons.toolbox.installToolbox('${tmpdir}/ci_helpers.mltbx');\
-          results = cihelpers.runTests();\
+          results = cihelpers.runTests('JUnitTestResults', '<<parameters.results-junit>>');\
           cihelpers.assertNoFailure(results);"
