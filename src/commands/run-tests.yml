@@ -2,7 +2,7 @@ description: >
   Run all tests in your project.
 
 parameters:
-  results-junit:
+  test-results-junit:
     description: >
       Path to write test results report using JUnit XML format.
     type: string
@@ -20,5 +20,5 @@ steps:
         # execute the MATLAB statement in batch mode
         matlab -batch "\
           matlab.addons.toolbox.installToolbox('${tmpdir}/ci_helpers.mltbx');\
-          results = cihelpers.runTests('JUnitTestResults', '<<parameters.results-junit>>');\
+          results = cihelpers.runTests('JUnitTestResults', '<<parameters.test-results-junit>>');\
           cihelpers.assertNoFailure(results);"

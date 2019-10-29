@@ -49,7 +49,7 @@ commands:
             mkdir tests
             echo '%% FirstTest' > tests/mytest.m
       - matlab/run-tests:
-          results-junit: test-results/matlab/results.xml
+          test-results-junit: test-results/matlab/results.xml
       - run:
           name: Verify test artifacts were created
           command: |
@@ -60,7 +60,7 @@ commands:
             echo 'export RESULTS=results.xml' >> $BASH_ENV
       - matlab/run-tests:
           name: Verify variable expansion 
-          results-junit: $RESULTS
+          test-results-junit: $RESULTS
       - run:
           command: |
             set -e
