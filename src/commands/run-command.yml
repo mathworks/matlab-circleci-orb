@@ -9,7 +9,7 @@ parameters:
       script, do not specify the file extension. Any required file must be on the MATLAB search path
       or in the startup folder.
     type: string
-  
+
   startup-folder:
     description: >
       Current folder when MATLAB starts. Defaults to the current working folder.

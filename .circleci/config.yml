@@ -15,7 +15,7 @@ commands:
             set -e
             matlab -batch ver
             mex -h
-  
+
   test-run-command:
     description: Test running MATLAB commands.
     steps:
@@ -24,7 +24,7 @@ commands:
           command: |
             mkdir('dir');
             f = fopen(fullfile('dir','myscript.m'), 'w')
-            fwrite(f, 'assert(true)'); 
+            fwrite(f, 'assert(true)');
             fclose(f)
       - matlab/run-command:
           command: myscript
@@ -36,7 +36,7 @@ commands:
       - matlab/run-command:
           command: $CMD
           startup-folder: $DIR
-  
+
   test-run-tests:
     description: Test running MATLAB tests.
     steps:
@@ -150,7 +150,7 @@ workflows:
       - test-install-machine:
           name: test-install-machine-dev
           filters: *integration-dev-filters
-      
+
       - test-run-command-machine:
           name: test-run-command-machine-dev
           filters: *integration-dev-filters
@@ -158,12 +158,12 @@ workflows:
       - test-run-tests-machine:
           name: test-run-tests-machine-dev
           filters: *integration-dev-filters
-      
+
       # triggered by master branch commits
       - test-install-machine:
           name: test-install-machine-master
           filters: *integration-master-filters
-      
+
       - test-run-command-machine:
           name: test-run-command-machine-master
           filters: *integration-master-filters

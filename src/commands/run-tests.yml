@@ -16,7 +16,7 @@ steps:
 
         # download helper toolbox
         wget -q -O "${tmpdir}/ci_helpers.mltbx" https://github.com/mcafaro/ci-helpers/releases/download/v0.0.1/ci_helpers.mltbx
-        
+
         # execute the MATLAB statement in batch mode
         matlab -batch "\
           matlab.addons.toolbox.installToolbox('${tmpdir}/ci_helpers.mltbx');\
