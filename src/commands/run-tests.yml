@@ -14,11 +14,16 @@ steps:
       command: |
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
 
-        # download helper toolbox
-        wget -q -O "${tmpdir}/ci_helpers.mltbx" https://github.com/mcafaro/ci-helpers/releases/download/v0.0.1/ci_helpers.mltbx
+        # download run command shell scripts
+        wget -q -O "${tmpdir}/bin.zip" https://storage.googleapis.com/matlabimagesus/public/run-matlab-command/v0/run-matlab-command.zip
+        unzip -q -d "${tmpdir}/bin" "${tmpdir}/bin.zip"
 
-        # execute the MATLAB statement in batch mode
-        matlab -batch "\
-          matlab.addons.toolbox.installToolbox('${tmpdir}/ci_helpers.mltbx');\
-          results = cihelpers.runTests('JUnitTestResults', '<<parameters.test-results-junit>>');\
-          cihelpers.assertNoFailure(results);"
+        # download MATLAB script generator
+        wget -q -O "${tmpdir}/scriptgen.zip" https://storage.googleapis.com/matlabimagesus/public/matlab-script-generator/v0/matlab-script-generator.zip
+        unzip -q -d "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
+
+        # generate and run MATLAB test script
+        "${tmpdir}/bin/run_matlab_command.sh" "\
+          addpath('${tmpdir}/scriptgen');\
+          testScript = genscript('Test', 'JUnitTestResults', '<<parameters.test-results-junit>>');\
+          run(testScript.writeToFile('mw/runAllTests.m'));"

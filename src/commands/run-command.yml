@@ -10,28 +10,15 @@ parameters:
       or in the startup folder.
     type: string
 
-  startup-folder:
-    description: >
-      Current folder when MATLAB starts. Defaults to the current working folder.
-    type: string
-    default: .
-
 steps:
   - run:
       name: Run MATLAB command
       command: |
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
 
-        # write command to file to better support YAML literal blocks
-        cmdscript=$(mktemp -u cmd_XXXXXXXXXX)
-        cat > "${tmpdir}/${cmdscript}.m" \<<EOF
-        <<parameters.command>>
-        EOF
+        # download run command shell scripts
+        wget -q -O "${tmpdir}/run-matlab-command.zip" https://storage.googleapis.com/matlabimagesus/public/run-matlab-command/v0/run-matlab-command.zip
+        unzip -q -d "${tmpdir}/bin" "${tmpdir}/run-matlab-command.zip"
 
-        # download helper toolbox
-        wget -q -O "${tmpdir}/ci_helpers.mltbx" https://github.com/mcafaro/ci-helpers/releases/download/v0.0.1/ci_helpers.mltbx
-
-        # execute MATLAB command in batch mode
-        matlab -sd "<<parameters.startup-folder>>" -batch "\
-          matlab.addons.toolbox.installToolbox('${tmpdir}/ci_helpers.mltbx');\
-          cihelpers.run('${tmpdir}/${cmdscript}')"
+        # run MATLAB command
+        "${tmpdir}/bin/run_matlab_command.sh" "<<parameters.command>>"

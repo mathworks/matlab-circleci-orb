@@ -21,21 +21,13 @@ commands:
     steps:
       - matlab/install
       - matlab/run-command:
-          command: |
-            mkdir('dir');
-            f = fopen(fullfile('dir','myscript.m'), 'w')
-            fwrite(f, 'assert(true)');
-            fclose(f)
+          command: mkdir('dir'); f = fopen(fullfile('dir','myscript.m'), 'w'); fwrite(f, 'assert(true)'); fclose(f);
       - matlab/run-command:
           command: myscript
-          startup-folder: dir
       - run:
-          command: |
-            echo 'export CMD=myscript' >> $BASH_ENV
-            echo 'export DIR=dir' >> $BASH_ENV
+          command: echo 'export CMD=myscript' >> $BASH_ENV
       - matlab/run-command:
           command: $CMD
-          startup-folder: $DIR
 
   test-run-tests:
     description: Test running MATLAB tests.
