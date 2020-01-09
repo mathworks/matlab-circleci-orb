@@ -21,7 +21,7 @@ commands:
     steps:
       - matlab/install
       - matlab/run-command:
-          command: mkdir('dir'); f = fopen(fullfile('dir','myscript.m'), 'w'); fwrite(f, 'assert(true)'); fclose(f);
+          command: f = fopen('myscript.m', 'w'); fwrite(f, 'assert(true)'); fclose(f);
       - matlab/run-command:
           command: myscript
       - run:

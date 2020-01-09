@@ -25,5 +25,5 @@ steps:
         # generate and run MATLAB test script
         "${tmpdir}/bin/run_matlab_command.sh" "\
           addpath('${tmpdir}/scriptgen');\
-          testScript = genscript('Test', 'JUnitTestResults', '<<parameters.test-results-junit>>');\
-          run(testScript.writeToFile('mw/runAllTests.m'));"
+          testScript = genscript('Test', 'WorkingFolder', '..', 'JUnitTestResults', '<<parameters.test-results-junit>>');\
+          run(testScript.writeToFile('.mw/runAllTests.m'));"
