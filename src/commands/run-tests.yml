@@ -15,15 +15,15 @@ steps:
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
 
         # download run command shell scripts
-        wget -q -O "${tmpdir}/bin.zip" https://storage.googleapis.com/matlabimagesus/public/run-matlab-command/v0/run-matlab-command.zip
-        unzip -q -d "${tmpdir}/bin" "${tmpdir}/bin.zip"
+        wget -qO "${tmpdir}/bin.zip" https://storage.googleapis.com/matlabimagesus/public/run-matlab-command/v0/run-matlab-command.zip
+        unzip -qod "${tmpdir}/bin" "${tmpdir}/bin.zip"
 
-        # download MATLAB script generator
-        wget -q -O "${tmpdir}/scriptgen.zip" https://storage.googleapis.com/matlabimagesus/public/matlab-script-generator/v0/matlab-script-generator.zip
-        unzip -q -d "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
+        # download script generator
+        wget -qO "${tmpdir}/scriptgen.zip" https://storage.googleapis.com/matlabimagesus/public/matlab-script-generator/v0/matlab-script-generator.zip
+        unzip -qod "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
 
         # generate and run MATLAB test script
         "${tmpdir}/bin/run_matlab_command.sh" "\
           addpath('${tmpdir}/scriptgen');\
-          testScript = genscript('Test', 'WorkingFolder', '..', 'JUnitTestResults', '<<parameters.test-results-junit>>');\
+          testScript = genscript('Test','WorkingFolder','..','JUnitTestResults','<<parameters.test-results-junit>>');\
           run(testScript.writeToFile('.mw/runAllTests.m'));"
