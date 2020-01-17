@@ -35,24 +35,23 @@ commands:
       - matlab/install
       - run:
           command: |
+            echo 'function c=add(a,b);c=a+b;' > add.m
             mkdir tests
-            echo '%% FirstTest' > tests/mytest.m
+            printf '%% FirstTest\nassert(add(1,2)==3)' > tests/mytest.m
+      - matlab/run-tests
       - matlab/run-tests:
           test-results-junit: test-results/matlab/results.xml
+          code-coverage-cobertura: coverage/coverage.xml
       - run:
-          name: Verify test artifacts were created
+          name: Verify test results file was created
           command: |
             set -e
             grep -q FirstTest test-results/matlab/results.xml
       - run:
-          command: |
-            echo 'export RESULTS=results.xml' >> $BASH_ENV
-      - matlab/run-tests:
-          test-results-junit: $RESULTS
-      - run:
+          name: Verify code coverage file was created
           command: |
             set -e
-            grep -q FirstTest $RESULTS
+            grep -q add coverage/coverage.xml
 
 jobs:
   test-install-machine:

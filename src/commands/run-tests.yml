@@ -38,5 +38,5 @@ steps:
           testScript = genscript('Test','WorkingFolder','..',\
           'JUnitTestResults','<<parameters.test-results-junit>>',\
           'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
-          'CodeCoverageSource','<<parameters.code-coverage-source>>');\
+          'CodeCoverageSource',{'<<parameters.code-coverage-source>>'});\
           run(testScript.writeToFile('.mw/runAllTests.m'));"
