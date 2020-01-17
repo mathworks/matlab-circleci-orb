@@ -6,7 +6,17 @@ parameters:
     description: >
       Path to write test results report using JUnit XML format.
     type: string
-    default: ""
+    default: ''
+  code-coverage-cobertura:
+    description: >
+      Path to write code coverage report using Cobertura XML format.
+    type: string
+    default: ''
+  code-coverage-source:
+    description: >
+      Location of folder containing source code.
+    type: string
+    default: .
 
 steps:
   - run:
@@ -25,5 +35,8 @@ steps:
         # generate and run MATLAB test script
         "${tmpdir}/bin/run_matlab_command.sh" "\
           addpath('${tmpdir}/scriptgen');\
-          testScript = genscript('Test','WorkingFolder','..','JUnitTestResults','<<parameters.test-results-junit>>');\
+          testScript = genscript('Test','WorkingFolder','..',\
+          'JUnitTestResults','<<parameters.test-results-junit>>',\
+          'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
+          'CodeCoverageSource','<<parameters.code-coverage-source>>');\
           run(testScript.writeToFile('.mw/runAllTests.m'));"
