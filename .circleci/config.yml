@@ -35,13 +35,15 @@ commands:
       - matlab/install
       - run:
           command: |
-            echo 'function c=add(a,b);c=a+b;' > add.m
+            mkdir src
+            echo 'function c=add(a,b);c=a+b;' > src/add.m
             mkdir tests
-            printf '%% FirstTest\nassert(add(1,2)==3)' > tests/mytest.m
+            printf "%% FirstTest\naddpath('../src');assert(add(1,2)==3)" > tests/mytest.m
       - matlab/run-tests
       - matlab/run-tests:
           test-results-junit: test-results/matlab/results.xml
-          code-coverage-cobertura: coverage/coverage.xml
+          code-coverage-cobertura: code-coverage/coverage.xml
+          code-coverage-source: src
       - run:
           name: Verify test results file was created
           command: |
@@ -51,7 +53,7 @@ commands:
           name: Verify code coverage file was created
           command: |
             set -e
-            grep -q add coverage/coverage.xml
+            grep -q add code-coverage/coverage.xml
 
 jobs:
   test-install-machine:
