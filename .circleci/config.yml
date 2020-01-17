@@ -38,7 +38,7 @@ commands:
             mkdir src
             echo 'function c=add(a,b);c=a+b;' > src/add.m
             mkdir tests
-            printf "%% FirstTest\naddpath('../src');assert(add(1,2)==3)" > tests/mytest.m
+            printf "%%%% FirstTest\naddpath('../src');assert(add(1,2)==3)" > tests/mytest.m
       - matlab/run-tests
       - matlab/run-tests:
           test-results-junit: test-results/matlab/results.xml
