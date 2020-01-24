@@ -42,4 +42,5 @@ steps:
           scriptFile = testScript.writeToFile('.matlab/runAllTests.m');\
           disp(['Running ''' scriptFile ''':']);\
           type(scriptFile);\
+          disp('__________');\
           run(scriptFile);"
