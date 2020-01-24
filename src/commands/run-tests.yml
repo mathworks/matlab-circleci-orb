@@ -36,7 +36,10 @@ steps:
         "${tmpdir}/bin/run_matlab_command.sh" "\
           addpath('${tmpdir}/scriptgen');\
           testScript = genscript('Test','WorkingFolder','..',\
-          'JUnitTestResults','<<parameters.test-results-junit>>',\
-          'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
-          'CodeCoverageSource',{'<<parameters.code-coverage-source>>'});\
-          run(testScript.writeToFile('.mw/runAllTests.m'));"
+            'JUnitTestResults','<<parameters.test-results-junit>>',\
+            'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
+            'CodeCoverageSource','<<parameters.code-coverage-source>>');\
+          scriptFile = testScript.writeToFile('.matlab/runAllTests.m');\
+          disp(['Running ''' scriptFile ''':']);\
+          type(scriptFile);\
+          run(scriptFile);"
