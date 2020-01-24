@@ -1,0 +1,46 @@
+description: >
+  Run all tests in your project.
+
+parameters:
+  test-results-junit:
+    description: >
+      Path to write test results report using JUnit XML format.
+    type: string
+    default: ''
+  code-coverage-cobertura:
+    description: >
+      Path to write code coverage report using Cobertura XML format.
+    type: string
+    default: ''
+  code-coverage-source:
+    description: >
+      Location of folder containing source code.
+    type: string
+    default: .
+
+steps:
+  - run:
+      name: Run MATLAB tests
+      command: |
+        tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
+
+        # download run command shell scripts
+        wget -qO "${tmpdir}/bin.zip" https://storage.googleapis.com/matlabimagesus/public/run-matlab-command/v0/run-matlab-command.zip
+        unzip -qod "${tmpdir}/bin" "${tmpdir}/bin.zip"
+
+        # download script generator
+        wget -qO "${tmpdir}/scriptgen.zip" https://storage.googleapis.com/matlabimagesus/public/matlab-script-generator/v0/matlab-script-generator.zip
+        unzip -qod "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
+
+        # generate and run MATLAB test script
+        "${tmpdir}/bin/run_matlab_command.sh" "\
+          addpath('${tmpdir}/scriptgen');\
+          testScript = genscript('Test','WorkingFolder','..',\
+            'JUnitTestResults','<<parameters.test-results-junit>>',\
+            'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
+            'CodeCoverageSource','<<parameters.code-coverage-source>>');\
+          scriptFile = testScript.writeToFile('.matlab/runAllTests.m');\
+          disp(['Running ''' scriptFile ''':']);\
+          type(scriptFile);\
+          fprintf('__________\n\n');\
+          run(scriptFile);"

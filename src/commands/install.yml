@@ -1,0 +1,15 @@
+description: >
+  Install MATLAB.
+
+steps:
+  - run:
+      name: Install MATLAB
+      command: |
+        # installer does not support the Docker executor type
+        if awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
+          echo 'The Docker executor type is not supported.'
+          exit 1
+        fi
+
+        # download and execute the installer
+        wget -qO- --retry-connrefused https://storage.googleapis.com/matlabimagesus/public/ephemeral-matlab/v0/install.sh | sudo -E bash

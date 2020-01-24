@@ -1,0 +1,204 @@
+version: 2.1
+
+orbs:
+  matlab: mathworks/matlab@dev:alpha
+  orb-tools: circleci/orb-tools@8.27.4
+
+commands:
+  test-install:
+    description: Test installing MATLAB.
+    steps:
+      - matlab/install
+      - run:
+          name: Verify the matlab and mex scripts are available
+          command: |
+            set -e
+            matlab -batch ver
+            mex -h
+
+  test-run-command:
+    description: Test running MATLAB commands.
+    steps:
+      - matlab/install
+      - matlab/run-command:
+          command: f = fopen('myscript.m', 'w'); fwrite(f, 'assert(true)'); fclose(f);
+      - matlab/run-command:
+          command: myscript
+      - run:
+          command: echo 'export CMD=myscript' >> $BASH_ENV
+      - matlab/run-command:
+          command: $CMD
+
+  test-run-tests:
+    description: Test running MATLAB tests.
+    steps:
+      - matlab/install
+      - run:
+          command: |
+            mkdir src
+            echo 'function c=add(a,b);c=a+b;' > src/add.m
+            mkdir tests
+            printf "%%%% FirstTest\naddpath('../src');assert(add(1,2)==3)" > tests/mytest.m
+      - matlab/run-tests
+      - matlab/run-tests:
+          test-results-junit: test-results/matlab/results.xml
+          code-coverage-cobertura: code-coverage/coverage.xml
+          code-coverage-source: src
+      - run:
+          name: Verify test results file was created
+          command: |
+            set -e
+            grep -q FirstTest test-results/matlab/results.xml
+      - run:
+          name: Verify code coverage file was created
+          command: |
+            set -e
+            grep -q add code-coverage/coverage.xml
+
+jobs:
+  test-install-machine:
+    executor: orb-tools/machine
+    steps:
+      - test-install
+
+  test-run-command-machine:
+    executor: orb-tools/machine
+    steps:
+      - test-run-command
+
+  test-run-tests-machine:
+    executor: orb-tools/machine
+    steps:
+      - test-run-tests
+
+# yaml anchor filters
+integration-dev-filters: &integration-dev-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /integration-.*/
+
+integration-master-filters: &integration-master-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /master-.*/
+
+prod-deploy-requires: &prod-deploy-requires
+  [
+    test-install-machine-master,
+    test-run-command-machine-master,
+    test-run-tests-machine-master
+  ]
+
+workflows:
+  # lint, pack, and publish dev orb then trigger test workflow
+  publish-dev:
+    jobs:
+      # lint all orb YAML files
+      - orb-tools/lint
+
+      # pack orb YAML files in to a single orb.yml
+      - orb-tools/pack:
+          requires:
+            - orb-tools/lint
+
+      # release dev version of orb for testing and possible publishing
+      # requires that a CIRCLE_TOKEN env variable is set
+      - orb-tools/publish-dev:
+          orb-name: mathworks/matlab
+          requires:
+            - orb-tools/pack
+
+      # trigger integration workflow to test orb on non-master branch commits
+      # creates a git tag and pushes it back to the repo via ssh to kick off integration workflow
+      # requires that a CIRCLE_TOKEN env variable is set
+      - orb-tools/trigger-integration-workflow:
+          filters:
+            branches:
+              ignore: master
+          name: trigger-integration-dev
+          requires:
+            - orb-tools/publish-dev
+          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
+          tag: integration
+
+      # trigger integration workflow to test orb on master branch commits
+      # creates a git tag and pushes it back to the repo via ssh to kick off integration workflow
+      # requires that a CIRCLE_TOKEN env variable is set
+      - orb-tools/trigger-integration-workflow:
+          filters:
+            branches:
+              only: master
+          name: trigger-integration-master
+          requires:
+            - orb-tools/publish-dev
+          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
+          tag: master
+
+  # test published dev orb and possibly promote it to prod if working on the master branch
+  integration-test-and-promote-to-prod:
+    jobs:
+      # triggered by non-master branch commits
+      - test-install-machine:
+          name: test-install-machine-dev
+          filters: *integration-dev-filters
+
+      - test-run-command-machine:
+          name: test-run-command-machine-dev
+          filters: *integration-dev-filters
+
+      - test-run-tests-machine:
+          name: test-run-tests-machine-dev
+          filters: *integration-dev-filters
+
+      # triggered by master branch commits
+      - test-install-machine:
+          name: test-install-machine-master
+          filters: *integration-master-filters
+
+      - test-run-command-machine:
+          name: test-run-command-machine-master
+          filters: *integration-master-filters
+
+      - test-run-tests-machine:
+          name: test-run-tests-machine-master
+          filters: *integration-master-filters
+
+      # patch, minor, or major publishing
+      # requires that a CIRCLE_TOKEN env variable is set
+      - orb-tools/dev-promote-prod:
+          name: dev-promote-patch
+          release: patch
+          orb-name: mathworks/matlab
+          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
+          requires: *prod-deploy-requires
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /master-patch.*/
+
+      - orb-tools/dev-promote-prod:
+          name: dev-promote-minor
+          release: minor
+          orb-name: mathworks/matlab
+          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
+          requires: *prod-deploy-requires
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /master-minor.*/
+
+      - orb-tools/dev-promote-prod:
+          name: dev-promote-major
+          release: major
+          orb-name: mathworks/matlab
+          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
+          requires: *prod-deploy-requires
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /master-major.*/

@@ -1,0 +1,23 @@
+description: >
+  Execute MATLAB script, statement, or function. MATLAB exits with exit code 0 if the command
+  executes successfully. Otherwise, MATLAB terminates with a non-zero exit code.
+
+parameters:
+  command:
+    description: >
+      Script, statement, or function to execute. If the command is the name of a MATLAB function or
+      script, do not specify the file extension. Any required file must be on the MATLAB search path.
+    type: string
+
+steps:
+  - run:
+      name: Run MATLAB command
+      command: |
+        tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
+
+        # download run command shell scripts
+        wget -qO "${tmpdir}/run-matlab-command.zip" https://storage.googleapis.com/matlabimagesus/public/run-matlab-command/v0/run-matlab-command.zip
+        unzip -qod "${tmpdir}/bin" "${tmpdir}/run-matlab-command.zip"
+
+        # run MATLAB command
+        "${tmpdir}/bin/run_matlab_command.sh" "<<parameters.command>>"
