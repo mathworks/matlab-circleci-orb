@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  matlab: mathworks/matlab@dev:alpha
+  matlab: mathworks/matlab@dev:beta
   orb-tools: circleci/orb-tools@8.27.4
 
 commands:
