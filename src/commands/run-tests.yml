@@ -12,11 +12,14 @@ parameters:
       Path to write code coverage report using Cobertura XML format.
     type: string
     default: ''
-  code-coverage-source:
+  source-folder:
     description: >
-      Location of folder containing source code.
+      Location of folder containing source code, relative to project root folder. The specified
+      folder and its subfolders will be added to the top of the MATLAB search path as well as
+      the code coverage report. Multiple folders may be specified by using a colon (:) or semicolon 
+      (;) separated list.
     type: string
-    default: .
+    default: ''
 
 steps:
   - run:
@@ -38,7 +41,7 @@ steps:
           testScript = genscript('Test','WorkingFolder','..',\
             'JUnitTestResults','<<parameters.test-results-junit>>',\
             'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
-            'CodeCoverageSource','<<parameters.code-coverage-source>>');\
+            'SourceFolder','<<parameters.source-folder>>');\
           scriptFile = testScript.writeToFile('.matlab/runAllTests.m');\
           disp(['Running ''' scriptFile ''':']);\
           type(scriptFile);\
