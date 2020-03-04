@@ -16,7 +16,7 @@ parameters:
     description: >
       Location of folder containing source code, relative to project root folder. The specified
       folder and its subfolders will be added to the top of the MATLAB search path as well as
-      the code coverage report. Multiple folders may be specified by using a colon (:) or semicolon 
+      the code coverage report. Multiple folders may be specified by using a colon (:) or semicolon
       (;) separated list.
     type: string
     default: ''
