@@ -165,6 +165,11 @@ workflows:
           name: test-run-tests-machine-master
           filters: *integration-master-filters
 
+      # hold promoting to prod for manual approval
+      - hold:
+          type: approval
+          requires: *prod-deploy-requires
+
       # patch, minor, or major publishing
       # requires that a CIRCLE_TOKEN env variable is set
       - orb-tools/dev-promote-prod:
@@ -172,7 +177,8 @@ workflows:
           release: patch
           orb-name: mathworks/matlab
           ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires: *prod-deploy-requires
+          requires: 
+            - hold
           filters:
             branches:
               ignore: /.*/
@@ -184,7 +190,8 @@ workflows:
           release: minor
           orb-name: mathworks/matlab
           ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires: *prod-deploy-requires
+          requires:
+            - hold
           filters:
             branches:
               ignore: /.*/
@@ -196,7 +203,8 @@ workflows:
           release: major
           orb-name: mathworks/matlab
           ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires: *prod-deploy-requires
+          requires:
+            - hold
           filters:
             branches:
               ignore: /.*/
