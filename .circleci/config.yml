@@ -177,7 +177,7 @@ workflows:
           release: patch
           orb-name: mathworks/matlab
           ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires: 
+          requires:
             - hold
           filters:
             branches:
