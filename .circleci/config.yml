@@ -39,7 +39,8 @@ commands:
             echo 'function c=add(a,b);c=a+b;' > src/add.m
             mkdir tests
             printf "%%%% FirstTest\nassert(add(1,2)==3)" > tests/mytest.m
-      - matlab/run-tests
+      - matlab/run-tests:
+          source-folder: src
       - matlab/run-tests:
           test-results-junit: test-results/matlab/results.xml
           code-coverage-cobertura: code-coverage/coverage.xml
