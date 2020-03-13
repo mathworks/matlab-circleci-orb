@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  matlab: mathworks/matlab@dev:alpha
+  matlab: mathworks/matlab@dev:beta
   orb-tools: circleci/orb-tools@8.27.4
 
 commands:
@@ -38,12 +38,13 @@ commands:
             mkdir src
             echo 'function c=add(a,b);c=a+b;' > src/add.m
             mkdir tests
-            printf "%%%% FirstTest\naddpath('../src');assert(add(1,2)==3)" > tests/mytest.m
-      - matlab/run-tests
+            printf "%%%% FirstTest\nassert(add(1,2)==3)" > tests/mytest.m
+      - matlab/run-tests:
+          source-folder: src
       - matlab/run-tests:
           test-results-junit: test-results/matlab/results.xml
           code-coverage-cobertura: code-coverage/coverage.xml
-          code-coverage-source: src
+          source-folder: src
       - run:
           name: Verify test results file was created
           command: |
@@ -165,6 +166,11 @@ workflows:
           name: test-run-tests-machine-master
           filters: *integration-master-filters
 
+      # hold promoting to prod for manual approval
+      - hold:
+          type: approval
+          requires: *prod-deploy-requires
+
       # patch, minor, or major publishing
       # requires that a CIRCLE_TOKEN env variable is set
       - orb-tools/dev-promote-prod:
@@ -172,7 +178,8 @@ workflows:
           release: patch
           orb-name: mathworks/matlab
           ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires: *prod-deploy-requires
+          requires:
+            - hold
           filters:
             branches:
               ignore: /.*/
@@ -184,7 +191,8 @@ workflows:
           release: minor
           orb-name: mathworks/matlab
           ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires: *prod-deploy-requires
+          requires:
+            - hold
           filters:
             branches:
               ignore: /.*/
@@ -196,7 +204,8 @@ workflows:
           release: major
           orb-name: mathworks/matlab
           ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires: *prod-deploy-requires
+          requires:
+            - hold
           filters:
             branches:
               ignore: /.*/

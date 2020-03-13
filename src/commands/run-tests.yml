@@ -12,11 +12,15 @@ parameters:
       Path to write code coverage report using Cobertura XML format.
     type: string
     default: ''
-  code-coverage-source:
+  source-folder:
     description: >
-      Location of folder containing source code.
+      Location of the folder containing source code, relative to the project root folder. The
+      specified folder and its subfolders will be added to the top of the MATLAB search path. To
+      generate a code coverage report, MATLAB uses only the source code in the specified folder and
+      its subfolders. You can specify multiple folders using a colon-separated or a
+      semicolon-separated list.
     type: string
-    default: .
+    default: ''
 
 steps:
   - run:
@@ -25,11 +29,11 @@ steps:
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
 
         # download run command shell scripts
-        wget -qO "${tmpdir}/bin.zip" https://storage.googleapis.com/matlabimagesus/public/run-matlab-command/v0/run-matlab-command.zip
+        wget -qO "${tmpdir}/bin.zip" https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v0/run-matlab-command.zip
         unzip -qod "${tmpdir}/bin" "${tmpdir}/bin.zip"
 
         # download script generator
-        wget -qO "${tmpdir}/scriptgen.zip" https://storage.googleapis.com/matlabimagesus/public/matlab-script-generator/v0/matlab-script-generator.zip
+        wget -qO "${tmpdir}/scriptgen.zip" https://ssd.mathworks.com/supportfiles/ci/matlab-script-generator/v0/matlab-script-generator.zip
         unzip -qod "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
 
         # generate and run MATLAB test script
@@ -38,7 +42,7 @@ steps:
           testScript = genscript('Test','WorkingFolder','..',\
             'JUnitTestResults','<<parameters.test-results-junit>>',\
             'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
-            'CodeCoverageSource','<<parameters.code-coverage-source>>');\
+            'SourceFolder','<<parameters.source-folder>>');\
           scriptFile = testScript.writeToFile('.matlab/runAllTests.m');\
           disp(['Running ''' scriptFile ''':']);\
           type(scriptFile);\

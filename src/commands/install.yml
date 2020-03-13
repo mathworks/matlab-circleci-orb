@@ -12,4 +12,4 @@ steps:
         fi
 
         # download and execute the installer
-        wget -qO- --retry-connrefused https://storage.googleapis.com/matlabimagesus/public/ephemeral-matlab/v0/install.sh | sudo -E bash
+        wget -qO- --retry-connrefused https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/install.sh | sudo -E bash
