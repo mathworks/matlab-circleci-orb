@@ -170,6 +170,7 @@ workflows:
       - hold:
           type: approval
           requires: *prod-deploy-requires
+          filters: *integration-master-filters
 
       # patch, minor, or major publishing
       # requires that a CIRCLE_TOKEN env variable is set
