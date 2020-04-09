@@ -47,4 +47,5 @@ steps:
           disp(['Running ''' scriptFile ''':']);\
           type(scriptFile);\
           fprintf('__________\n\n');\
-          run(scriptFile);"
+          cd('.matlab');\
+          runAllTests;"
