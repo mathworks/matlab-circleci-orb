@@ -22,6 +22,7 @@ steps:
         # run MATLAB command
         cmd=$(cat \<<EOF
         <<parameters.command>>
-        EOF)
+        EOF
+        )
         cmd=$(echo $cmd | sed 's/"/\\"/g')
         "${tmpdir}/bin/run_matlab_command.sh" "$cmd"
