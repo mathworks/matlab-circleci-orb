@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  matlab: mathworks/matlab@dev:beta
+  matlab: mathworks/matlab@dev:alpha
   orb-tools: circleci/orb-tools@8.27.4
 
 commands:
@@ -28,6 +28,12 @@ commands:
           command: echo 'export CMD=myscript' >> $BASH_ENV
       - matlab/run-command:
           command: $CMD
+      - matlab/run-command:
+          command: "eval(\"a = 1+2\"); assert(a == 3); eval('b = 3+4'); assert(b == 7);"
+      - matlab/run-command:
+          command: 'eval("a = 1+2"); assert(a == 3); eval(''b = 3+4''); assert(b == 7);'
+      - matlab/run-command:
+          command: a = """hello world"""; b = '"hello world"'; assert(strcmp(a,b));
 
   test-run-tests:
     description: Test running MATLAB tests.
