@@ -28,6 +28,12 @@ commands:
           command: echo 'export CMD=myscript' >> $BASH_ENV
       - matlab/run-command:
           command: $CMD
+      - matlab/run-command:
+          command: "eval(\"a = 1+2\"); assert(a == 3);"
+      - matlab/run-command:
+          command: 'eval("a = 1+2"); assert(a == 3);'
+      - matlab/run-command:
+          command: a = """hello world"""; b = '"hello world"'; assert(strcmp(a,b));
 
   test-run-tests:
     description: Test running MATLAB tests.
