@@ -20,5 +20,4 @@ steps:
         unzip -qod "${tmpdir}/bin" "${tmpdir}/run-matlab-command.zip"
 
         # run MATLAB command
-        cmd=$(echo '<<parameters.command>>' | sed 's/"/\\"/g')
-        "${tmpdir}/bin/run_matlab_command.sh" "$cmd"
+        "${tmpdir}/bin/run_matlab_command.sh" <<parameters.command>>
