@@ -24,5 +24,4 @@ steps:
         <<parameters.command>>
         EOF
         )
-        cmd=$(echo $cmd | sed 's/"/\\"/g')
-        "${tmpdir}/bin/run_matlab_command.sh" "$cmd"
+        "${tmpdir}/bin/run_matlab_command.sh" "$(printf '%s' "${cmd[@]}")"
