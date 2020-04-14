@@ -20,8 +20,8 @@ steps:
         unzip -qod "${tmpdir}/bin" "${tmpdir}/run-matlab-command.zip"
 
         # run MATLAB command
-        cmd=$(cat \<<EOF
+        cmd=$(cat \<<_EOF
         <<parameters.command>>
-        EOF
+        _EOF
         )
         "${tmpdir}/bin/run_matlab_command.sh" "$cmd"
