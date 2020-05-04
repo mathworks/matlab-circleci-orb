@@ -31,8 +31,7 @@ commands:
       - matlab/run-command:
           command: a = """hello world"""; b = '"hello world"'; assert(strcmp(a,b), a+b);
       - matlab/run-command:
-          command: |
-            a = " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"; b = char([32:126]); assert(strcmp(a, b), a+b);
+          command: a = " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"; b = char([32:126]); assert(strcmp(a, b), a+b);
 
   test-run-tests:
     description: Test running MATLAB tests.
