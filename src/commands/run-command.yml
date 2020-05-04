@@ -25,7 +25,9 @@ steps:
         define cmd \<<'_EOF'
         <<parameters.command>>
         _EOF
-        cmd=$(printf '%s' "$cmd" | sed 's/`/\\\`/g')
+        cmd=$(printf '%s' "$cmd" | sed 's/`/\\\\`/g')
+
+        echo "$cmd"
 
         # run MATLAB command
         "${tmpdir}/bin/run_matlab_command.sh" "$cmd"
