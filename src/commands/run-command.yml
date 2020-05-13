@@ -13,15 +13,18 @@ steps:
   - run:
       name: Run MATLAB command
       command: |
+        define(){ read -r -d '' ${1} || true; }
+
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
 
         # download run command shell scripts
         wget -qO "${tmpdir}/run-matlab-command.zip" https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v0/run-matlab-command.zip
         unzip -qod "${tmpdir}/bin" "${tmpdir}/run-matlab-command.zip"
 
-        # run MATLAB command
-        cmd=$(cat \<<_EOF
+        # create command to execute
+        define cmd \<<'_EOF'
         <<parameters.command>>
         _EOF
-        )
+
+        # run MATLAB command
         "${tmpdir}/bin/run_matlab_command.sh" "$cmd"
