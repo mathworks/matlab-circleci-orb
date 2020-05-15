@@ -4,7 +4,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    matlab: mathworks/matlab@0.1
+    matlab: mathworks/matlab@x.y
   jobs:
     build:
       machine:

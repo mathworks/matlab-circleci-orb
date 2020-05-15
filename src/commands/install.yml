@@ -1,5 +1,6 @@
 description: >
-  Install MATLAB.
+  Install the latest MATLAB release on a machine executor. You can use this command only for public
+  projects.
 
 steps:
   - run:

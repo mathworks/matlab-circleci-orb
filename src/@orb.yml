@@ -1,5 +1,8 @@
 version: 2.1
 
 description: >
-  Common CircleCI tasks for MATLAB.
-  Source: https://github.com/mathworks/matlab-circleci-orb
+  Run MATLAB and Simulink as part of your build pipeline.
+
+display:
+  source_url: https://github.com/mathworks/matlab-circleci-orb
+  home_url: https://www.mathworks.com
