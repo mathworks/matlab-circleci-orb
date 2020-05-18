@@ -1,23 +1,52 @@
 version: 2.1
 
 orbs:
-  matlab: mathworks/matlab@dev:alpha
-  orb-tools: circleci/orb-tools@8.27.4
+  matlab: mathworks/matlab@<<pipeline.parameters.dev-orb-version>>
+  orb-tools: circleci/orb-tools@9.1
 
-commands:
-  test-install:
-    description: Test installing MATLAB.
+# Pipeline parameters
+parameters:
+  # These pipeline parameters are required by the "trigger-integration-tests-workflow"
+  # job, by default.
+  run-integration-tests:
+    type: boolean
+    default: false
+  dev-orb-version:
+    type: string
+    default: "dev:alpha"
+
+integration-tests: &integration-tests
+  [
+    integration-test-install,
+    integration-test-run-command,
+    integration-test-run-tests
+  ]
+
+executors:
+  linux-machine:
+    machine:
+      image: ubuntu-1604:201903-01
+
+jobs:
+  integration-test-install:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
     steps:
       - matlab/install
       - run:
           name: Verify the matlab and mex scripts are available
           command: |
             set -e
-            matlab -batch ver
+            matlab -batch version
             mex -h
 
-  test-run-command:
-    description: Test running MATLAB commands.
+  integration-test-run-command:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
     steps:
       - matlab/install
       - matlab/run-command:
@@ -34,8 +63,11 @@ commands:
           command: |
             a = " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_\\\`abcdefghijklmnopqrstuvwxyz{|}~"; b = char([32:126]); assert(strcmp(a, b), a+b);
 
-  test-run-tests:
-    description: Test running MATLAB tests.
+  integration-test-run-tests:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
     steps:
       - matlab/install
       - run:
@@ -61,159 +93,79 @@ commands:
             set -e
             grep -q add code-coverage/coverage.xml
 
-jobs:
-  test-install-machine:
-    executor: orb-tools/machine
-    steps:
-      - test-install
-
-  test-run-command-machine:
-    executor: orb-tools/machine
-    steps:
-      - test-run-command
-
-  test-run-tests-machine:
-    executor: orb-tools/machine
-    steps:
-      - test-run-tests
-
-# yaml anchor filters
-integration-dev-filters: &integration-dev-filters
-  branches:
-    ignore: /.*/
-  tags:
-    only: /integration-.*/
-
-integration-master-filters: &integration-master-filters
-  branches:
-    ignore: /.*/
-  tags:
-    only: /master-.*/
-
-prod-deploy-requires: &prod-deploy-requires
-  [
-    test-install-machine-master,
-    test-run-command-machine-master,
-    test-run-tests-machine-master
-  ]
-
 workflows:
-  # lint, pack, and publish dev orb then trigger test workflow
-  publish-dev:
+  # This `lint-pack_validate_publish-dev` workflow will run on any commit.
+  lint_pack-validate_publish-dev:
+    unless: << pipeline.parameters.run-integration-tests >>
     jobs:
-      # lint all orb YAML files
+      # Lint your YAML
       - orb-tools/lint
 
-      # pack orb YAML files in to a single orb.yml
-      - orb-tools/pack:
-          requires:
-            - orb-tools/lint
+      # Linting for BASH commands
+      - orb-tools/shellcheck
 
-      # release dev version of orb for testing and possible publishing
-      # requires that a CIRCLE_TOKEN env variable is set
+      # pack your orb YAML files to a single orb.yml
+      # validate the orb.yml file to ensure it is well-formed
+      - orb-tools/pack
+
+      # release dev version of orb, for testing & possible publishing.
+      # orb will be published as dev:alpha and dev:${CIRCLE_SHA1:0:7}.
+      # requires a CircleCI API token to be stored as CIRCLE_TOKEN (default)
+      # https://circleci.com/docs/2.0/managing-api-tokens
+      # store CIRCLE_TOKEN as a project env var or Contexts resource
+      # if using Contexts, add your context below
       - orb-tools/publish-dev:
           orb-name: mathworks/matlab
           requires:
+            - orb-tools/lint
+            - orb-tools/shellcheck
             - orb-tools/pack
 
-      # trigger integration workflow to test orb on non-master branch commits
-      # creates a git tag and pushes it back to the repo via ssh to kick off integration workflow
-      # requires that a CIRCLE_TOKEN env variable is set
-      - orb-tools/trigger-integration-workflow:
-          filters:
-            branches:
-              ignore: master
+      # trigger an integration workflow to test the
+      # dev:${CIRCLE_SHA1:0:7} version of your orb
+      - orb-tools/trigger-integration-tests-workflow:
           name: trigger-integration-dev
           requires:
             - orb-tools/publish-dev
-          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          tag: integration
 
-      # trigger integration workflow to test orb on master branch commits
-      # creates a git tag and pushes it back to the repo via ssh to kick off integration workflow
-      # requires that a CIRCLE_TOKEN env variable is set
-      - orb-tools/trigger-integration-workflow:
+  # This `integration-tests_prod-release` workflow will only run
+  # when the run-integration-tests pipeline parameter is set to true.
+  # It is meant to be triggered by the "trigger-integration-tests-workflow"
+  # job, and run tests on <your orb>@dev:${CIRCLE_SHA1:0:7}.
+  integration-tests_prod-release:
+    when: << pipeline.parameters.run-integration-tests >>
+    jobs:
+      # your integration test jobs go here: essentially, run all your orb's
+      # jobs and commands to ensure they behave as expected. or, run other
+      # integration tests of your choosing
+      - integration-test-install:
+          matrix:
+            parameters:
+              executor: [linux-machine]
+
+      - integration-test-run-command:
+          matrix:
+            parameters:
+              executor: [linux-machine]
+
+      - integration-test-run-tests:
+          matrix:
+            parameters:
+              executor: [linux-machine]
+
+      # publish a semver version of the orb. relies on
+      # the commit subject containing the text "[semver:patch|minor|major|skip]"
+      # as that will determine whether a patch, minor or major
+      # version will be published or if publishing should
+      # be skipped.
+      # e.g. [semver:patch] will cause a patch version to be published.
+      - orb-tools/dev-promote-prod-from-commit-subject:
+          orb-name: mathworks/matlab
+          add-pr-comment: false
+          fail-if-semver-not-indicated: true
+          publish-version-tag: true
+          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
+          requires: *integration-tests
           filters:
             branches:
               only: master
-          name: trigger-integration-master
-          requires:
-            - orb-tools/publish-dev
-          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          tag: master
-
-  # test published dev orb and possibly promote it to prod if working on the master branch
-  integration-test-and-promote-to-prod:
-    jobs:
-      # triggered by non-master branch commits
-      - test-install-machine:
-          name: test-install-machine-dev
-          filters: *integration-dev-filters
-
-      - test-run-command-machine:
-          name: test-run-command-machine-dev
-          filters: *integration-dev-filters
-
-      - test-run-tests-machine:
-          name: test-run-tests-machine-dev
-          filters: *integration-dev-filters
-
-      # triggered by master branch commits
-      - test-install-machine:
-          name: test-install-machine-master
-          filters: *integration-master-filters
-
-      - test-run-command-machine:
-          name: test-run-command-machine-master
-          filters: *integration-master-filters
-
-      - test-run-tests-machine:
-          name: test-run-tests-machine-master
-          filters: *integration-master-filters
-
-      # hold promoting to prod for manual approval
-      - hold:
-          type: approval
-          requires: *prod-deploy-requires
-          filters: *integration-master-filters
-
-      # patch, minor, or major publishing
-      # requires that a CIRCLE_TOKEN env variable is set
-      - orb-tools/dev-promote-prod:
-          name: dev-promote-patch
-          release: patch
-          orb-name: mathworks/matlab
-          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires:
-            - hold
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /master-patch.*/
-
-      - orb-tools/dev-promote-prod:
-          name: dev-promote-minor
-          release: minor
-          orb-name: mathworks/matlab
-          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires:
-            - hold
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /master-minor.*/
-
-      - orb-tools/dev-promote-prod:
-          name: dev-promote-major
-          release: major
-          orb-name: mathworks/matlab
-          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires:
-            - hold
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /master-major.*/
