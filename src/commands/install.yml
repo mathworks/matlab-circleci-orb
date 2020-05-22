@@ -1,6 +1,7 @@
 description: >
-  Install the latest MATLAB release on a Linux machine executor. You can use this command only for
-  public projects.
+  Install the latest MATLAB release on a Linux machine executor. Currently, this command is
+  available only for public projects and does not include transformation products, such as MATLAB
+  Coder and MATLAB Compiler.
 
 steps:
   - run:
