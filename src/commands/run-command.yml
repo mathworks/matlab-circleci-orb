@@ -27,10 +27,10 @@ steps:
         # create script to execute
         script=command_${RANDOM}
         scriptpath=${tmpdir}/${script}.m
-        echo "cd('${workdir}');" > "$scriptpath"
+        echo "cd('${workdir//\'/\'\'}');" > "$scriptpath"
         cat \<<'_EOF' >> "$scriptpath"
         <<parameters.command>>
         _EOF
 
         # run MATLAB command
-        (cd "$tmpdir" && bin/run_matlab_command.sh $script)
+        (cd "$tmpdir" && bin/run_matlab_command.sh "$script")
