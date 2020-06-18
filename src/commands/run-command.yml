@@ -25,10 +25,10 @@ steps:
         unzip -qod "${tmpdir}/bin" "${tmpdir}/run-matlab-command.zip"
 
         # create script to execute
-        script=command${RANDOM}
+        script=command_${RANDOM}
         scriptpath=${tmpdir}/${script}.m
         echo "cd('${workdir}');" > "$scriptpath"
-        cat <<'_EOF' >> "$scriptpath"
+        cat \<<'_EOF' >> "$scriptpath"
         <<parameters.command>>
         _EOF
 
