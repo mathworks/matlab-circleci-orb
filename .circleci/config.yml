@@ -63,7 +63,7 @@ jobs:
           command: |
             a = " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"; b = char([32:126]); assert(strcmp(a, b), a+b);
       - matlab/run-command:
-          command: exp = getenv('CIRCLE_WORKING_DIRECTORY'); act = pwd; assert(strcmp(act, exp), strjoin({act exp}, '\n'));
+          command: \[~, exp] = system("echo " + getenv('CIRCLE_WORKING_DIRECTORY')); exp = strtrim(exp); act = pwd; assert(strcmp(act, exp), strjoin({act exp}, '\n'));
 
   integration-test-run-tests:
     parameters:
