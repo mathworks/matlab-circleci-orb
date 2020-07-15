@@ -33,4 +33,4 @@ steps:
         _EOF
 
         # run MATLAB command
-        (cd "$tmpdir" && bin/run_matlab_command.sh "$script")
+        "${tmpdir}/bin/run_matlab_command.sh" "cd('${tmpdir//\'/\'\'}'); $script"
