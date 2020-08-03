@@ -45,11 +45,7 @@ steps:
             'JUnitTestResults','<<parameters.test-results-junit>>',\
             'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
             'SourceFolder','<<parameters.source-folder>>');\
-          scriptFolder = '.matlab';\
-          scriptPath = fullfile(scriptFolder, 'runAllTests.m');\
-          testScript.writeToFile(scriptPath);\
-          disp(['Running ''' scriptPath ''':']);\
-          type(scriptPath);\
+          disp('Running:');\
+          disp(strtrim(testScript.writeToText()));\
           fprintf('__________\n\n');\
-          cd(scriptFolder);\
-          runAllTests;"
+          run(testScript);"
