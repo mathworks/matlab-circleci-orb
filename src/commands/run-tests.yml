@@ -41,11 +41,11 @@ steps:
         # generate and run MATLAB test script
         "${tmpdir}/bin/run_matlab_command.sh" "\
           addpath('${tmpdir}/scriptgen');\
-          testScript = genscript('Test','WorkingFolder','..',\
+          testScript = genscript('Test',\
             'JUnitTestResults','<<parameters.test-results-junit>>',\
             'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
             'SourceFolder','<<parameters.source-folder>>');\
-          disp('Running:');\
+          disp('Running MATLAB script with content:');\
           disp(strtrim(testScript.writeToText()));\
           fprintf('__________\n\n');\
           run(testScript);"
