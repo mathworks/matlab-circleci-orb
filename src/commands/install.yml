@@ -1,7 +1,14 @@
 description: >
-  Install the latest MATLAB release on a Linux machine executor. Currently, this command is
-  available only for public projects and does not include transformation products, such as MATLAB
-  Coder and MATLAB Compiler.
+  Install MATLAB on a Linux machine executor. Currently, this command is available only for public
+  projects and does not include transformation products, such as MATLAB Coder and MATLAB Compiler.
+
+parameters:
+  release:
+    description: >
+      MATLAB release to install. You can specify R2020a or a later release. By default, the command
+      installs the latest release of MATLAB.
+    type: string
+    default: 'latest'
 
 steps:
   - run:
@@ -14,7 +21,7 @@ steps:
         fi
 
         # install core system dependencies
-        wget -qO- --retry-connrefused https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh | sudo -E bash
+        wget -qO- --retry-connrefused https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh | sudo -E bash -s -- <<parameters.release>>
 
         # install ephemeral version of MATLAB
-        wget -qO- --retry-connrefused https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/install.sh | sudo -E bash
+        wget -qO- --retry-connrefused https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/install.sh | sudo -E bash -s -- --release <<parameters.release>>

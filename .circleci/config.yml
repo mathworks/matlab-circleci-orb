@@ -18,6 +18,7 @@ parameters:
 integration-tests: &integration-tests
   [
     integration-test-install,
+    integration-test-install-release,
     integration-test-run-command,
     integration-test-run-tests
   ]
@@ -41,6 +42,20 @@ jobs:
             set -e
             matlab -batch version
             mex -h
+
+  integration-test-install-release:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
+    steps:
+      - matlab/install:
+          release: R2020a
+      - run:
+          name: Verify the matlab and mex scripts are available
+          command: |
+            set -e
+            matlab -batch "assert(strcmp(version('-release'),'2020a'))"
 
   integration-test-run-command:
     parameters:
@@ -146,6 +161,11 @@ workflows:
       # jobs and commands to ensure they behave as expected. or, run other
       # integration tests of your choosing
       - integration-test-install:
+          matrix:
+            parameters:
+              executor: [linux-machine]
+
+      - integration-test-install-release:
           matrix:
             parameters:
               executor: [linux-machine]
