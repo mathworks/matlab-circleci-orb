@@ -44,7 +44,9 @@ steps:
           testScript = genscript('Test',\
             'JUnitTestResults','<<parameters.test-results-junit>>',\
             'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
-            'SourceFolder','<<parameters.source-folder>>');\
+            'SourceFolder','<<parameters.source-folder>>',\
+            'SelectByFolder','<<parameters.select-by-folder>>',\
+            'SelectByTag','<<parameters.select-by-tag>>');\
           disp('Running MATLAB script with content:');\
           disp(strtrim(testScript.writeToText()));\
           fprintf('__________\n\n');\
