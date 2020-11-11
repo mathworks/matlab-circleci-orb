@@ -23,19 +23,19 @@ parameters:
       semicolon-separated list.
     type: string
     default: ''
-    select-by-folder:
-      description: >
-        Location of the folder containing test code, relative to the project root folder. The
-        specified folder and its subfolders are added to the test suite to run.To filter multiple test folders
-        You can specify multiple folders using a colon-separated or a semicolon-separated list.
-      type: string
-      default: ''
-    select-by-tag:
-      description: >
-        Specify the test Tag name. Test which are tagged with specified name will be added to test suite and
-        will be considered to run.
-      type: string
-      default: ''
+  select-by-folder:
+    description: >
+      Location of the folder containing test code, relative to the project root folder. The
+      specified folder and its subfolders are added to the test suite to run.To filter multiple test folders
+      You can specify multiple folders using a colon-separated or a semicolon-separated list.
+    type: string
+    default: ''
+  select-by-tag:
+    description: >
+      Specify the test Tag name. Test which are tagged with specified name will be added to test suite and
+      will be considered to run.
+    type: string
+    default: ''
 
 steps:
   - run:
