@@ -102,12 +102,18 @@ jobs:
             echo "evalin('base','assert(myvar==123)')" >> tests/mytest.m
             echo "%% FirstTest" >> tests/mytest.m
             echo "assert(add(1,2)==3)" >> tests/mytest.m
+            mkdir tests/filteredTest
+            echo "%% simpleTest" >> tests/filteredTest/filtertest.m
+            echo "assert(2==2)" >> tests/filteredTest/filtertest.m
       - matlab/run-tests:
           source-folder: src
       - matlab/run-tests:
           test-results-junit: test-results/matlab/results.xml
           code-coverage-cobertura: code-coverage/coverage.xml
           source-folder: src
+      - matlab/run-tests:
+          test-results-junit: test-results/matlab/filterdtestresult.xml
+          select-by-folder: tests/filteredTest
       - run:
           name: Verify test results file was created
           command: |
@@ -118,6 +124,11 @@ jobs:
           command: |
             set -e
             grep -q add code-coverage/coverage.xml
+      - run:
+          name: Verify filtered test results file was created
+          command: |
+            set -e
+            grep -q FirstTest test-results/matlab/filterdtestresult.xml
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
