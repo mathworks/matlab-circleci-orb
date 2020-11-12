@@ -128,7 +128,7 @@ jobs:
           name: Verify filtered test results file was created
           command: |
             set -e
-            grep -q simpleTest test-results/matlab/filterdtestresult.xml
+            grep -q simpleTest test-results/matlab/filterdtestresult.xml | grep -v FirstTest
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
