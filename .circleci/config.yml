@@ -119,7 +119,7 @@ jobs:
           test-results-junit: test-results/matlab/filterdtestresult.xml
           select-by-folder: tests/filteredTest
       - matlab/run-tests:
-          test-results-junit: test-results/matlab/filterdtestresult.xml
+          test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
       - run:
           name: Verify test results file was created
@@ -135,12 +135,12 @@ jobs:
           name: Verify filtered test results file was created
           command: |
             set -e
-            grep -q simpleTest test-results/matlab/filterdtestresult.xml 
+            grep -q simpleTest test-results/matlab/filterdtestresult.xml
       - run:
           name: Verify filter by tag test results file was created
           command: |
             set -e
-            grep -q FilterByTag test-results/matlab/filterdtestresult.xml
+            grep -q FilterByTag test-results/matlab/filterdtagresult.xml
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
