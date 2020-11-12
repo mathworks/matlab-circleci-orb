@@ -140,7 +140,7 @@ jobs:
           name: Verify filter by tag test results file was created
           command: |
             set -e
-            grep -q FilterByTag test-results/matlab/filterdtagresult.xml
+            grep -q TaggedTest test-results/matlab/filterdtagresult.xml
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
