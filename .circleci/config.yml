@@ -105,6 +105,10 @@ jobs:
             mkdir tests/filteredTest
             echo "%% simpleTest" >> tests/filteredTest/filtertest.m
             echo "assert(2==2)" >> tests/filteredTest/filtertest.m
+            printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
+            printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
+            printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
+
       - matlab/run-tests:
           source-folder: src
       - matlab/run-tests:
@@ -114,6 +118,9 @@ jobs:
       - matlab/run-tests:
           test-results-junit: test-results/matlab/filterdtestresult.xml
           select-by-folder: tests/filteredTest
+      - matlab/run-tests:
+          test-results-junit: test-results/matlab/filterdtestresult.xml
+          select-by-tag: FILTERED
       - run:
           name: Verify test results file was created
           command: |
@@ -129,6 +136,11 @@ jobs:
           command: |
             set -e
             grep -q simpleTest test-results/matlab/filterdtestresult.xml | grep -v FirstTest
+      - run:
+          name: Verify filter by tag test results file was created
+          command: |
+            set -e
+            grep -q FilterByTag test-results/matlab/filterdtestresult.xml | grep -v simpleTest
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
