@@ -23,6 +23,19 @@ parameters:
       semicolon-separated list.
     type: string
     default: ''
+  select-by-folder:
+    description: >
+      Location of the folder used to select test suite elements, relative to the project root folder.
+      To generate a test suite, MATLAB uses only the tests in the specified folder and its subfolders.
+      You can specify multiple folders using a colon-separated or a semicolon-separated list.
+    type: string
+    default: ''
+  select-by-tag:
+    description: >
+      Test tag used to select test suite elements. To generate a test suite, MATLAB uses only the test elements
+      with the specified tag.
+    type: string
+    default: ''
 
 steps:
   - run:
@@ -44,7 +57,9 @@ steps:
           testScript = genscript('Test',\
             'JUnitTestResults','<<parameters.test-results-junit>>',\
             'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
-            'SourceFolder','<<parameters.source-folder>>');\
+            'SourceFolder','<<parameters.source-folder>>',\
+            'SelectByFolder','<<parameters.select-by-folder>>',\
+            'SelectByTag','<<parameters.select-by-tag>>');\
           disp('Running MATLAB script with content:');\
           disp(strtrim(testScript.writeToText()));\
           fprintf('__________\n\n');\
