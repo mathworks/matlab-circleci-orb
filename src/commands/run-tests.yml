@@ -60,7 +60,7 @@ steps:
             'SourceFolder','<<parameters.source-folder>>',\
             'SelectByFolder','<<parameters.select-by-folder>>',\
             'SelectByTag','<<parameters.select-by-tag>>');\
-          disp('Running MATLAB script with content:');\
-          disp(strtrim(testScript.writeToText()));\
+          disp('Running MATLAB script with contents:');\
+          disp(testScript.Contents);\
           fprintf('__________\n\n');\
           run(testScript);"
