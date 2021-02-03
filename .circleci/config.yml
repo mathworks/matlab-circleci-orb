@@ -91,6 +91,7 @@ jobs:
         type: executor
     executor: <<parameters.executor>>
     steps:
+    # Setup for Integ tests for matlab/run-tests
       - matlab/install
       - run:
           command: |
@@ -108,7 +109,27 @@ jobs:
             printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
             printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
             printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
-
+            printf "model = 'simple_model';" > tests/createModelAndTest.m
+            printf "new_system(model);" >> tests/createModelAndTest.m
+            printf "load_system(model);" >> tests/createModelAndTest.m
+            printf "add_block('built-in/Constant', [model, '/Constant']);" >> tests/createModelAndTest.m
+            printf "save_system(model);" >> tests/createModelAndTest.m
+            printf "close_system(model);" >> tests/createModelAndTest.m
+            printf "sltest.testmanager.clear;" >> tests/createModelAndTest.m
+            printf "sltest.testmanager.clearResults;" >> tests/createModelAndTest.m
+            printf "tf = sltest.testmanager.TestFile('test.mldatx');" >> tests/createModelAndTest.m
+            printf "ts = tf.getTestSuites;" >> tests/createModelAndTest.m
+            printf "tc = ts.getTestCases;" >> tests/createModelAndTest.m
+            printf "tc.setProperty('model', model);" >> tests/createModelAndTest.m
+            printf "tf.saveToFile;" >> tests/createModelAndTest.m
+            printf "tf.close;" >> tests/createModelAndTest.m
+            printf "sltest.testmanager.close;" >> tests/createModelAndTest.m
+            printf "disp('Created Model and Simulink Test file to simulate the model.');" >> tests/createModelAndTest.m
+            printf "evalin('base', 'clear all');" >> tests/createModelAndTest.m
+      - matlab/run-command:
+          command: cd tests;createModelAndTest;
+      
+    # Integ tests for matlab/run-tests
       - matlab/run-tests:
           source-folder: src
       - matlab/run-tests:
@@ -121,6 +142,11 @@ jobs:
       - matlab/run-tests:
           test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
+      - matlab/run-tests:
+          model-coverage-cobertura: model-coverage/coverage.xml
+          test-results-pdf: test-resuts/matlab/pdfresults.pdf
+          test-results-simulink-test: test-resuts/matlab/simulinkTest.mldatx
+          
       - run:
           name: Verify test results file was created
           command: |
@@ -144,6 +170,22 @@ jobs:
             grep -q TaggedTest test-results/matlab/filterdtagresult.xml
             grep -v FirstTest test-results/matlab/filterdtagresult.xml
             grep -v simpleTest test-results/matlab/filterdtagresult.xml
+      - run:
+          name: Verify pdf test report file generation
+          command: |
+            set -e
+            test -f test-resuts/matlab/pdfresults.pdf
+      - run:
+          name: Verify Simulink Test result file generation
+          command: |
+            set -e
+            test -f test-resuts/matlab/simulinkTest.mldatx
+      - run:
+          name: Verify model coverage file was created
+          command: |
+            set -e
+            grep -q simple_model model-coverage/coverage.xml
+      
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
