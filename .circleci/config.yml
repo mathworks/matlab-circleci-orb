@@ -128,7 +128,7 @@ jobs:
             printf "evalin('base', 'clear all');" >> tests/createModelAndTest.m
       - matlab/run-command:
           command: cd tests;createModelAndTest;
-      
+
     # Integ tests for matlab/run-tests
       - matlab/run-tests:
           source-folder: src
@@ -146,7 +146,7 @@ jobs:
           model-coverage-cobertura: model-coverage/coverage.xml
           test-results-pdf: test-resuts/matlab/pdfresults.pdf
           test-results-simulink-test: test-resuts/matlab/simulinkTest.mldatx
-          
+
       - run:
           name: Verify test results file was created
           command: |
@@ -185,7 +185,7 @@ jobs:
           command: |
             set -e
             grep -q simple_model model-coverage/coverage.xml
-      
+
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
