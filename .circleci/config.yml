@@ -140,6 +140,7 @@ jobs:
           test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
       - matlab/run-tests:
+          source-folder: src
           model-coverage-cobertura: model-coverage/coverage.xml
           test-results-pdf: test-resuts/matlab/pdfresults.pdf
           test-results-simulink-test: test-resuts/matlab/simulinkTest.mldatx
