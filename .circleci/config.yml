@@ -125,7 +125,6 @@ jobs:
             printf "tf.close;" >> tests/createModelAndTest.m
             printf "sltest.testmanager.close;" >> tests/createModelAndTest.m
             printf "disp('Created Model and Simulink Test file to simulate the model.');" >> tests/createModelAndTest.m
-            printf "evalin('base', 'clear all');" >> tests/createModelAndTest.m
 
     # Integ tests for matlab/run-tests
       - matlab/run-tests:
