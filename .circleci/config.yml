@@ -109,22 +109,25 @@ jobs:
             printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
             printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
             printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
-            printf "model = 'simple_model';" > tests/createModelAndTest.m
-            printf "new_system(model);" >> tests/createModelAndTest.m
-            printf "load_system(model);" >> tests/createModelAndTest.m
-            printf "add_block('built-in/Constant', [model, '/Constant']);" >> tests/createModelAndTest.m
-            printf "save_system(model);" >> tests/createModelAndTest.m
-            printf "close_system(model);" >> tests/createModelAndTest.m
-            printf "sltest.testmanager.clear;" >> tests/createModelAndTest.m
-            printf "sltest.testmanager.clearResults;" >> tests/createModelAndTest.m
-            printf "tf = sltest.testmanager.TestFile('test.mldatx');" >> tests/createModelAndTest.m
-            printf "ts = tf.getTestSuites;" >> tests/createModelAndTest.m
-            printf "tc = ts.getTestCases;" >> tests/createModelAndTest.m
-            printf "tc.setProperty('model', model);" >> tests/createModelAndTest.m
-            printf "tf.saveToFile;" >> tests/createModelAndTest.m
-            printf "tf.close;" >> tests/createModelAndTest.m
-            printf "sltest.testmanager.close;" >> tests/createModelAndTest.m
-            printf "disp('Created Model and Simulink Test file to simulate the model.');" >> tests/createModelAndTest.m
+            printf "model = 'simple_model';" > simtests/createModelAndTest.m
+            printf "evalin('base','bdclose all');" >> simtests/createModelAndTest.m
+            printf "if exist('simple_model.slx', 'file') == 0" >> simtests/createModelAndTest.m
+            printf "new_system(model);" >> simtests/createModelAndTest.m
+            printf "load_system(model);" >> simtests/createModelAndTest.m
+            printf "add_block('built-in/Constant', [model, '/Constant']);" >> simtests/createModelAndTest.m
+            printf "save_system(model);" >> simtests/createModelAndTest.m
+            printf "close_system(model);" >> simtests/createModelAndTest.m
+            printf "sltest.testmanager.clear;" >> simtests/createModelAndTest.m
+            printf "sltest.testmanager.clearResults;" >> simtests/createModelAndTest.m
+            printf "tf = sltest.testmanager.TestFile('test.mldatx');" >> simtests/createModelAndTest.m
+            printf "ts = tf.getTestSuites;" >> simtests/createModelAndTest.m
+            printf "tc = ts.getTestCases;" >> simtests/createModelAndTest.m
+            printf "tc.setProperty('model', model);" >> simtests/createModelAndTest.m
+            printf "tf.saveToFile;" >> simtests/createModelAndTest.m
+            printf "tf.close;" >> simtests/createModelAndTest.m
+            printf "sltest.testmanager.close;" >> simtests/createModelAndTest.m
+            printf "end" >> simtests/createModelAndTest.m
+            printf "disp('Created Model and Simulink Test file to simulate the model.');" >> simtests/createModelAndTest.m
 
     # Integ tests for matlab/run-tests
       - matlab/run-tests:
@@ -139,8 +142,11 @@ jobs:
       - matlab/run-tests:
           test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
+    # Set up for model coverage artifact tests
+      - matlab/run-command:
+          command: cd simtests;createModelAndTest;
       - matlab/run-tests:
-          source-folder: src
+          selectByFolder: "simtests"
           model-coverage-cobertura: model-coverage/coverage.xml
           test-results-pdf: test-resuts/matlab/pdfresults.pdf
           test-results-simulink-test: test-resuts/matlab/simulinkTest.mldatx
@@ -168,10 +174,6 @@ jobs:
             grep -q TaggedTest test-results/matlab/filterdtagresult.xml
             grep -v FirstTest test-results/matlab/filterdtagresult.xml
             grep -v simpleTest test-results/matlab/filterdtagresult.xml
-
-    # Set up for model coverage artifact tests
-      - matlab/run-command:
-          command: cd tests;createModelAndTest;
 
       - run:
           name: Verify pdf test report file generation
