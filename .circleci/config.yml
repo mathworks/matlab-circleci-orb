@@ -109,6 +109,7 @@ jobs:
             printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
             printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
             printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
+            mkdir simtests
             printf "model = 'simple_model';" > simtests/createModelAndTest.m
             printf "evalin('base','bdclose all');" >> simtests/createModelAndTest.m
             printf "if exist('simple_model.slx', 'file') == 0" >> simtests/createModelAndTest.m
