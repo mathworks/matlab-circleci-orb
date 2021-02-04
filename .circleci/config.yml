@@ -110,7 +110,7 @@ jobs:
             printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
             printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
             mkdir simtests
-            cat <<'_EOF' >> "simtests/createModelAndTest.m"
+            cat \<<'_EOF' >> "simtests/createModelAndTest.m"
             model = 'simple_model';
             evalin('base','bdclose all');
             if exist('simple_model.slx', 'file') == 0
