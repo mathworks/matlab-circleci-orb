@@ -146,7 +146,7 @@ jobs:
       - matlab/run-command:
           command: cd simtests;createModelAndTest;
       - matlab/run-tests:
-          selectByFolder: "simtests"
+          select-by-folder: simtests
           model-coverage-cobertura: model-coverage/coverage.xml
           test-results-pdf: test-resuts/matlab/pdfresults.pdf
           test-results-simulink-test: test-resuts/matlab/simulinkTest.mldatx
