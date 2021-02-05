@@ -43,7 +43,7 @@ parameters:
     default: ''
   test-results-simulink-test:
     description: >
-      Path to write Simulink Test results in MLDATX format for Simulink Test test files.
+      Path to export Simulink Test Manager results in MLDATX format.
     type: string
     default: ''
   test-results-pdf:
