@@ -36,6 +36,21 @@ parameters:
       with the specified tag.
     type: string
     default: ''
+  model-coverage-cobertura:
+    description: >
+      Path to write model coverage report in Cobertura XML format.
+    type: string
+    default: ''
+  test-results-simulink-test:
+    description: >
+      Path to export Simulink Test Manager results in MLDATX format.
+    type: string
+    default: ''
+  test-results-pdf:
+    description: >
+      Path to write test results report in PDF format.
+    type: string
+    default: ''
 
 steps:
   - run:
@@ -59,7 +74,10 @@ steps:
             'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
             'SourceFolder','<<parameters.source-folder>>',\
             'SelectByFolder','<<parameters.select-by-folder>>',\
-            'SelectByTag','<<parameters.select-by-tag>>');\
+            'SelectByTag','<<parameters.select-by-tag>>',\
+            'CoberturaModelCoverage','<<parameters.model-coverage-cobertura>>',\
+            'SimulinkTestResults','<<parameters.test-results-simulink-test>>',\
+            'PDFTestReport','<<parameters.test-results-pdf>>');\
           disp('Running MATLAB script with contents:');\
           disp(testScript.Contents);\
           fprintf('__________\n\n');\

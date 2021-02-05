@@ -91,6 +91,7 @@ jobs:
         type: executor
     executor: <<parameters.executor>>
     steps:
+    # Setup for Integ tests for matlab/run-tests
       - matlab/install
       - run:
           command: |
@@ -108,7 +109,34 @@ jobs:
             printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
             printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
             printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
+            mkdir simtests
+            cat \<<'_EOF' >> "simtests/createModelAndTest.m"
+            model = 'simple_model';
+            evalin('base','bdclose all');
+            if exist('simple_model.slx', 'file') == 0
+                new_system(model);
+                load_system(model);
+                add_block('built-in/Constant', [model, '/Constant']);
+                save_system(model);
+                close_system(model);
+                sltest.testmanager.clear;
+                sltest.testmanager.clearResults;
+                tf = sltest.testmanager.TestFile('test.mldatx');
+                cs = tf.getCoverageSettings;
+                cs.RecordCoverage = true;
+                cs.MdlRefCoverage = true;
+                cs.MetricSettings = 'd';
+                ts = tf.getTestSuites;
+                tc = ts.getTestCases;
+                tc.setProperty('model', model);
+                tf.saveToFile;
+                tf.close;
+                sltest.testmanager.close;
+            end
+            disp('Created Model and Simulink Test file to simulate the model.');
+            _EOF
 
+    # Integ tests for matlab/run-tests
       - matlab/run-tests:
           source-folder: src
       - matlab/run-tests:
@@ -121,6 +149,15 @@ jobs:
       - matlab/run-tests:
           test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
+    # Set up for model coverage artifact tests
+      - matlab/run-command:
+          command: cd simtests;createModelAndTest;
+      - matlab/run-tests:
+          select-by-folder: simtests
+          model-coverage-cobertura: model-coverage/coverage.xml
+          test-results-pdf: test-results/matlab/pdfresults.pdf
+          test-results-simulink-test: test-results/matlab/simulinkTest.mldatx
+
       - run:
           name: Verify test results file was created
           command: |
@@ -144,6 +181,23 @@ jobs:
             grep -q TaggedTest test-results/matlab/filterdtagresult.xml
             grep -v FirstTest test-results/matlab/filterdtagresult.xml
             grep -v simpleTest test-results/matlab/filterdtagresult.xml
+
+      - run:
+          name: Verify pdf test report file generation
+          command: |
+            set -e
+            test -f test-results/matlab/pdfresults.pdf
+      - run:
+          name: Verify Simulink Test result file generation
+          command: |
+            set -e
+            test -f test-results/matlab/simulinkTest.mldatx
+      - run:
+          name: Verify model coverage file was created
+          command: |
+            set -e
+            grep -q simple_model model-coverage/coverage.xml
+
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
