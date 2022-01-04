@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@9.1
+  win: circleci/windows@2.2.0
 
 # Pipeline parameters
 parameters:
@@ -24,9 +25,14 @@ integration-tests: &integration-tests
   ]
 
 executors:
-  linux-machine:
+  linux:
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-2004:202111-02
+  macos:
+    macos:
+      xcode: 13.2.1
+  windows:
+    win/default
 
 jobs:
   integration-test-install:
@@ -243,22 +249,22 @@ workflows:
       - integration-test-install:
           matrix:
             parameters:
-              executor: [linux-machine]
+              executor: [linux, macos, windows]
 
       - integration-test-install-release:
           matrix:
             parameters:
-              executor: [linux-machine]
+              executor: [linux, macos, windows]
 
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux-machine]
+              executor: [linux, macos, windows]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux-machine]
+              executor: [linux, macos, windows]
 
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
