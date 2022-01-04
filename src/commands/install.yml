@@ -14,6 +14,16 @@ steps:
   - run:
       name: Install MATLAB
       command: |
+        downloadAndRun() {
+          url=$1
+          shift
+          if [ -x "$(command -v sudo)" ]; then
+            curl -sfL $url | sudo -E bash -s -- "$@"
+          else
+            curl -sfL $url | bash -s -- "$@"
+          fi
+        }
+
         # installer does not support the Docker executor type
         if awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
           echo 'The Docker executor type is not supported.'
@@ -21,7 +31,9 @@ steps:
         fi
 
         # install core system dependencies
-        wget -qO- --retry-connrefused https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh | sudo -E bash -s -- <<parameters.release>>
+        if [ "$(uname)" = "Linux" ]; then
+          downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh <<parameters.release>>
+        fi
 
         # install ephemeral version of MATLAB
-        wget -qO- --retry-connrefused https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh | sudo -E bash -s -- --release <<parameters.release>>
+        downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release <<parameters.release>>
