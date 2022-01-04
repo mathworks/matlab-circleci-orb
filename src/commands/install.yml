@@ -37,3 +37,7 @@ steps:
 
         # install ephemeral version of MATLAB
         downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release <<parameters.release>>
+
+        # add MATLAB to path
+        tmpdir=$(dirname $(mktemp -u))
+        echo $(cat "$tmpdir/ephemeral_matlab_root")/bin >> $BASH_ENV
