@@ -32,8 +32,7 @@ executors:
     macos:
       xcode: 13.2.1
   windows:
-    name: win/default
-    shell: bash.exe
+    win/default
 
 jobs:
   integration-test-install:
@@ -49,6 +48,7 @@ jobs:
             set -e
             matlab -batch version
             mex -h
+          shell: bash
 
   integration-test-install-release:
     parameters:
@@ -63,6 +63,7 @@ jobs:
           command: |
             set -e
             matlab -batch "assert(strcmp(version('-release'),'2020a'))"
+          shell: bash
 
   integration-test-run-command:
     parameters:
@@ -89,6 +90,7 @@ jobs:
             [~, exp] = system("echo " + getenv('CIRCLE_WORKING_DIRECTORY')); exp = strtrim(exp); act = pwd; assert(strcmp(act, exp), strjoin({act exp}, '\n'));
       - run:
           command: echo 'myvar = 123' > startup.m
+          shell: bash
       - matlab/run-command:
           command: assert(myvar==123, 'myvar was not set as expected by startup.m')
 
@@ -142,6 +144,7 @@ jobs:
             end
             disp('Created Model and Simulink Test file to simulate the model.');
             _EOF
+          shell: bash
 
     # Integ tests for matlab/run-tests
       - matlab/run-tests:
@@ -170,17 +173,20 @@ jobs:
           command: |
             set -e
             grep -q FirstTest test-results/matlab/results.xml
+          shell: bash
       - run:
           name: Verify code coverage file was created
           command: |
             set -e
             grep -q add code-coverage/coverage.xml
+          shell: bash
       - run:
           name: Verify filtered test results file was created
           command: |
             set -e
             grep -q simpleTest test-results/matlab/filterdtestresult.xml
             grep -v FirstTest test-results/matlab/filterdtestresult.xml
+          shell: bash
       - run:
           name: Verify filter by tag test results file was created
           command: |
@@ -188,22 +194,26 @@ jobs:
             grep -q TaggedTest test-results/matlab/filterdtagresult.xml
             grep -v FirstTest test-results/matlab/filterdtagresult.xml
             grep -v simpleTest test-results/matlab/filterdtagresult.xml
+          shell: bash
 
       - run:
           name: Verify pdf test report file generation
           command: |
             set -e
             test -f test-results/matlab/pdfresults.pdf
+          shell: bash
       - run:
           name: Verify Simulink Test result file generation
           command: |
             set -e
             test -f test-results/matlab/simulinkTest.mldatx
+          shell: bash
       - run:
           name: Verify model coverage file was created
           command: |
             set -e
             grep -q simple_model model-coverage/coverage.xml
+          shell: bash
 
 
 workflows:
