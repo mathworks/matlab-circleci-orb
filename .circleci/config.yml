@@ -57,12 +57,12 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - matlab/install:
-          release: R2020a
+          release: R2021a
       - run:
           name: Verify the matlab and mex scripts are available
           command: |
             set -e
-            matlab -batch "assert(strcmp(version('-release'),'2020a'))"
+            matlab -batch "assert(strcmp(version('-release'),'2021a'))"
           shell: bash
 
   integration-test-run-command:
