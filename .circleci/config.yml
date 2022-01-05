@@ -32,7 +32,8 @@ executors:
     macos:
       xcode: 13.2.1
   windows:
-    win/default
+    name: win/default
+    shell: bash.exe
 
 jobs:
   integration-test-install:

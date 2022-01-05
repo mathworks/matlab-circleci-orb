@@ -82,3 +82,4 @@ steps:
           disp(testScript.Contents);\
           fprintf('__________\n\n');\
           run(testScript);"
+      shell: bash

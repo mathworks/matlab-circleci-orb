@@ -42,3 +42,4 @@ steps:
         tmpdir=$(dirname $(mktemp -u))
         bindir=$(cat "$tmpdir/ephemeral_matlab_root")/bin
         echo "export PATH=$bindir:$PATH" >> $BASH_ENV
+      shell: bash
