@@ -40,4 +40,5 @@ steps:
 
         # add MATLAB to path
         tmpdir=$(dirname $(mktemp -u))
-        echo $(cat "$tmpdir/ephemeral_matlab_root")/bin >> $BASH_ENV
+        bindir=$(cat "$tmpdir/ephemeral_matlab_root")/bin
+        echo "export PATH=$bindir:$PATH" >> $BASH_ENV
