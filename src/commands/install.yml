@@ -23,17 +23,15 @@ steps:
             curl -sfL $url | bash -s -- "$@"
           fi
         }
-
-        os=$(uname)
-
+        
         # installer does not support the Docker executor type on Linux
-        if [[ $os = Linux ]] && awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
+        if [[ $(uname) = Linux ]] && awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
           echo 'The Docker executor type is not supported.'
           exit 1
         fi
 
         # install core system dependencies
-        if [[ $os = Linux ]]; then
+        if [[ $(uname) = Linux ]]; then
           downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh <<parameters.release>>
         fi
 
@@ -42,6 +40,9 @@ steps:
 
         # add MATLAB to path
         tmpdir=$(dirname $(mktemp -u))
-        bindir=$(cat "$tmpdir/ephemeral_matlab_root")/bin
-        echo 'export PATH='$bindir':$PATH' >> $BASH_ENV
+        rootdir=$(cat "$tmpdir/ephemeral_matlab_root")
+        if [[ -x $(command -v cygpath) ]]; then
+          rootdir=$(cygpath "$rootdir")
+        fi
+        echo 'export PATH='$rootdir'/bin:$PATH' >> $BASH_ENV
       shell: bash
