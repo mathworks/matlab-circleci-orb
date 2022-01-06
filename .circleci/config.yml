@@ -95,7 +95,7 @@ jobs:
             dir=$CIRCLE_WORKING_DIRECTORY
             os=$(uname)
             if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-              dir=$(cygpath -w "$dir")
+              dir=$(cygpath -w "${dir/#\~/$HOME}")
             fi
             echo 'export WORK_DIR="'$dir'"' >> $BASH_ENV
           shell: bash
