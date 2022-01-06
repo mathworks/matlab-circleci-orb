@@ -90,15 +90,18 @@ jobs:
       - matlab/run-command:
           command: |
             a = " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"; b = char([32:126]); assert(strcmp(a, b), a+b);
-      - matlab/run-command:
+      - run:
           command: |
             dir=$CIRCLE_WORKING_DIRECTORY
             os=$(uname)
             if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
               dir=$(cygpath -w "$dir")
             fi
-            export WORKING_DIR=$dir
-            [~, exp] = system("echo " + getenv('WORKING_DIR')); exp = strtrim(exp); act = pwd; assert(strcmp(act, exp), strjoin({act exp}, '\n'));
+            echo 'export WORK_DIR="'$dir'"' >> $BASH_ENV
+          shell: bash
+      - matlab/run-command:
+          command: |
+            [~, exp] = system("echo " + getenv('WORK_DIR')); exp = strtrim(exp); act = pwd; assert(strcmp(act, exp), strjoin({act exp}, '\n'));
       - run:
           command: echo 'myvar = 123' > startup.m
           shell: bash
