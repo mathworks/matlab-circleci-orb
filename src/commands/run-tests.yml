@@ -56,10 +56,6 @@ steps:
   - run:
       name: Run MATLAB tests
       command: |
-        posix2win() {
-          echo "$1" | sed 's/^\///' | sed 's/\//\\/g' | sed 's/^./\0:/'
-        }
-
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
 
         # download run command shell scripts
@@ -74,7 +70,7 @@ steps:
         os=$(uname)
         gendir=$tmpdir
         if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-          gendir=$(posix2win "$gendir")
+          gendir=$(cygpath -w "$gendir")
         fi
 
         # generate and run MATLAB test script

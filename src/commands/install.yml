@@ -24,10 +24,6 @@ steps:
           fi
         }
 
-        win2posix() {
-          echo "/$1" | sed -e 's/\\/\//g' -e 's/://'
-        }
-
         os=$(uname)
 
         # installer does not support the Docker executor type on Linux
@@ -48,7 +44,7 @@ steps:
         tmpdir=$(dirname $(mktemp -u))
         rootdir=$(cat "$tmpdir/ephemeral_matlab_root")
         if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-          rootdir=$(win2posix "$rootdir")
+          rootdir=$(cygpath "$rootdir")
         fi
         echo 'export PATH="'$rootdir'/bin:$PATH"' >> $BASH_ENV
       shell: bash

@@ -17,10 +17,6 @@ steps:
   - run:
       name: Run MATLAB command
       command: |
-        posix2win() {
-          echo "$1" | sed 's/^\///' | sed 's/\//\\/g' | sed 's/^./\0:/'
-        }
-
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
 
         # download run command shell scripts
@@ -32,8 +28,8 @@ steps:
         workdir=$(pwd)
         scriptdir=$tmpdir
         if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-          workdir=$(posix2win "$workdir")
-          scriptdir=$(posix2win "$scriptdir")
+          workdir=$(cygpath -w "$workdir")
+          scriptdir=$(cygpath -w "$scriptdir")
         fi
 
         # create script to execute
