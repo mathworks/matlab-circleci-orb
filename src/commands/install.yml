@@ -44,5 +44,5 @@ steps:
         if [[ -x $(command -v cygpath) ]]; then
           rootdir=$(cygpath "$rootdir")
         fi
-        echo 'export PATH='$rootdir'/bin:$PATH' >> $BASH_ENV
+        echo 'export PATH="'$rootdir'/bin:$PATH"' >> $BASH_ENV
       shell: bash
