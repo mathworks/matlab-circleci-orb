@@ -26,7 +26,7 @@ steps:
 
         os=$(uname)
 
-        # installer does not support the Docker executor type
+        # installer does not support the Docker executor type on Linux
         if [[ $os = Linux ]] && awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
           echo 'The Docker executor type is not supported.'
           exit 1
@@ -43,5 +43,5 @@ steps:
         # add MATLAB to path
         tmpdir=$(dirname $(mktemp -u))
         bindir=$(cat "$tmpdir/ephemeral_matlab_root")/bin
-        echo "export PATH=$bindir:$PATH" >> $BASH_ENV
+        echo 'export PATH='$bindir':$PATH' >> $BASH_ENV
       shell: bash
