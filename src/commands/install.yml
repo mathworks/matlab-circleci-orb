@@ -23,7 +23,7 @@ steps:
             curl -sfL $url | bash -s -- "$@"
           fi
         }
-        
+
         # installer does not support the Docker executor type on Linux
         if [[ $(uname) = Linux ]] && awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
           echo 'The Docker executor type is not supported.'
