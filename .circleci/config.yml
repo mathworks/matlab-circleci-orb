@@ -280,22 +280,22 @@ workflows:
       - integration-test-install:
           matrix:
             parameters:
-              executor: [linux, macos, windows]
+              executor: [linux, windows]
 
       - integration-test-install-release:
           matrix:
             parameters:
-              executor: [linux, macos, windows]
+              executor: [linux, windows]
 
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux, macos, windows]
+              executor: [linux, windows]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, macos, windows]
+              executor: [linux, windows]
 
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
