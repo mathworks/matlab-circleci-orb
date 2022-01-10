@@ -59,16 +59,23 @@ steps:
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
 
         # download run command shell scripts
-        wget -qO "${tmpdir}/bin.zip" https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v0/run-matlab-command.zip
+        curl -sfLo "${tmpdir}/bin.zip" https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v0/run-matlab-command.zip
         unzip -qod "${tmpdir}/bin" "${tmpdir}/bin.zip"
 
         # download script generator
-        wget -qO "${tmpdir}/scriptgen.zip" https://ssd.mathworks.com/supportfiles/ci/matlab-script-generator/v0/matlab-script-generator.zip
+        curl -sfLo "${tmpdir}/scriptgen.zip" https://ssd.mathworks.com/supportfiles/ci/matlab-script-generator/v0/matlab-script-generator.zip
         unzip -qod "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
+
+        # form OS appropriate paths for MATLAB
+        os=$(uname)
+        gendir=$tmpdir
+        if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+          gendir=$(cygpath -w "$gendir")
+        fi
 
         # generate and run MATLAB test script
         "${tmpdir}/bin/run_matlab_command.sh" "\
-          addpath('${tmpdir}/scriptgen');\
+          addpath('${gendir}/scriptgen');\
           testScript = genscript('Test',\
             'JUnitTestResults','<<parameters.test-results-junit>>',\
             'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
@@ -82,3 +89,4 @@ steps:
           disp(testScript.Contents);\
           fprintf('__________\n\n');\
           run(testScript);"
+      shell: bash
