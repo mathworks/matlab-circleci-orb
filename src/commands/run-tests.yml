@@ -59,7 +59,7 @@ steps:
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
 
         # download run command shell scripts
-        curl -sfLo "${tmpdir}/bin.zip" https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v0/run-matlab-command.zip
+        curl -sfLo "${tmpdir}/bin.zip" https://static-dev.mathworks-ci.com/run-matlab-command/private-repo-pilot/run-matlab-command.zip
         unzip -qod "${tmpdir}/bin" "${tmpdir}/bin.zip"
 
         # download script generator

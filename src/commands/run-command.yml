@@ -20,7 +20,7 @@ steps:
         tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
 
         # download run command shell scripts
-        curl -sfLo "${tmpdir}/run-matlab-command.zip" https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v0/run-matlab-command.zip
+        curl -sfLo "${tmpdir}/run-matlab-command.zip" https://static-dev.mathworks-ci.com/run-matlab-command/private-repo-pilot/run-matlab-command.zip
         unzip -qod "${tmpdir}/bin" "${tmpdir}/run-matlab-command.zip"
 
         # form OS appropriate paths for MATLAB
