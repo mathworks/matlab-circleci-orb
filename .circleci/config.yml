@@ -14,7 +14,7 @@ parameters:
     default: false
   dev-orb-version:
     type: string
-    default: "dev:alpha"
+    default: "dev:private-repo-pilot"
 
 integration-tests: &integration-tests
   [
