@@ -256,6 +256,7 @@ workflows:
       # if using Contexts, add your context below
       - orb-tools/publish-dev:
           orb-name: mathworks/matlab
+          alpha-version-ref: dev:private-repo-pilot
           requires:
             - orb-tools/lint
             - orb-tools/pack
