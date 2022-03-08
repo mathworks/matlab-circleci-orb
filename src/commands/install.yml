@@ -38,7 +38,10 @@ steps:
         fi
 
         # install ephemeral version of MATLAB
-        downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release <<parameters.release>>
+        downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --skip-activation --release <<parameters.release>>
+
+        # install batch token licensing software
+        downloadAndRun https://static-dev.mathworks-ci.com/matlab-batch/v0/install.sh
 
         # add MATLAB to path
         tmpdir=$(dirname $(mktemp -u))
