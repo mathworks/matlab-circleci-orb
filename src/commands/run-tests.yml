@@ -14,6 +14,11 @@ parameters:
       Path to write code coverage report in Cobertura XML format.
     type: string
     default: ''
+  code-coverage-html:
+    description: >
+      Path to write code coverage report in HTML format.
+    type: string
+    default: ''
   source-folder:
     description: >
       Location of the folder containing source code, relative to the project root folder. The
@@ -41,9 +46,19 @@ parameters:
       Path to write model coverage report in Cobertura XML format.
     type: string
     default: ''
+  model-coverage-html:
+    description: >
+      Path to write model coverage report in HTML format.
+    type: string
+    default: ''
   test-results-simulink-test:
     description: >
       Path to export Simulink Test Manager results in MLDATX format.
+    type: string
+    default: ''
+  test-results-html:
+    description: >
+      Path to write test results report in HTML format.
     type: string
     default: ''
   test-results-pdf:
@@ -79,11 +94,13 @@ steps:
           testScript = genscript('Test',\
             'JUnitTestResults','<<parameters.test-results-junit>>',\
             'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
+            'HTMLCodeCoverage','<<parameters.code-coverage-html>>',\
             'SourceFolder','<<parameters.source-folder>>',\
             'SelectByFolder','<<parameters.select-by-folder>>',\
             'SelectByTag','<<parameters.select-by-tag>>',\
             'CoberturaModelCoverage','<<parameters.model-coverage-cobertura>>',\
             'SimulinkTestResults','<<parameters.test-results-simulink-test>>',\
+            'HTMLTestReport','<<parameters.test-results-html>>',\
             'PDFTestReport','<<parameters.test-results-pdf>>');\
           disp('Running MATLAB script with contents:');\
           disp(testScript.Contents);\

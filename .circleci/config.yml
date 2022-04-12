@@ -142,6 +142,10 @@ jobs:
           code-coverage-cobertura: code-coverage/coverage.xml
           source-folder: src
       - matlab/run-tests:
+          test-results-html: test-results/matlab/html
+          code-coverage-html: code-coverage/html
+          source-folder: src
+      - matlab/run-tests:
           test-results-junit: test-results/matlab/filterdtestresult.xml
           select-by-folder: tests/filteredTest
       - matlab/run-tests:
@@ -155,10 +159,22 @@ jobs:
             grep -q FirstTest test-results/matlab/results.xml
           shell: bash
       - run:
+          name: Verify HTML test results report was created
+          command: |
+            set -e
+            grep -q FirstTest test-results/matlab/html/index.html
+          shell: bash
+      - run:
           name: Verify code coverage file was created
           command: |
             set -e
             grep -q add code-coverage/coverage.xml
+          shell: bash
+      - run:
+          name: Verify HTML code coverage report was created
+          command: |
+            set -e
+            grep -q CoverageSummary code-coverage/html/index.html
           shell: bash
       - run:
           name: Verify filtered test results file was created
