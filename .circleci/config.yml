@@ -1,331 +1,35 @@
 version: 2.1
-
+setup: true
 orbs:
-  matlab: mathworks/matlab@<<pipeline.parameters.dev-orb-version>>
-  orb-tools: circleci/orb-tools@9.1
-  win: circleci/windows@2.2.0
+  orb-tools: circleci/orb-tools@11.1
+  shellcheck: circleci/shellcheck@3.1
 
-# Pipeline parameters
-parameters:
-  # These pipeline parameters are required by the "trigger-integration-tests-workflow"
-  # job, by default.
-  run-integration-tests:
-    type: boolean
-    default: false
-  dev-orb-version:
-    type: string
-    default: "dev:alpha"
-
-integration-tests: &integration-tests
-  [
-    integration-test-install,
-    integration-test-install-release,
-    integration-test-run-command,
-    integration-test-run-tests
-  ]
-
-executors:
-  linux: &linux-executor
-    machine:
-      image: ubuntu-2004:202111-02
-  macos:
-    macos:
-      xcode: 13.2.1
-  windows:
-    win/default
-
-jobs:
-  integration-test-install:
-    parameters:
-      executor:
-        type: executor
-    executor: <<parameters.executor>>
-    steps:
-      - matlab/install
-      - run:
-          name: Verify the matlab and mex scripts are available
-          command: |
-            set -e
-            matlab -batch version
-            os=$(uname)
-            if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-              mex.bat -h
-            else
-              mex -h
-            fi
-          shell: bash
-
-  integration-test-install-release:
-    parameters:
-      executor:
-        type: executor
-    executor: <<parameters.executor>>
-    steps:
-      - matlab/install:
-          release: R2021a
-      - run:
-          name: Verify the matlab and mex scripts are available
-          command: |
-            set -e
-            matlab -batch "assert(strcmp(version('-release'),'2021a'))"
-          shell: bash
-
-  integration-test-run-command:
-    parameters:
-      executor:
-        type: executor
-    executor: <<parameters.executor>>
-    steps:
-      - matlab/install
-      - matlab/run-command:
-          command: f = fopen('myscript.m', 'w'); fwrite(f, 'assert(true)'); fclose(f);
-      - matlab/run-command:
-          command: myscript
-      - matlab/run-command:
-          command: "eval(\"a = 1+2\"); assert(a == 3); eval('b = 3+4'); assert(b == 7);"
-      - matlab/run-command:
-          command: 'eval("a = 1+2"); assert(a == 3); eval(''b = 3+4''); assert(b == 7);'
-      - matlab/run-command:
-          command: a = """hello world"""; b = '"hello world"'; assert(strcmp(a,b), a+b);
-      - matlab/run-command:
-          command: |
-            a = " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"; b = char([32:126]); assert(strcmp(a, b), a+b);
-      - run:
-          command: |
-            dir=$CIRCLE_WORKING_DIRECTORY
-            os=$(uname)
-            if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-              dir=$(cygpath -w "${dir/#\~/$HOME}")
-            fi
-            echo 'export WORK_DIR="'$dir'"' >> $BASH_ENV
-          shell: bash
-      - matlab/run-command:
-          command: |
-            [~, exp] = system("echo " + getenv('WORK_DIR')); exp = strtrim(exp); act = pwd; assert(strcmp(act, exp), strjoin({act exp}, '\n'));
-      - run:
-          command: echo 'myvar = 123' > startup.m
-          shell: bash
-      - matlab/run-command:
-          command: assert(myvar==123, 'myvar was not set as expected by startup.m')
-
-  integration-test-run-tests:
-    parameters:
-      executor:
-        type: executor
-    executor: <<parameters.executor>>
-    steps:
-    # Setup for Integ tests for matlab/run-tests
-      - matlab/install
-      - run:
-          command: |
-            echo 'myvar = 123' > startup.m
-            mkdir src
-            echo 'function c=add(a,b);c=a+b;' > src/add.m
-            mkdir tests
-            echo "%% StartupTest" > tests/mytest.m
-            echo "evalin('base','assert(myvar==123)')" >> tests/mytest.m
-            echo "%% FirstTest" >> tests/mytest.m
-            echo "assert(add(1,2)==3)" >> tests/mytest.m
-            mkdir tests/filteredTest
-            echo "%% simpleTest" >> tests/filteredTest/filtertest.m
-            echo "assert(2==2)" >> tests/filteredTest/filtertest.m
-            printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
-            printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
-            printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
-          shell: bash
-
-    # Integ tests for matlab/run-tests
-      - matlab/run-tests:
-          source-folder: src
-      - matlab/run-tests:
-          test-results-junit: test-results/matlab/results.xml
-          code-coverage-cobertura: code-coverage/coverage.xml
-          source-folder: src
-      - matlab/run-tests:
-          test-results-html: test-results/matlab/html
-          code-coverage-html: code-coverage/html
-          source-folder: src
-      - matlab/run-tests:
-          test-results-junit: test-results/matlab/filterdtestresult.xml
-          select-by-folder: tests/filteredTest
-      - matlab/run-tests:
-          test-results-junit: test-results/matlab/filterdtagresult.xml
-          select-by-tag: FILTERED
-
-      - run:
-          name: Verify test results file was created
-          command: |
-            set -e
-            grep -q FirstTest test-results/matlab/results.xml
-          shell: bash
-      - run:
-          name: Verify HTML test results report was created
-          command: |
-            set -e
-            grep -q FirstTest test-results/matlab/html/index.html
-          shell: bash
-      - run:
-          name: Verify code coverage file was created
-          command: |
-            set -e
-            grep -q add code-coverage/coverage.xml
-          shell: bash
-      - run:
-          name: Verify HTML code coverage report was created
-          command: |
-            set -e
-            grep -q CoverageSummary code-coverage/html/index.html
-          shell: bash
-      - run:
-          name: Verify filtered test results file was created
-          command: |
-            set -e
-            grep -q simpleTest test-results/matlab/filterdtestresult.xml
-            grep -v FirstTest test-results/matlab/filterdtestresult.xml
-          shell: bash
-      - run:
-          name: Verify filter by tag test results file was created
-          command: |
-            set -e
-            grep -q TaggedTest test-results/matlab/filterdtagresult.xml
-            grep -v FirstTest test-results/matlab/filterdtagresult.xml
-            grep -v simpleTest test-results/matlab/filterdtagresult.xml
-          shell: bash
-
-    # Set up for model coverage artifact tests
-      - when:
-          condition:
-            equal: [*linux-executor, <<parameters.executor>>]
-          steps:
-            - run:
-                command: |
-                  mkdir simtests
-                  cat \<<'_EOF' >> "simtests/createModelAndTest.m"
-                  model = 'simple_model';
-                  evalin('base','bdclose all');
-                  if exist('simple_model.slx', 'file') == 0
-                      new_system(model);
-                      load_system(model);
-                      add_block('built-in/Constant', [model, '/Constant']);
-                      save_system(model);
-                      close_system(model);
-                      sltest.testmanager.clear;
-                      sltest.testmanager.clearResults;
-                      tf = sltest.testmanager.TestFile('test.mldatx');
-                      cs = tf.getCoverageSettings;
-                      cs.RecordCoverage = true;
-                      cs.MdlRefCoverage = true;
-                      cs.MetricSettings = 'd';
-                      ts = tf.getTestSuites;
-                      tc = ts.getTestCases;
-                      tc.setProperty('model', model);
-                      tf.saveToFile;
-                      tf.close;
-                      sltest.testmanager.close;
-                  end
-                  disp('Created Model and Simulink Test file to simulate the model.');
-                  _EOF
-                shell: bash
-            - matlab/run-command:
-                command: cd simtests;createModelAndTest;
-            - matlab/run-tests:
-                select-by-folder: simtests
-                model-coverage-cobertura: model-coverage/coverage.xml
-                test-results-pdf: test-results/matlab/pdfresults.pdf
-                test-results-simulink-test: test-results/matlab/simulinkTest.mldatx
-            - run:
-                name: Verify pdf test report file generation
-                command: |
-                  set -e
-                  test -f test-results/matlab/pdfresults.pdf
-                shell: bash
-            - run:
-                name: Verify Simulink Test result file generation
-                command: |
-                  set -e
-                  test -f test-results/matlab/simulinkTest.mldatx
-                shell: bash
-            - run:
-                name: Verify model coverage file was created
-                command: |
-                  set -e
-                  grep -q simple_model model-coverage/coverage.xml
-                shell: bash
+filters: &filters
+  tags:
+    only: /.*/
 
 workflows:
-  # This `lint-pack_validate_publish-dev` workflow will run on any commit.
-  lint_pack-validate_publish-dev:
-    unless: << pipeline.parameters.run-integration-tests >>
+  lint-pack:
     jobs:
-      # Lint your YAML
-      - orb-tools/lint
-
-      # pack your orb YAML files to a single orb.yml
-      # validate the orb.yml file to ensure it is well-formed
-      - orb-tools/pack
-
-      # release dev version of orb, for testing & possible publishing.
-      # orb will be published as dev:alpha and dev:${CIRCLE_SHA1:0:7}.
-      # requires a CircleCI API token to be stored as CIRCLE_TOKEN (default)
-      # https://circleci.com/docs/2.0/managing-api-tokens
-      # store CIRCLE_TOKEN as a project env var or Contexts resource
-      # if using Contexts, add your context below
-      - orb-tools/publish-dev:
+      # Lint, pack, and review your orb
+      - orb-tools/lint:
+          filters: *filters
+      - orb-tools/pack:
+          filters: *filters
+      - orb-tools/review:
+          filters: *filters
+      - shellcheck/check:
+          exclude: SC2148,SC2038,SC2086,SC2002,SC2016
+          filters: *filters
+      - orb-tools/publish:
           orb-name: mathworks/matlab
+          vcs-type: << pipeline.project.type >>
           requires:
-            - orb-tools/lint
-            - orb-tools/pack
-
-      # trigger an integration workflow to test the
-      # dev:${CIRCLE_SHA1:0:7} version of your orb
-      - orb-tools/trigger-integration-tests-workflow:
-          name: trigger-integration-dev
-          requires:
-            - orb-tools/publish-dev
-
-  # This `integration-tests_prod-release` workflow will only run
-  # when the run-integration-tests pipeline parameter is set to true.
-  # It is meant to be triggered by the "trigger-integration-tests-workflow"
-  # job, and run tests on <your orb>@dev:${CIRCLE_SHA1:0:7}.
-  integration-tests_prod-release:
-    when: << pipeline.parameters.run-integration-tests >>
-    jobs:
-      # your integration test jobs go here: essentially, run all your orb's
-      # jobs and commands to ensure they behave as expected. or, run other
-      # integration tests of your choosing
-      - integration-test-install:
-          matrix:
-            parameters:
-              executor: [linux, windows]
-
-      - integration-test-install-release:
-          matrix:
-            parameters:
-              executor: [linux, windows]
-
-      - integration-test-run-command:
-          matrix:
-            parameters:
-              executor: [linux, windows]
-
-      - integration-test-run-tests:
-          matrix:
-            parameters:
-              executor: [linux, windows]
-
-      # publish a semver version of the orb. relies on
-      # the commit subject containing the text "[semver:patch|minor|major|skip]"
-      # as that will determine whether a patch, minor or major
-      # version will be published or if publishing should
-      # be skipped.
-      # e.g. [semver:patch] will cause a patch version to be published.
-      - orb-tools/dev-promote-prod-from-commit-subject:
-          orb-name: mathworks/matlab
-          add-pr-comment: false
-          fail-if-semver-not-indicated: true
-          publish-version-tag: true
-          ssh-fingerprints: e0:48:de:54:c4:e8:fb:15:1c:1c:a5:89:95:e5:23:69
-          requires: *integration-tests
-          filters:
-            branches:
-              only: master
+            [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
+          filters: *filters
+      # Triggers the next workflow in the Orb Development Kit.
+      - orb-tools/continue:
+          pipeline-number: << pipeline.number >>
+          vcs-type: << pipeline.project.type >>
+          requires: [orb-tools/publish]
+          filters: *filters
