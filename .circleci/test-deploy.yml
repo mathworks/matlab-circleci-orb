@@ -274,7 +274,7 @@ workflows:
           filters: *filters
 
       - orb-tools/publish:
-          orb-name: <namespace>/<orb-name>
+          orb-name: mathworks/matlab
           vcs-type: << pipeline.project.type >>
           pub-type: production
           requires:
