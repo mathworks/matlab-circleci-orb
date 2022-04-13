@@ -20,7 +20,7 @@ integration-tests: &integration-tests
 executors:
   linux: &linux-executor
     machine:
-      image: ubuntu-2004:202111-02
+      image: ubuntu-2204:edge
   macos:
     macos:
       xcode: 13.2.1
@@ -113,7 +113,7 @@ jobs:
       - matlab/install
       - run:
           command: |
-            echo 'open_system(new_system('abcdef123456')); bdclose('abcdef123456'); myvar = 123' > startup.m
+            echo 'myvar = 123' > startup.m
             mkdir src
             echo 'function c=add(a,b);c=a+b;' > src/add.m
             mkdir tests
