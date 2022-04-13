@@ -14,6 +14,11 @@ parameters:
       Path to write code coverage report in Cobertura XML format.
     type: string
     default: ''
+  code-coverage-html:
+    description: >
+      Path to write code coverage report in HTML format.
+    type: string
+    default: ''
   source-folder:
     description: >
       Location of the folder containing source code, relative to the project root folder. The
@@ -46,6 +51,11 @@ parameters:
       Path to export Simulink Test Manager results in MLDATX format.
     type: string
     default: ''
+  test-results-html:
+    description: >
+      Path to write test results report in HTML format.
+    type: string
+    default: ''
   test-results-pdf:
     description: >
       Path to write test results report in PDF format.
@@ -55,38 +65,16 @@ parameters:
 steps:
   - run:
       name: Run MATLAB tests
-      command: |
-        tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
-
-        # download run command shell scripts
-        curl -sfLo "${tmpdir}/bin.zip" https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v0/run-matlab-command.zip
-        unzip -qod "${tmpdir}/bin" "${tmpdir}/bin.zip"
-
-        # download script generator
-        curl -sfLo "${tmpdir}/scriptgen.zip" https://ssd.mathworks.com/supportfiles/ci/matlab-script-generator/v0/matlab-script-generator.zip
-        unzip -qod "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
-
-        # form OS appropriate paths for MATLAB
-        os=$(uname)
-        gendir=$tmpdir
-        if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-          gendir=$(cygpath -w "$gendir")
-        fi
-
-        # generate and run MATLAB test script
-        "${tmpdir}/bin/run_matlab_command.sh" "\
-          addpath('${gendir}/scriptgen');\
-          testScript = genscript('Test',\
-            'JUnitTestResults','<<parameters.test-results-junit>>',\
-            'CoberturaCodeCoverage','<<parameters.code-coverage-cobertura>>',\
-            'SourceFolder','<<parameters.source-folder>>',\
-            'SelectByFolder','<<parameters.select-by-folder>>',\
-            'SelectByTag','<<parameters.select-by-tag>>',\
-            'CoberturaModelCoverage','<<parameters.model-coverage-cobertura>>',\
-            'SimulinkTestResults','<<parameters.test-results-simulink-test>>',\
-            'PDFTestReport','<<parameters.test-results-pdf>>');\
-          disp('Running MATLAB script with contents:');\
-          disp(testScript.Contents);\
-          fprintf('__________\n\n');\
-          run(testScript);"
+      environment:
+        PARAM_TEST_RESULTS_JUNIT: <<parameters.test-results-junit>>
+        PARAM_CODE_COVERAGE_COBERTURA: <<parameters.code-coverage-cobertura>>
+        PARAM_CODE_COVERAGE_HTML: <<parameters.code-coverage-html>>
+        PARAM_SOURCE_FOLDER: <<parameters.source-folder>>
+        PARAM_SELECT_BY_FOLDER: <<parameters.select-by-folder>>
+        PARAM_SELECT_BY_TAG: <<parameters.select-by-tag>>
+        PARAM_MODEL_COVERAGE_COBERTURA: <<parameters.model-coverage-cobertura>>
+        PARAM_TEST_RESULTS_SIMULINK_TEST: <<parameters.test-results-simulink-test>>
+        PARAM_TEST_RESULTS_HTML: <<parameters.test-results-html>>
+        PARAM_TEST_RESULTS_PDF: <<parameters.test-results-pdf>>
+      command:  <<include(scripts/run-tests.sh)>>
       shell: bash
