@@ -279,7 +279,7 @@ workflows:
           pub-type: production
           requires:
             - orb-tools/pack
-            - *integration-tests
+            *integration-tests
           filters:
             branches:
               only: master
