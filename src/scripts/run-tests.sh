@@ -1,3 +1,4 @@
+#!/bin/bash
 tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
 
 # download run command shell scripts

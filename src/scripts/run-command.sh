@@ -1,3 +1,4 @@
+#!/bin/bash
 tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-command')
 
 # download run command shell scripts
@@ -17,9 +18,9 @@ fi
 script=command_${RANDOM}
 scriptpath=${tmpdir}/${script}.m
 echo "cd('${workdir//\'/\'\'}');" > "$scriptpath"
-cat \<<'_EOF' >> "$scriptpath"
+cat << EOF >> "$scriptpath"
 ${PARAM_COMMAND}
-_EOF
+EOF
 
 # run MATLAB command
 "${tmpdir}/bin/run_matlab_command.sh" "cd('${scriptdir//\'/\'\'}'); $script"

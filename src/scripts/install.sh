@@ -1,3 +1,4 @@
+#!/bin/bash
 downloadAndRun() {
     url=$1
     shift
@@ -11,7 +12,7 @@ downloadAndRun() {
 os=$(uname)
 
 # installer does not support the Docker executor type on Linux
-if [[ $os = Linux ]] && awk -F/ '$2 == "docker"' /proc/self/cgroup | read; then
+if [[ $os = Linux ]] && awk -F/ '$2 == "docker"' /proc/self/cgroup | read -r; then
     echo 'The Docker executor type is not supported.'
     exit 1
 fi
@@ -25,7 +26,7 @@ fi
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release ${PARAM_RELEASE}
 
 # add MATLAB to path
-tmpdir=$(dirname $(mktemp -u))
+tmpdir=$(dirname "$(mktemp -u)")
 rootdir=$(cat "$tmpdir/ephemeral_matlab_root")
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     rootdir=$(cygpath "$rootdir")
