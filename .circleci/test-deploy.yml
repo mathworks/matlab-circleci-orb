@@ -10,6 +10,7 @@ filters: &filters
 
 integration-tests: &integration-tests
   [
+    orb-tools/pack,
     integration-test-install,
     integration-test-install-release,
     integration-test-run-command,
@@ -277,9 +278,7 @@ workflows:
           orb-name: mathworks/matlab
           vcs-type: << pipeline.project.type >>
           pub-type: production
-          requires:
-            - orb-tools/pack
-            *integration-tests
+          requires: *integration-tests
           filters:
             branches:
               only: master
