@@ -1,4 +1,3 @@
-#!/bin/bash
 downloadAndRun() {
     url=$1
     shift

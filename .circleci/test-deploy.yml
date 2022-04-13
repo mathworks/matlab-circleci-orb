@@ -196,6 +196,7 @@ jobs:
                 command: |
                   mkdir simtests
                   cat \<<'_EOF' >> "simtests/createModelAndTest.m"
+                  open_system(new_system('abcdef123456')); bdclose('abcdef123456');
                   model = 'simple_model';
                   evalin('base','bdclose all');
                   if exist('simple_model.slx', 'file') == 0
