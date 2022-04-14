@@ -46,6 +46,11 @@ parameters:
       Path to write model coverage report in Cobertura XML format.
     type: string
     default: ''
+  model-coverage-html:
+    description: >
+      Path to write model coverage report in HTML format.
+    type: string
+    default: ''
   test-results-simulink-test:
     description: >
       Path to export Simulink Test Manager results in MLDATX format.
@@ -73,6 +78,7 @@ steps:
         PARAM_SELECT_BY_FOLDER: <<parameters.select-by-folder>>
         PARAM_SELECT_BY_TAG: <<parameters.select-by-tag>>
         PARAM_MODEL_COVERAGE_COBERTURA: <<parameters.model-coverage-cobertura>>
+        PARAM_MODEL_COVERAGE_HTML: <<parameters.model-coverage-html>>
         PARAM_TEST_RESULTS_SIMULINK_TEST: <<parameters.test-results-simulink-test>>
         PARAM_TEST_RESULTS_HTML: <<parameters.test-results-html>>
         PARAM_TEST_RESULTS_PDF: <<parameters.test-results-pdf>>

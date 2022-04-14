@@ -26,6 +26,7 @@ fi
     'SelectByFolder','${PARAM_SELECT_BY_FOLDER}',\
     'SelectByTag','$PARAM_SELECT_BY_TAG',\
     'CoberturaModelCoverage','${PARAM_MODEL_COVERAGE_COBERTURA}',\
+    'HTMLModelCoverage','${PARAM_MODEL_COVERAGE_HTML}',\
     'SimulinkTestResults','${PARAM_TEST_RESULTS_SIMULINK_TEST}',\
     'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}');\
