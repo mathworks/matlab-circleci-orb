@@ -4,7 +4,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    matlab: mathworks/matlab@x.y
+    matlab: mathworks/matlab@0
   jobs:
     build:
       machine:
@@ -16,3 +16,7 @@ usage:
             test-results-junit: test-results/matlab/results.xml
         - store_test_results:
             path: test-results
+  workflows:
+    build:
+      jobs:
+        - build
