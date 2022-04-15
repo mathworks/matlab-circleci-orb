@@ -4,7 +4,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    matlab: mathworks/matlab@x.y
+    matlab: mathworks/matlab@0
   jobs:
     build:
       machine:
@@ -14,3 +14,7 @@ usage:
         - matlab/install
         - matlab/run-command:
             command: myscript
+  workflows:
+    build:
+      jobs:
+        - build
