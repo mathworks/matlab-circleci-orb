@@ -66,6 +66,13 @@ parameters:
       Path to write test results report in PDF format.
     type: string
     default: ''
+  no-output-timeout:
+    description: >
+      Elapsed time the tests can run without output. The string is a decimal with unit suffix, 
+      such as “20m”, “1.25h”, “5s”. The default is 10 minutes and the maximum is governed by the 
+      maximum time a job is allowed to run.
+    type: string
+    default: 10m
 
 steps:
   - run:
@@ -84,3 +91,4 @@ steps:
         PARAM_TEST_RESULTS_PDF: <<parameters.test-results-pdf>>
       command:  <<include(scripts/run-tests.sh)>>
       shell: bash
+      no_output_timeout: <<parameters.no-output-timeout>>
