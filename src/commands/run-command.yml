@@ -12,6 +12,13 @@ parameters:
       script or function, do not specify the file extension. If you specify more than one MATLAB
       command, use a comma or semicolon to separate the commands.
     type: string
+  no-output-timeout:
+    description: >
+      Elapsed time the command can run without output. The string is a decimal with unit suffix,
+      such as “20m”, “1.25h”, “5s”. The default is 10 minutes and the maximum is governed by the
+      maximum time a job is allowed to run.
+    type: string
+    default: 10m
 
 steps:
   - run:
@@ -20,3 +27,4 @@ steps:
         PARAM_COMMAND: <<parameters.command>>
       command:  <<include(scripts/run-command.sh)>>
       shell: bash
+      no_output_timeout: <<parameters.no-output-timeout>>
