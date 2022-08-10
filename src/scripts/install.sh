@@ -22,12 +22,23 @@ if [[ $os = Linux ]]; then
 fi
 
 # install ephemeral version of MATLAB
-downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release ${PARAM_RELEASE}
+if ! [ -z "${MATHWORKS_ACCOUNT}" ] &&  ! [ -z "${MATHWORKS_TOKEN}" ]; then
+    ACTIVATION_FLAG="--skip-activation"
+fi
+ACTIVATION_FLAG="--skip-activation"
+downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release ${PARAM_RELEASE} $ACTIVATION_FLAG
 
-# add MATLAB to path
+# install matlab-batch
+if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+    BATCH_INSTALL_DIR='C:\Program Files\matlab-batch'
+else
+    BATCH_INSTALL_DIR='/opt/matlab-batch'
+fi
+
+downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v0/install.sh "$BATCH_INSTALL_DIR"
+
+# add MATLAB and matlab-batch to path
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir=$(cat "$tmpdir/ephemeral_matlab_root")
-if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-    rootdir=$(cygpath "$rootdir")
-fi
-echo 'export PATH="'$rootdir'/bin:$PATH"' >> $BASH_ENV
+
+echo 'export PATH="'$rootdir'/bin:'$BATCH_INSTALL_DIR':$PATH"' >> $BASH_ENV
