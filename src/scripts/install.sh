@@ -25,7 +25,7 @@ fi
 if [ -n "${MATHWORKS_ACCOUNT}" ] &&  [ -n "${MATHWORKS_TOKEN}" ]; then
     ACTIVATION_FLAG="--skip-activation"
 fi
-ACTIVATION_FLAG="--skip-activation"
+
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release ${PARAM_RELEASE} $ACTIVATION_FLAG
 
 # install matlab-batch
