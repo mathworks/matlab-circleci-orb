@@ -22,7 +22,7 @@ if [[ $os = Linux ]]; then
 fi
 
 # install ephemeral version of MATLAB
-if ! [ -z "${MATHWORKS_ACCOUNT}" ] &&  ! [ -z "${MATHWORKS_TOKEN}" ]; then
+if [ -n "${MATHWORKS_ACCOUNT}" ] &&  [ -n "${MATHWORKS_TOKEN}" ]; then
     ACTIVATION_FLAG="--skip-activation"
 fi
 ACTIVATION_FLAG="--skip-activation"
