@@ -33,7 +33,7 @@ script=command_${RANDOM}
 scriptpath=${tmpdir}/${script}.m
 echo "cd('${workdir//\'/\'\'}');" > "$scriptpath"
 cat << EOF >> "$scriptpath"
-"addpath('${gendir}/scriptgen');\
+addpath('${gendir}/scriptgen');\
 testScript = genscript('Test',\
 'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
 'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
@@ -49,7 +49,7 @@ testScript = genscript('Test',\
 disp('Running MATLAB script with contents:');\
 disp(testScript.Contents);\
 fprintf('__________\n\n');\
-run(testScript);"
+run(testScript);
 EOF
 
 "${tmpdir}/bin/run-matlab-command$binext" "cd('${gendir//\'/\'\'}');$script"
