@@ -24,7 +24,7 @@ workdir=$(pwd)
 binext=""
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
-    workdir=$(pwd)
+    workdir=$(cygpath -w "$workdir")
     binext=".exe"
 fi
 
