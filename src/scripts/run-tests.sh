@@ -28,28 +28,21 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
-# generate and run MATLAB test script
-script=command_${RANDOM}
-scriptpath=${tmpdir}/${script}.m
-echo "cd('${workdir//\'/\'\'}');" > "$scriptpath"
-cat << EOF >> "$scriptpath"
-addpath('${gendir}/scriptgen');\
-testScript = genscript('Test',\
-'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
-'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
-'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
-'SourceFolder','${PARAM_SOURCE_FOLDER}',\
-'SelectByFolder','${PARAM_SELECT_BY_FOLDER}',\
-'SelectByTag','$PARAM_SELECT_BY_TAG',\
-'CoberturaModelCoverage','${PARAM_MODEL_COVERAGE_COBERTURA}',\
-'HTMLModelCoverage','${PARAM_MODEL_COVERAGE_HTML}',\
-'SimulinkTestResults','${PARAM_TEST_RESULTS_SIMULINK_TEST}',\
-'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
-'PDFTestReport','${PARAM_TEST_RESULTS_PDF}');\
-disp('Running MATLAB script with contents:');\
-disp(testScript.Contents);\
-fprintf('__________\n\n');\
-run(testScript);
-EOF
-
-"${tmpdir}/bin/run-matlab-command$binext" "cd('${gendir//\'/\'\'}');$script"
+"${tmpdir}/bin/run-matlab-command$binext" "\
+    addpath('${gendir}/scriptgen');\
+    testScript = genscript('Test',\
+    'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
+    'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
+    'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
+    'SourceFolder','${PARAM_SOURCE_FOLDER}',\
+    'SelectByFolder','${PARAM_SELECT_BY_FOLDER}',\
+    'SelectByTag','$PARAM_SELECT_BY_TAG',\
+    'CoberturaModelCoverage','${PARAM_MODEL_COVERAGE_COBERTURA}',\
+    'HTMLModelCoverage','${PARAM_MODEL_COVERAGE_HTML}',\
+    'SimulinkTestResults','${PARAM_TEST_RESULTS_SIMULINK_TEST}',\
+    'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
+    'PDFTestReport','${PARAM_TEST_RESULTS_PDF}');\
+    disp('Running MATLAB script with contents:');\
+    disp(testScript.Contents);\
+    fprintf('__________\n\n');\
+    run(testScript);"
