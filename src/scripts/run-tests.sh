@@ -20,11 +20,9 @@ unzip -qod "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
 # form OS appropriate paths for MATLAB
 os=$(uname)
 gendir=$tmpdir
-workdir=$(pwd)
 binext=""
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
-    workdir=$(cygpath -w "$workdir")
     binext=".exe"
 fi
 
