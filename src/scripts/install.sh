@@ -33,7 +33,7 @@ rootdir=$(cat "$tmpdir/ephemeral_matlab_root")
 
 # install matlab-batch
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-    batchInstallDir='C:\Program Files\matlab-batch'
+    batchInstallDir='/c/Program Files/matlab-batch'
     rootdir=$(cygpath "$rootdir")
 else
     batchInstallDir='/opt/matlab-batch'
