@@ -28,9 +28,13 @@ fi
 
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release ${PARAM_RELEASE} $activationFlag
 
+tmpdir=$(dirname "$(mktemp -u)")
+rootdir=$(cat "$tmpdir/ephemeral_matlab_root")
+
 # install matlab-batch
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     batchInstallDir='C:\Program Files\matlab-batch'
+    rootdir=$(cygpath "$rootdir")
 else
     batchInstallDir='/opt/matlab-batch'
 fi
@@ -38,7 +42,4 @@ fi
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v0/install.sh "$batchInstallDir"
 
 # add MATLAB and matlab-batch to path
-tmpdir=$(dirname "$(mktemp -u)")
-rootdir=$(cat "$tmpdir/ephemeral_matlab_root")
-
 echo 'export PATH="'$rootdir'/bin:'$batchInstallDir':$PATH"' >> $BASH_ENV
