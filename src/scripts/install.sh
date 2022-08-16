@@ -18,7 +18,7 @@ fi
 
 # install core system dependencies
 if [[ $os = Linux ]]; then
-    downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh ${PARAM_RELEASE}
+    downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh "${PARAM_RELEASE}"
 fi
 
 # install ephemeral version of MATLAB
@@ -26,7 +26,7 @@ if [ -n "${MATHWORKS_ACCOUNT}" ] &&  [ -n "${MATHWORKS_TOKEN}" ]; then
     activationFlag="--skip-activation"
 fi
 
-downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release ${PARAM_RELEASE} $activationFlag
+downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release "${PARAM_RELEASE}" $activationFlag
 
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir=$(cat "$tmpdir/ephemeral_matlab_root")
