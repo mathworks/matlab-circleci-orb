@@ -2,9 +2,9 @@ downloadAndRun() {
     url=$1
     shift
     if [[ -x $(command -v sudo) ]]; then
-    curl -sfL $url | sudo -E bash -s -- "$@"
+    curl --retry 3 -sfL $url | sudo -E bash -s -- "$@"
     else
-    curl -sfL $url | bash -s -- "$@"
+    curl --retry 3 -sfL $url | bash -s -- "$@"
     fi
 }
 
