@@ -1,12 +1,12 @@
 description: >
   Execute the MATLAB Build Tool to execute a build. MATLAB exits with exit code 0 if all specified
-  tasks execute successfully without error. Otherwise, MATLAB terminates with a nonzero exit code, 
+  tasks execute successfully without error. Otherwise, MATLAB terminates with a nonzero exit code,
   which causes the build to fail.
 
 parameters:
   tasks:
     description: >
-      A space separated list of one or more tasks to execute from buildfile.m. If no tasks are 
+      A space separated list of one or more tasks to execute from buildfile.m. If no tasks are
       specified, buildtool with run a build with the default tasks.
     type: string
     default: ""
@@ -23,6 +23,6 @@ steps:
       name: Run MATLAB command
       environment:
         PARAM_TASKS: <<parameters.tasks>>
-      command:  <<include(scripts/run-build.sh)>>
+      command: <<include(scripts/run-build.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
