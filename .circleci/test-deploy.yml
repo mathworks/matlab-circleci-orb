@@ -312,7 +312,7 @@ jobs:
             rm buildlog.txt
           shell: bash
       # run build with default tasks
-      - matlab/run-build:
+      - matlab/run-build
       - run:
           name: Verify correct tasks appear in buildlog.txt
           command: |
