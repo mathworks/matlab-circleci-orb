@@ -25,7 +25,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 
 # create buildtool command from parameters
-buildCommand = "buildtool ${PARAM_TASKS}"
+buildCommand="buildtool ${PARAM_TASKS}"
 
 # create script to execute
 script=command_${RANDOM}
