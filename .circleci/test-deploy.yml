@@ -20,7 +20,7 @@ integration-tests: &integration-tests
 executors:
   linux: &linux-executor
     machine:
-      image: ubuntu-2204:edge
+      image: ubuntu-2204:2022.07.1
   macos:
     macos:
       xcode: 13.2.1
@@ -254,6 +254,76 @@ jobs:
                   grep -r "simple_model Coverage Report" --include="*.html" model-coverage/html
                 shell: bash
 
+  integration-test-run-build:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
+    steps:
+      # Setup for Integ tests for matlab/run-build
+      - matlab/install
+      - run:
+          command: |
+            cat \<<'_EOF' >> "buildfile.m"
+              function plan = buildfile
+              plan = buildplan(localfunctions);
+              plan("test").Dependencies = "build";
+              plan("deploy").Dependencies = "test";
+
+              plan.DefaultTasks = "test";
+
+              function buildTask(~)
+              f = fopen('buildlog.txt', 'w'); fwrite(f, 'building'); fclose(f);
+
+              function testTask(~)
+              f = fopen('buildlog.txt', 'w'); fwrite(f, 'testing'); fclose(f);
+
+              function deployTask(~)
+              f = fopen('buildlog.txt', 'w'); fwrite(f, 'deploying'); fclose(f);
+
+              function checkTask(~)
+              f = fopen('buildlog.txt', 'w'); fwrite(f, 'checking'); fclose(f);
+            _EOF
+          shell: bash
+      # run build with one specified task
+      - matlab/run-build:
+          tasks: deploy
+      - run:
+          name: Verify correct tasks appear in buildlog.txt
+          command: |
+            set -e
+            grep "building" buildlog.txt
+            grep "testing" buildlog.txt
+            grep "deploying" buildlog.txt
+            ! grep "checking" buildlog.txt
+            rm buildlog.txt
+          shell: bash
+      # run build with multiple specified tasks
+      - matlab/run-build:
+          tasks: deploy check
+      - run:
+          name: Verify correct tasks appear in buildlog.txt
+          command: |
+            set -e
+            grep "building" buildlog.txt
+            grep "testing" buildlog.txt
+            grep "deploying" buildlog.txt
+            grep "checking" buildlog.txt
+            rm buildlog.txt
+          shell: bash
+      # run build with default tasks
+      - matlab/run-build:
+      - run:
+          name: Verify correct tasks appear in buildlog.txt
+          command: |
+            set -e
+            grep "building" buildlog.txt
+            grep "testing" buildlog.txt
+            ! grep "deploying" buildlog.txt
+            ! grep "checking" buildlog.txt
+            rm buildlog.txt
+          shell: bash
+
 workflows:
   test-deploy:
     jobs:
@@ -274,6 +344,11 @@ workflows:
               executor: [linux, windows]
 
       - integration-test-run-tests:
+          matrix:
+            parameters:
+              executor: [linux, windows]
+
+      - integration-test-run-build:
           matrix:
             parameters:
               executor: [linux, windows]

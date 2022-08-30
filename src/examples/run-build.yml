@@ -1,5 +1,5 @@
 description: >
-  Run all tests in your project and produce a test results report.
+  Run a custom MATLAB script in your project.
 
 usage:
   version: 2.1
@@ -12,10 +12,8 @@ usage:
       steps:
         - checkout
         - matlab/install
-        - matlab/run-tests:
-            test-results-junit: test-results/matlab/results.xml
-        - store_test_results:
-            path: test-results
+        - matlab/run-build:
+            tasks: test
   workflows:
     build:
       jobs:
