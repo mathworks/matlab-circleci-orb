@@ -20,7 +20,7 @@ parameters:
 
 steps:
   - run:
-      name: Run MATLAB command
+      name: Run MATLAB build
       environment:
         PARAM_TASKS: <<parameters.tasks>>
       command: <<include(scripts/run-build.sh)>>
