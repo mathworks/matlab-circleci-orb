@@ -90,12 +90,12 @@ parameters:
     description: >
       Maximum verbosity level for logged diagnostics included for the test run.
     type: string
-    default: ''
+    default: 'Default'
   output-detail:
     description: >
       Display level for event details produced by the test run.
     type: string
-    default: ''
+    default: 'Default'
 
 steps:
   - run:
