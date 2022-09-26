@@ -1,5 +1,5 @@
 description: >
-  Run a custom MATLAB script in your project.
+  Run a MATLAB build for your project.
 
 usage:
   version: 2.1

@@ -6,8 +6,8 @@ description: >
 parameters:
   tasks:
     description: >
-      A space separated list of one or more tasks to execute from buildfile.m. If no tasks are
-      specified, buildtool with run a build with the default tasks.
+      Space-separated list of tasks to run. If not specified, the action runs the default tasks 
+      in the plan returned by buildfile.m as well as all the tasks on which they depend.
     type: string
     default: ""
   no-output-timeout:
