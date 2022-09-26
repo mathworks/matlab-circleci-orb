@@ -25,6 +25,6 @@ steps:
       name: Run MATLAB command
       environment:
         PARAM_COMMAND: <<parameters.command>>
-      command:  <<include(scripts/run-command.sh)>>
+      command: <<include(scripts/run-command.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>

@@ -15,5 +15,5 @@ steps:
       name: Install MATLAB
       environment:
         PARAM_RELEASE: <<parameters.release>>
-      command:  <<include(scripts/install.sh)>>
+      command: <<include(scripts/install.sh)>>
       shell: bash

@@ -1,0 +1,28 @@
+description: >
+  Run builds using the MATLAB build tool. Use this command to run the tasks in the plan returned
+  by a file named buildfile.m in the root of your repository. To use the run-build command, you
+  need MATLAB R2022b or a later release.
+
+parameters:
+  tasks:
+    description: >
+      Space-separated list of tasks to run. If not specified, the command runs the default tasks
+      in the plan returned by buildfile.m as well as all the tasks on which they depend.
+    type: string
+    default: ""
+  no-output-timeout:
+    description: >
+      Elapsed time the command can run without output. The string is a decimal with unit suffix,
+      such as “20m”, “1.25h”, “5s”. The default is 10 minutes and the maximum is governed by the
+      maximum time a job is allowed to run.
+    type: string
+    default: 10m
+
+steps:
+  - run:
+      name: Run MATLAB build
+      environment:
+        PARAM_TASKS: <<parameters.tasks>>
+      command: <<include(scripts/run-build.sh)>>
+      shell: bash
+      no_output_timeout: <<parameters.no-output-timeout>>
