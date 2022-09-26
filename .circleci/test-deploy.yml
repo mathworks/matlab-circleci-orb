@@ -23,7 +23,7 @@ executors:
       image: ubuntu-2204:2022.07.1
   macos:
     macos:
-      xcode: 13.2.1
+      xcode: 13.4.1
   windows:
     win/default
 
@@ -289,7 +289,7 @@ jobs:
       - matlab/run-build:
           tasks: deploy
       - run:
-          name: Verify correct tasks appear in buildlog.txt
+          name: Verify that correct tasks appear in buildlog.txt
           command: |
             set -e
             grep "building" buildlog.txt
@@ -302,7 +302,7 @@ jobs:
       - matlab/run-build:
           tasks: deploy check
       - run:
-          name: Verify correct tasks appear in buildlog.txt
+          name: Verify that correct tasks appear in buildlog.txt
           command: |
             set -e
             grep "building" buildlog.txt
@@ -314,7 +314,7 @@ jobs:
       # run build with default tasks
       - matlab/run-build
       - run:
-          name: Verify correct tasks appear in buildlog.txt
+          name: Verify that correct tasks appear in buildlog.txt
           command: |
             set -e
             grep "building" buildlog.txt
@@ -331,27 +331,27 @@ workflows:
       - integration-test-install:
           matrix:
             parameters:
-              executor: [linux, windows]
+              executor: [linux, windows, macos]
 
       - integration-test-install-release:
           matrix:
             parameters:
-              executor: [linux, windows]
+              executor: [linux, windows, macos]
 
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux, windows]
+              executor: [linux, windows, macos]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows]
+              executor: [linux, windows, macos]
 
       - integration-test-run-build:
           matrix:
             parameters:
-              executor: [linux, windows]
+              executor: [linux, windows, macos]
 
       - orb-tools/pack:
           filters: *filters

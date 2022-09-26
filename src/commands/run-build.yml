@@ -6,7 +6,7 @@ description: >
 parameters:
   tasks:
     description: >
-      Space-separated list of tasks to run. If not specified, the action runs the default tasks
+      Space-separated list of tasks to run. If not specified, the command runs the default tasks
       in the plan returned by buildfile.m as well as all the tasks on which they depend.
     type: string
     default: ""
