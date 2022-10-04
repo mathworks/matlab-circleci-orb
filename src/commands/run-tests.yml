@@ -73,6 +73,12 @@ parameters:
       maximum time a job is allowed to run.
     type: string
     default: 10m
+  strict:
+    description: >
+      Whether to apply strict checks when running the tests. For example, the task generates a
+      qualification failure if a test issues a warning.
+    type: boolean
+    default: false
   use-parallel:
     description: >
       Whether to run tests in parallel (requires Parallel Computing Toolbox). This feature might
@@ -80,20 +86,14 @@ parameters:
       the specified value.
     type: boolean
     default: false
-  strict:
-    description: >
-      Whether to apply strict checks when running the tests. For example, the task generates a
-      qualification failure if a test issues a warning.
-    type: boolean
-    default: false
-  logging-level:
-    description: >
-      Maximum verbosity level for logged diagnostics included for the test run.
-    type: string
-    default: ''
   output-detail:
     description: >
       Display level for event details produced by the test run.
+    type: string
+    default: ''
+  logging-level:
+    description: >
+      Maximum verbosity level for logged diagnostics included for the test run.
     type: string
     default: ''
 
@@ -112,10 +112,10 @@ steps:
         PARAM_TEST_RESULTS_SIMULINK_TEST: <<parameters.test-results-simulink-test>>
         PARAM_TEST_RESULTS_HTML: <<parameters.test-results-html>>
         PARAM_TEST_RESULTS_PDF: <<parameters.test-results-pdf>>
-        PARAM_USE_PARALLEL: <<parameters.use-parallel>>
         PARAM_STRICT: <<parameters.strict>>
-        PARAM_LOGGING_LEVEL: <<parameters.logging-level>>
+        PARAM_USE_PARALLEL: <<parameters.use-parallel>>
         PARAM_OUTPUT_DETAIL: <<parameters.output-detail>>
+        PARAM_LOGGING_LEVEL: <<parameters.logging-level>>
       command:  <<include(scripts/run-tests.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
