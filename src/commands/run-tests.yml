@@ -116,6 +116,6 @@ steps:
         PARAM_USE_PARALLEL: <<parameters.use-parallel>>
         PARAM_OUTPUT_DETAIL: <<parameters.output-detail>>
         PARAM_LOGGING_LEVEL: <<parameters.logging-level>>
-      command:  <<include(scripts/run-tests.sh)>>
+      command: <<include(scripts/run-tests.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
