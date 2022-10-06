@@ -10,7 +10,7 @@ downloadAndRun() {
 
 os=$(uname)
 tmpdir=$(dirname "$(mktemp -u)")
-workdir=$(pwd)
+rootdir=$(cat "$tmpdir/matlab_root")
 mpmroot="https://www.mathworks.com/mpm"
 
 # install system dependencies
