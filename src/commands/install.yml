@@ -3,17 +3,17 @@ description: >
   projects and does not include transformation products, such as MATLAB Coder and MATLAB Compiler.
 
 parameters:
+  products:
+    description: >
+      A list of MathWorks products to install.
+    type: string
+    default: ''
   release:
     description: >
       MATLAB release to install. You can specify R2020a or a later release. By default, the command
       installs the latest release of MATLAB.
     type: string
     default: 'latest'
-  release:
-    description: >
-      A list of MathWorks products to install.
-    type: string
-    default: ''
 
 steps:
   - run:
