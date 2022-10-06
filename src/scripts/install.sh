@@ -37,7 +37,7 @@ else
 fi
 
 # install mpm
-curl -sfL $mpmUrl -O "$tmpdir"
+curl -sfL $mpmurl -O "$tmpdir"
 ls $tmpdir
 eval $mpmSetup
 ls $tmpdir
