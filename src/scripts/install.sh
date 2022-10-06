@@ -29,11 +29,12 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     batchInstallDir='/c/Program Files/matlab-batch'
     rootdir=$(cygpath "$rootdir")
     mpmurl="$mpmbaseurl/win64/mpm";
-    mpmSetup="unzip $tmpdir/mpm -d $tmpdir"
+    mpmSetup="unzip -q $tmpdir/mpm -d $tmpdir"
+    mpmPath="$tmpdir/bin/win64/mpm"
 else
     batchInstallDir='/opt/matlab-batch'
     mpmurl="$mpmbaseurl/glnxa64/mpm";
-    mpmSetup="mkdir $tmpdir/bin; mv $tmpdir/mpm $tmpdir/bin"
+    mpmPath="$tmpdir/mpm"
 fi
 
 # install mpm
@@ -41,10 +42,10 @@ curl -o "$tmpdir/mpm" -sfL $mpmurl
 ls $tmpdir
 eval $mpmSetup
 ls $tmpdir
-chmod +x "$tmpdir/bin/mpm"
+chmod +x "$mpmPath"
 mkdir rootdir
 
-"$tmpdir/bin/mpm" install \
+"$mpmPath" install \
     --release="${PARAM_RELEASE}" \
     --destination="$rootdir" \
     --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
