@@ -49,8 +49,9 @@ eval $mpmsetup
 chmod +x "$mpmPath"
 mkdir rootdir
 
+# install matlab
 "$mpmPath" install \
-    --release="$version" \
+    --release=$version \
     --destination="$rootdir" \
     --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
 
