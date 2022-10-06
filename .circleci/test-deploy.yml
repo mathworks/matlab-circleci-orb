@@ -36,18 +36,18 @@ jobs:
     steps:
       - checkout
       - matlab/install
-      - run:
-          name: Verify the matlab and mex scripts are available
-          command: |
-            set -e
-            matlab -batch version
-            os=$(uname)
-            if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-              mex.bat -h
-            else
-              mex -h
-            fi
-          shell: bash
+      # - run:
+      #     name: Verify the matlab and mex scripts are available
+      #     command: |
+      #       set -e
+      #       matlab -batch version
+      #       os=$(uname)
+      #       if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+      #         mex.bat -h
+      #       else
+      #         mex -h
+      #       fi
+      #     shell: bash
 
   integration-test-install-release:
     parameters:
@@ -58,12 +58,12 @@ jobs:
       - checkout
       - matlab/install:
           release: R2021a
-      - run:
-          name: Verify the matlab and mex scripts are available
-          command: |
-            set -e
-            matlab -batch "assert(strcmp(version('-release'),'2021a'))"
-          shell: bash
+      # - run:
+      #     name: Verify the matlab and mex scripts are available
+      #     command: |
+      #       set -e
+      #       matlab -batch "assert(strcmp(version('-release'),'2021a'))"
+      #     shell: bash
 
   integration-test-run-command:
     parameters:
@@ -331,27 +331,27 @@ workflows:
       - integration-test-install:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-install-release:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-run-build:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - orb-tools/pack:
           filters: *filters
