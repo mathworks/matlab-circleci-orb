@@ -200,6 +200,7 @@ jobs:
           command: |
             set -e
             grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
+            rm console.log
           shell: bash
       - matlab/run-tests:
           use-parallel: true
@@ -208,7 +209,8 @@ jobs:
           name: Verify tests ran in parallel
           command: |
             set -e
-            grep -q "Starting parallel pool (parpool)" console.log
+            grep -q "Unable to get or start a parallel pool. Running tests in serial instead." console.log
+            rm console.log
           shell: bash
       - matlab/run-tests:
           output-detail: Verbose
@@ -218,6 +220,7 @@ jobs:
           command: |
             set -e
             grep -q "TestRunner.withTextOutput('OutputDetail', 4)" console.log
+            rm console.log
           shell: bash
       - matlab/run-tests:
           logging-level: Verbose
@@ -227,6 +230,7 @@ jobs:
           command: |
             set -e
             grep -q "TestRunner.withTextOutput('LoggingLevel', 4)" console.log
+            rm console.log
           shell: bash
 
     # Set up for model coverage artifact tests
