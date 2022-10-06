@@ -89,6 +89,6 @@ steps:
         PARAM_TEST_RESULTS_SIMULINK_TEST: <<parameters.test-results-simulink-test>>
         PARAM_TEST_RESULTS_HTML: <<parameters.test-results-html>>
         PARAM_TEST_RESULTS_PDF: <<parameters.test-results-pdf>>
-      command:  <<include(scripts/run-tests.sh)>>
+      command: <<include(scripts/run-tests.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>

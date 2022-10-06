@@ -21,7 +21,7 @@ if [[ $os = Linux ]]; then
         wget \
         unzip \
         ca-certificates && \
-    apt-get clean && apt-get autoremove
+    sudo apt-get clean && sudo apt-get autoremove
 fi
 
 # set os specific options
@@ -37,10 +37,11 @@ else
     mpmPath="$tmpdir/mpm"
 fi
 
+# resolve release
 if [[ $PARAM_RELEASE = "latest" ]]; then
-    version=$(curl https://mw-ci-static-dev.s3.amazonaws.com/matlab-deps/v0/versions.json | jq .latest | tr -d '"')
+    release=$(curl https://mw-ci-static-dev.s3.amazonaws.com/matlab-deps/v0/versions.json | jq .latest | tr -d '"')
 else
-    version=${PARAM_RELEASE}
+    release=${PARAM_RELEASE}
 fi
 
 # install mpm
@@ -51,7 +52,7 @@ mkdir rootdir
 
 # install matlab
 "$mpmPath" install \
-    --release=$version \
+    --release=$release \
     --destination="$rootdir" \
     --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
 
