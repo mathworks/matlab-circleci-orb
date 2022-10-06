@@ -38,7 +38,7 @@ fi
 
 # install mpm
 wget $mpmUrl -O "$tmpdir"
-$($mpmSetup)
+eval $mpmSetup
 chmod +x "$tmpdir/bin/mpm"
 
 "$tmpdir/bin/mpm" install \
