@@ -188,7 +188,7 @@ jobs:
           shell: bash
 
       - run:
-          name: Setup diary for logging
+          name: Set up diary for logging
           command: |
             echo 'diary console.log' >> startup.m
           shell: bash

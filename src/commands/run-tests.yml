@@ -75,7 +75,7 @@ parameters:
     default: 10m
   strict:
     description: >
-      Whether to apply strict checks when running the tests. For example, the task generates a
+      Whether to apply strict checks when running the tests. For example, the command generates a
       qualification failure if a test issues a warning.
     type: boolean
     default: false
