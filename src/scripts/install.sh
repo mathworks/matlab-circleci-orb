@@ -9,35 +9,43 @@ downloadAndRun() {
 }
 
 os=$(uname)
+tmpdir=$(dirname "$(mktemp -u)")
+workdir=$(pwd)
+mpmroot="https://www.mathworks.com/mpm"
 
-# installer does not support the Docker executor type on Linux
-if [[ $os = Linux ]] && awk -F/ '$2 == "docker"' /proc/self/cgroup | read -r; then
-    echo 'The Docker executor type is not supported.'
-    exit 1
-fi
-
-# install core system dependencies
+# install system dependencies
 if [[ $os = Linux ]]; then
     downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh "${PARAM_RELEASE}"
+    # install mpm depencencies
+    apt-get install --no-install-recommends --yes \
+        wget \
+        unzip \
+        ca-certificates && \
+    apt-get clean && apt-get autoremove
 fi
-
-# install ephemeral version of MATLAB
-if [ -n "${MATHWORKS_ACCOUNT}" ] &&  [ -n "${MATHWORKS_TOKEN}" ]; then
-    activationFlag="--skip-activation"
-fi
-
-downloadAndRun https://ssd.mathworks.com/supportfiles/ci/ephemeral-matlab/v0/ci-install.sh --release "${PARAM_RELEASE}" $activationFlag
-
-tmpdir=$(dirname "$(mktemp -u)")
-rootdir=$(cat "$tmpdir/ephemeral_matlab_root")
 
 # install matlab-batch
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     batchInstallDir='/c/Program Files/matlab-batch'
     rootdir=$(cygpath "$rootdir")
+    mpmUrl="$mpmroot/win64/mpm";
+    mpmSetup="unzip $tmpdir/mpm -d $tmpdir"
 else
     batchInstallDir='/opt/matlab-batch'
+    mpmUrl="$mpmroot/glnxa64/mpm";
+    mpmSetup="mkdir $tmpdir/bin; mv $tmpdir/mpm $tmpdir/bin"
 fi
+
+# install mpm
+wget $mpmUrl -O "$tmpdir"
+$($mpmSetup)
+chmod +x "$tmpdir/bin/mpm"
+
+"$tmpdir/bin/mpm" install \
+    --release="${PARAM_RELEASE}" \
+    --destination="$rootdir" \
+    --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
+
 
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v0/install.sh "$batchInstallDir"
 

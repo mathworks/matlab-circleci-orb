@@ -9,11 +9,17 @@ parameters:
       installs the latest release of MATLAB.
     type: string
     default: 'latest'
+  release:
+    description: >
+      A list of MathWorks products to install.
+    type: string
+    default: ''
 
 steps:
   - run:
       name: Install MATLAB
       environment:
         PARAM_RELEASE: <<parameters.release>>
+        PARAM_PRODUCTS: <<parameters.products>>
       command:  <<include(scripts/install.sh)>>
       shell: bash
