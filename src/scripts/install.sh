@@ -38,7 +38,7 @@ else
 fi
 
 if [[ $PARAM_RELEASE = "latest" ]]; then
-    version=$(curl https://mw-ci-static-dev.s3.amazonaws.com/matlab-deps/v0/versions.json | jq .latest)
+    version=$(curl https://mw-ci-static-dev.s3.amazonaws.com/matlab-deps/v0/versions.json | jq .latest | tr -d '"')
 else
     version=${PARAM_RELEASE}
 fi
