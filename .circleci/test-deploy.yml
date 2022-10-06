@@ -110,7 +110,8 @@ jobs:
     executor: <<parameters.executor>>
     steps:
     # Setup for Integ tests for matlab/run-tests
-      - matlab/install
+      - matlab/install:
+          products: MATLAB Simulink
       - run:
           command: |
             echo 'myvar = 123' > startup.m
