@@ -193,7 +193,7 @@ jobs:
             echo 'diary console.log' >> startup.m
           shell: bash
       - matlab/run-tests:
-          strict: True
+          strict: true
           source-folder: src
       - run:
           name: Verify tests ran with strict checks
