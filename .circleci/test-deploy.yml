@@ -193,25 +193,25 @@ jobs:
             echo 'diary console.log' >> startup.m
           shell: bash
       - matlab/run-tests:
-          strict: False
+          strict: true
           source-folder: src
-      # - run:
-      #     name: Verify tests ran with strict checks
-      #     command: |
-      #       set -e
-      #       grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
-      #       rm console.log
-      #     shell: bash
+      - run:
+          name: Verify tests ran with strict checks
+          command: |
+            set -e
+            grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
+            rm console.log
+          shell: bash
       - matlab/run-tests:
-          use-parallel: no
+          use-parallel: true
           source-folder: src
-      # - run:
-      #     name: Verify tests ran in parallel
-      #     command: |
-      #       set -e
-      #       grep -q "Unable to get or start a parallel pool. Running tests in serial instead." console.log
-      #       rm console.log
-      #     shell: bash
+      - run:
+          name: Verify tests ran in parallel
+          command: |
+            set -e
+            grep -q "Unable to get or start a parallel pool. Running tests in serial instead." console.log
+            rm console.log
+          shell: bash
       - matlab/run-tests:
           output-detail: Detailed
           source-folder: src
