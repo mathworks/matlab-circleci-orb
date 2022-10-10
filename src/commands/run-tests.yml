@@ -88,12 +88,12 @@ parameters:
     default: false
   output-detail:
     description: >
-      Display level for event details produced by the test run.
+      Display level for event details produced by the test run, specified as 'None', 'Terse', 'Concise', 'Detailed', or 'Verbose'.
     type: string
     default: ''
   logging-level:
     description: >
-      Maximum verbosity level for logged diagnostics included for the test run.
+      Maximum verbosity level for logged diagnostics included for the test run, specified as 'None', 'Terse', 'Concise', 'Detailed', or 'Verbose'.
     type: string
     default: ''
 
