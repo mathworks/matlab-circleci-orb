@@ -209,7 +209,7 @@ jobs:
           name: Verify tests ran in parallel
           command: |
             set -e
-            grep -q "Unable to get or start a parallel pool. Running tests in serial instead." console.log
+            grep -q "parallel pool" console.log
             rm console.log
           shell: bash
       - matlab/run-tests:
