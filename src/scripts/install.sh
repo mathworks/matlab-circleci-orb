@@ -10,7 +10,6 @@ downloadAndRun() {
 
 os=$(uname)
 tmpdir=$(dirname "$(mktemp -u)")
-rootdir="$tmpdir/matlab_root"
 mpmbaseurl="https://www.mathworks.com/mpm"
 
 # install system dependencies
@@ -27,11 +26,13 @@ fi
 # set os specific options
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     batchInstallDir='/c/Program Files/matlab-batch'
+    rootdir='/c/Program Files/matlab'
     rootdir=$(cygpath "$rootdir")
     mpmurl="$mpmbaseurl/win64/mpm";
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mpmPath="$tmpdir/bin/win64/mpm"
 else
+    rootdir='/opt/matlab'
     batchInstallDir='/opt/matlab-batch'
     mpmurl="$mpmbaseurl/glnxa64/mpm";
     mpmPath="$tmpdir/mpm"
@@ -48,7 +49,7 @@ fi
 curl -o "$tmpdir/mpm" -sfL $mpmurl
 eval $mpmsetup
 chmod +x "$mpmPath"
-mkdir rootdir
+mkdir -p rootdir
 
 # install matlab
 "$mpmPath" install \
