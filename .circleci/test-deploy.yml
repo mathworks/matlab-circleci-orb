@@ -351,6 +351,11 @@ workflows:
             parameters:
               executor: [linux, windows]
 
+      - integration-test-install-products:
+          matrix:
+            parameters:
+              executor: [linux, windows]
+              
       - integration-test-run-command:
           matrix:
             parameters:
