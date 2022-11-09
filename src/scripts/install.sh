@@ -65,7 +65,7 @@ mkdir -p rootdir
 # install matlab
 powershell "$mpmPath install \
     --release=$release \
-    --destination=$rootdir \
+    --destination=\"$rootdir\" \
     --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox"
 
 
