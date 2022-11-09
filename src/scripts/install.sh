@@ -69,8 +69,9 @@ mkdir -p rootdir
     --destination="$rootdir" \
     --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
 
-ls $TMPDIR
-cat $TMPDIR/mathworks_$USER.log
+ls "/c/Users/$USERNAME/AppData/Local/Temp"
+cat "/c/Users/$USERNAME/AppData/Local/Temp//mathworks_$USERNAME.log"
+
 # install matlab-batch
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v0/install.sh "$batchInstallDir"
 
