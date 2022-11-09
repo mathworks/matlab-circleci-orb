@@ -53,6 +53,8 @@ jobs:
     parameters:
       executor:
         type: executor
+      release:
+        type: string
     executor: <<parameters.executor>>
     steps:
       - checkout
