@@ -46,6 +46,7 @@ else
     rootdir='/usr/share/matlab'
     batchInstallDir='/usr/share/matlab-batch'
     mpmurl="$mpmbaseurl/glnxa64/mpm";
+    mpmsetup=""
     mpmPath="$tmpdir/mpm"
 fi
 
