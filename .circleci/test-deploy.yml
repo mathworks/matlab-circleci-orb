@@ -58,6 +58,18 @@ jobs:
       - checkout
       - matlab/install:
           release: R2021a
+          
+
+  integration-test-install-products:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
+    steps:
+      - checkout
+      - matlab/install:
+          release: R2021a
+          products: Simulink Samulink
       # - run:
       #     name: Verify the matlab and mex scripts are available
       #     command: |
