@@ -43,8 +43,8 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mpmPath="$tmpdir/bin/win64/mpm"
 else
-    rootdir='/usr/share/matlab'
-    batchInstallDir='/usr/share/matlab-batch'
+    rootdir="$tmpdir/matlab_root"
+    batchInstallDir='/opt/matlab-batch'
     mpmurl="$mpmbaseurl/glnxa64/mpm";
     mpmsetup=""
     mpmPath="$tmpdir/mpm"
