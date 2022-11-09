@@ -43,8 +43,8 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mpmPath="$tmpdir/bin/win64/mpm"
 else
-    rootdir='/opt/matlab'
-    batchInstallDir='/opt/matlab-batch'
+    rootdir='/usr/share/matlab'
+    batchInstallDir='/usr/share/matlab-batch'
     mpmurl="$mpmbaseurl/glnxa64/mpm";
     mpmPath="$tmpdir/mpm"
 fi
@@ -63,11 +63,10 @@ chmod +x "$mpmPath"
 mkdir -p rootdir
 
 # install matlab
-powershell "$mpmPath install \
+"$mpmPath" install \
     --release=$release \
-    --destination=\"$rootdir\" \
-    --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox"
-
+    --destination="$rootdir" \
+    --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
 
 # install matlab-batch
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v0/install.sh "$batchInstallDir"
