@@ -63,10 +63,10 @@ chmod +x "$mpmPath"
 mkdir -p rootdir
 
 # install matlab
-powershell '"$mpmPath" install \
+powershell "$mpmPath install \
     --release=$release \
     --destination="$rootdir" \
-    --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox'
+    --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox"
 
 
 # install matlab-batch
