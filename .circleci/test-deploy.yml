@@ -341,11 +341,6 @@ workflows:
             parameters:
               executor: [linux, windows]
               release: ["R2020a", "R2020b", "R2021a", "R2021b", "R2022a", "R2022b"]
-
-      - integration-test-install-products:
-          matrix:
-            parameters:
-              executor: [linux, windows]
               
       - integration-test-run-command:
           matrix:
