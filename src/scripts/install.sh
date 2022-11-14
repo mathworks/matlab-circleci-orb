@@ -69,6 +69,8 @@ mkdir -p rootdir
     --destination="$rootdir" \
     --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
 
+eval "/c/Program Files/matlab/bin/win64/registerWithOS.exe"
+eval "/c/Program Files/matlab/bin/win64/cppms_cache.exe"
 ls "/c/Users/$USERNAME/AppData/Local/Temp"
 cat "/c/Users/$USERNAME/AppData/Local/Temp//mathworks_$USERNAME.log"
 
