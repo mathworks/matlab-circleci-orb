@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # Exit script if you try to use an uninitialized variable.
-# set -o nounset
+set -o nounset
 
 # Exit script if a statement returns a non-true return value.
-# set -o errexit
+set -o errexit
 
 # Use the error status of the first failure, rather than that of the last item in a pipeline.
-# set -o pipefail
+set -o pipefail
 
 downloadAndRun() {
     url=$1
@@ -68,11 +68,6 @@ mkdir -p rootdir
     --release=$release \
     --destination="$rootdir" \
     --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
-
-eval "/c/Program\ Files/matlab/bin/win64/registerWithOS.exe"
-eval "/c/Program\ Files/matlab/bin/win64/cppms_cache.exe"
-ls "/c/Users/$USERNAME/AppData/Local/Temp"
-cat "/c/Users/$USERNAME/AppData/Local/Temp//mathworks_$USERNAME.log"
 
 # install matlab-batch
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v0/install.sh "$batchInstallDir"
