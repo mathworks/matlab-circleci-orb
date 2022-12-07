@@ -25,6 +25,7 @@ mpmbaseurl="https://www.mathworks.com/mpm"
 
 # install system dependencies
 if [[ $os = Linux ]]; then
+    # install MATLAB dependencies
     downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh "${PARAM_RELEASE}"
     # install mpm depencencies
     sudo apt-get install --no-install-recommends --yes \
@@ -37,11 +38,12 @@ fi
 # set os specific options
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     batchInstallDir='/c/Program Files/matlab-batch'
-    rootdir='/c/Program Files/matlab'
-    rootdir=$(cygpath "$rootdir")
+    rootdir="$tmpdir/matlab_root"
     mpmurl="$mpmbaseurl/win64/mpm";
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mpmPath="$tmpdir/bin/win64/mpm"
+    rootdir=$(cygpath "$rootdir")
+    mpmPath=$(cygpath "$mpmPath")
 else
     rootdir="$tmpdir/matlab_root"
     batchInstallDir='/opt/matlab-batch'
@@ -58,7 +60,7 @@ else
 fi
 
 # install mpm
-curl -o "$tmpdir/mpm" -sfL $mpmurl
+curl -o "$mpmPath" -sfL $mpmurl
 eval $mpmsetup
 chmod +x "$mpmPath"
 mkdir -p rootdir
