@@ -60,7 +60,7 @@ else
 fi
 
 # install mpm
-curl -o "$mpmPath" -sfL $mpmurl
+curl -o "$tmpdir/mpm" -sfL $mpmurl
 eval $mpmsetup
 chmod +x "$mpmPath"
 mkdir -p rootdir
