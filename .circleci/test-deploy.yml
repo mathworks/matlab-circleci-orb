@@ -36,36 +36,34 @@ jobs:
     steps:
       - checkout
       - matlab/install
-      # - run:
-      #     name: Verify the matlab and mex scripts are available
-      #     command: |
-      #       set -e
-      #       matlab -batch version
-      #       os=$(uname)
-      #       if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-      #         mex.bat -h
-      #       else
-      #         mex -h
-      #       fi
-      #     shell: bash
+      - run:
+          name: Verify the matlab and mex scripts are available
+          command: |
+            set -e
+            matlab-batch version
+            os=$(uname)
+            if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+              mex.bat -h
+            else
+              mex -h
+            fi
+          shell: bash
 
   integration-test-install-release:
     parameters:
       executor:
         type: executor
-      release:
-        type: string
     executor: <<parameters.executor>>
     steps:
       - checkout
       - matlab/install:
-          release: <<parameters.release>>
-      # - run:
-      #     name: Verify the matlab and mex scripts are available
-      #     command: |
-      #       set -e
-      #       matlab -batch "assert(strcmp(version('-release'),'2021a'))"
-      #     shell: bash
+          release: "R2021b"
+      - run:
+          name: Verify the matlab and mex scripts are available
+          command: |
+            set -e
+            matlab-batch "assert(strcmp(version('-release'),'2021b'))"
+          shell: bash
 
   integration-test-run-command:
     parameters:
@@ -378,15 +376,18 @@ workflows:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       - integration-test-install:
+          context:
+            - batch-token
           matrix:
             parameters:
               executor: [linux, windows]
 
       - integration-test-install-release:
+          context:
+            - batch-token
           matrix:
             parameters:
               executor: [linux, windows]
-              release: ["R2021b"]
               
       - integration-test-run-command:
           matrix:
