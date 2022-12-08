@@ -190,6 +190,52 @@ jobs:
             grep -v simpleTest test-results/matlab/filterdtagresult.xml
           shell: bash
 
+      - run:
+          name: Set up diary for logging
+          command: |
+            echo 'diary console.log' >> startup.m
+          shell: bash
+      - matlab/run-tests:
+          strict: true
+          source-folder: src
+      - run:
+          name: Verify tests ran with strict checks
+          command: |
+            set -e
+            grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
+            rm console.log
+          shell: bash
+      - matlab/run-tests:
+          use-parallel: true
+          source-folder: src
+      - run:
+          name: Verify tests ran in parallel
+          command: |
+            set -e
+            grep -q "parallel pool" console.log
+            rm console.log
+          shell: bash
+      - matlab/run-tests:
+          output-detail: Detailed
+          source-folder: src
+      - run:
+          name: Verify tests ran with detailed display level for event details
+          command: |
+            set -e
+            grep -q "TestRunner.withTextOutput('OutputDetail', 3)" console.log
+            rm console.log
+          shell: bash
+      - matlab/run-tests:
+          logging-level: Detailed
+          source-folder: src
+      - run:
+          name: Verify tests ran with detailed verbosity level for logged diagnostics
+          command: |
+            set -e
+            grep -q "TestRunner.withTextOutput('LoggingLevel', 3)" console.log
+            rm console.log
+          shell: bash
+
     # Set up for model coverage artifact tests
       - when:
           condition:

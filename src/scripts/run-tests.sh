@@ -39,7 +39,11 @@ fi
     'HTMLModelCoverage','${PARAM_MODEL_COVERAGE_HTML}',\
     'SimulinkTestResults','${PARAM_TEST_RESULTS_SIMULINK_TEST}',\
     'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
-    'PDFTestReport','${PARAM_TEST_RESULTS_PDF}');\
+    'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
+    'Strict',${PARAM_STRICT},\
+    'UseParallel',${PARAM_USE_PARALLEL},\
+    'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
+    'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
     disp('Running MATLAB script with contents:');\
     disp(testScript.Contents);\
     fprintf('__________\n\n');\
