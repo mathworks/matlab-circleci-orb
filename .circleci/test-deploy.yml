@@ -53,18 +53,16 @@ jobs:
     parameters:
       executor:
         type: executor
-      release:
-        type: string
     executor: <<parameters.executor>>
     steps:
       - checkout
       - matlab/install:
-          release: <<parameters.release>>
+          release: "R2021b"
       - run:
           name: Verify the matlab and mex scripts are available
           command: |
             set -e
-            matlab-batch "assert(strcmp(version('-release'),'2021a'))"
+            matlab-batch "assert(strcmp(version('-release'),'2021b'))"
           shell: bash
 
   integration-test-run-command:
@@ -338,7 +336,6 @@ workflows:
           matrix:
             parameters:
               executor: [linux, windows]
-              release: ["R2021b"]
               
       - integration-test-run-command:
           matrix:
