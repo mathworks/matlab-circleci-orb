@@ -113,7 +113,7 @@ jobs:
     steps:
     # Setup for Integ tests for matlab/run-tests
       - matlab/install:
-          products: MATLAB Simulink
+          products: MATLAB Simulink Simulink_Test
       - run:
           command: |
             echo 'myvar = 123' > startup.m
