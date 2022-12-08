@@ -32,22 +32,24 @@ jobs:
     parameters:
       executor:
         type: executor
+    context:
+      - batch-token
     executor: <<parameters.executor>>
     steps:
       - checkout
       - matlab/install
-      # - run:
-      #     name: Verify the matlab and mex scripts are available
-      #     command: |
-      #       set -e
-      #       matlab -batch version
-      #       os=$(uname)
-      #       if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-      #         mex.bat -h
-      #       else
-      #         mex -h
-      #       fi
-      #     shell: bash
+      - run:
+          name: Verify the matlab and mex scripts are available
+          command: |
+            set -e
+            matlab-batch version
+            os=$(uname)
+            if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+              mex.bat -h
+            else
+              mex -h
+            fi
+          shell: bash
 
   integration-test-install-release:
     parameters:
@@ -55,17 +57,19 @@ jobs:
         type: executor
       release:
         type: string
+    context:
+    - batch-token
     executor: <<parameters.executor>>
     steps:
       - checkout
       - matlab/install:
           release: <<parameters.release>>
-      # - run:
-      #     name: Verify the matlab and mex scripts are available
-      #     command: |
-      #       set -e
-      #       matlab -batch "assert(strcmp(version('-release'),'2021a'))"
-      #     shell: bash
+      - run:
+          name: Verify the matlab and mex scripts are available
+          command: |
+            set -e
+            matlab-batch "assert(strcmp(version('-release'),'2021a'))"
+          shell: bash
 
   integration-test-run-command:
     parameters:
