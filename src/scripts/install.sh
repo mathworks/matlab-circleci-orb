@@ -56,10 +56,10 @@ else
 fi
 
 # resolve release
-if [[ $PARAM_RELEASE = "latest" ]]; then
+if [[ ${PARAM_RELEASE,,} = "latest" ]]; then
     release=$(curl https://mw-ci-static-dev.s3.amazonaws.com/matlab-deps/v0/versions.json | grep "\"latest\":.*$" | sed 's/^.*latest//'  | tr -cd "[:alnum:]")
 else
-    release=${PARAM_RELEASE}
+    release="${PARAM_RELEASE}"
 fi
 
 # install mpm
