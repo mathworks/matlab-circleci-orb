@@ -30,8 +30,7 @@ mpmbaseurl="https://www.mathworks.com/mpm"
 # install system dependencies
 if [[ $os = Linux ]]; then
     # install MATLAB dependencies
-    echo ${PARAM_RELEASE} | grep -ioE "r[0-9]{4}[a-b]"
-    release=$(echo ${PARAM_RELEASE} | grep -ioE "r[0-9]{4}[a-b]")
+    release=$(echo "${PARAM_RELEASE}" | grep -ioE "r[0-9]*[a-b]")
     downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh "$release"
     # install mpm depencencies
     sudoIfAvailable -c "apt-get install --no-install-recommends --yes \
