@@ -57,7 +57,7 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: "R2021b"
+          release: "R2021bU2"
       - run:
           name: Verify the matlab and mex scripts are available
           command: |

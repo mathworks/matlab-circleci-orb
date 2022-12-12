@@ -30,7 +30,8 @@ mpmbaseurl="https://www.mathworks.com/mpm"
 # install system dependencies
 if [[ $os = Linux ]]; then
     # install MATLAB dependencies
-    downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh "${PARAM_RELEASE}"
+    release=$(echo "${PARAM_RELEASE}" | grep -ioE "r[0-9]{4}[a-b]")
+    downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh "$release"
     # install mpm depencencies
     sudoIfAvailable -c "apt-get install --no-install-recommends --yes \
         wget \
@@ -57,9 +58,9 @@ fi
 
 # resolve release
 if [[ ${PARAM_RELEASE,,} = "latest" ]]; then
-    release=$(curl https://mw-ci-static-dev.s3.amazonaws.com/matlab-deps/v0/versions.json | grep "\"latest\":.*$" | sed 's/^.*latest//'  | tr -cd "[:alnum:]")
+    mpmrelease=$(curl https://mw-ci-static-dev.s3.amazonaws.com/matlab-deps/v0/versions.json | grep "\"latest\":.*$" | sed 's/^.*latest//'  | tr -cd "[:alnum:]")
 else
-    release="${PARAM_RELEASE}"
+    mpmrelease="${PARAM_RELEASE}"
 fi
 
 # install mpm
@@ -70,7 +71,7 @@ mkdir -p "$rootdir"
 
 # install matlab
 "$mpmpath" install \
-    --release=$release \
+    --release=$mpmrelease \
     --destination="$rootdir" \
     --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
 
