@@ -11,16 +11,16 @@ set -o pipefail
 
 sudoIfAvailable() {
     if [[ -x $(command -v sudo) ]]; then
-    sudo -E bash -s -- "$@"
+    sudo -E bash "$@"
     else
-    bash -s -- "$@"
+    bash "$@"
     fi
 }
 
 downloadAndRun() {
     url=$1
     shift
-    curl -sfL $url | sudoIfAvailable "$@"
+    curl -sfL $url | sudoIfAvailable -s -- "$@"
 }
 
 os=$(uname)
@@ -32,10 +32,10 @@ if [[ $os = Linux ]]; then
     # install MATLAB dependencies
     downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh "${PARAM_RELEASE}"
     # install mpm depencencies
-    sudoIfAvailable apt-get install --no-install-recommends --yes \
+    sudoIfAvailable -c "apt-get install --no-install-recommends --yes \
         wget \
         unzip \
-        ca-certificates
+        ca-certificates"
 fi
 
 # set os specific options
