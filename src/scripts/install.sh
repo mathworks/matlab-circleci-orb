@@ -9,14 +9,18 @@ set -o errexit
 # Use the error status of the first failure, rather than that of the last item in a pipeline.
 set -o pipefail
 
+sudoIfAvailable() {
+    if [[ -x $(command -v sudo) ]]; then
+    sudo -E bash -s -- "$@"
+    else
+    bash -s -- "$@"
+    fi
+}
+
 downloadAndRun() {
     url=$1
     shift
-    if [[ -x $(command -v sudo) ]]; then
-    curl -sfL $url | sudo -E bash -s -- "$@"
-    else
-    curl -sfL $url | bash -s -- "$@"
-    fi
+    curl -sfL $url | sudoIfAvailable "$@"
 }
 
 os=$(uname)
@@ -28,28 +32,27 @@ if [[ $os = Linux ]]; then
     # install MATLAB dependencies
     downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh "${PARAM_RELEASE}"
     # install mpm depencencies
-    sudo apt-get install --no-install-recommends --yes \
+    sudoIfAvailable apt-get install --no-install-recommends --yes \
         wget \
         unzip \
-        ca-certificates && \
-    sudo apt-get clean && sudo apt-get autoremove
+        ca-certificates
 fi
 
 # set os specific options
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-    batchInstallDir='/c/Program Files/matlab-batch'
+    batchinstalldir='/c/Program Files/matlab-batch'
     rootdir="$tmpdir/matlab_root"
     mpmurl="$mpmbaseurl/win64/mpm";
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
-    mpmPath="$tmpdir/bin/win64/mpm"
+    mpmpath="$tmpdir/bin/win64/mpm"
     rootdir=$(cygpath "$rootdir")
-    mpmPath=$(cygpath "$mpmPath")
+    mpmpath=$(cygpath "$mpmpath")
 else
     rootdir="$tmpdir/matlab_root"
-    batchInstallDir='/opt/matlab-batch'
+    batchinstalldir='/opt/matlab-batch'
     mpmurl="$mpmbaseurl/glnxa64/mpm";
     mpmsetup=""
-    mpmPath="$tmpdir/mpm"
+    mpmpath="$tmpdir/mpm"
 fi
 
 # resolve release
@@ -62,17 +65,17 @@ fi
 # install mpm
 curl -o "$tmpdir/mpm" -sfL $mpmurl
 eval $mpmsetup
-chmod +x "$mpmPath"
-mkdir -p rootdir
+chmod +x "$mpmpath"
+mkdir -p "$rootdir"
 
 # install matlab
-"$mpmPath" install \
+"$mpmpath" install \
     --release=$release \
     --destination="$rootdir" \
     --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
 
 # install matlab-batch
-downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v0/install.sh "$batchInstallDir"
+downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v0/install.sh "$batchinstalldir"
 
 # add MATLAB and matlab-batch to path
-echo 'export PATH="'$rootdir'/bin:'$batchInstallDir':$PATH"' >> $BASH_ENV
+echo 'export PATH="'$rootdir'/bin:'$batchinstalldir':$PATH"' >> $BASH_ENV
