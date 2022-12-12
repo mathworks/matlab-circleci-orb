@@ -5,7 +5,7 @@ description: >
 parameters:
   products:
     description: >
-      A list of MathWorks products to install.
+      List of MathWorks products to install.
     type: string
     default: ''
   release:
