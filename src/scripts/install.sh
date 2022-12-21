@@ -58,7 +58,7 @@ fi
 
 # resolve release
 if [[ ${PARAM_RELEASE,,} = "latest" ]]; then
-    mpmrelease=$(curl https://mw-ci-static-dev.s3.amazonaws.com/release-info/latest.txt)
+    mpmrelease=$(curl https://mw-ci-static-dev.s3.amazonaws.com/matlab-release-info/latest)
 else
     mpmrelease="${PARAM_RELEASE}"
 fi
