@@ -28,10 +28,17 @@ tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
 mpmbaseurl="https://www.mathworks.com/mpm"
 
+# resolve release
+if [[ ${PARAM_RELEASE,,} = "latest" ]]; then
+    mpmrelease=$(curl https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
+else
+    mpmrelease="${PARAM_RELEASE}"
+fi
+
 # install system dependencies
 if [[ $os = Linux ]]; then
     # install MATLAB dependencies
-    release=$(echo "${PARAM_RELEASE}" | grep -ioE "(r[0-9]{4}[a-b]|latest)")
+    release=$(echo "${mpmrelease}" | grep -ioE "(r[0-9]{4}[a-b])")
     downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh "$release"
     # install mpm depencencies
     sudoIfAvailable -c "apt-get install --no-install-recommends --no-upgrade --yes \
@@ -54,13 +61,6 @@ else
     mpmpath="$tmpdir/mpm"
     mpmsetup=""
     mwarch="glnxa64"
-fi
-
-# resolve release
-if [[ ${PARAM_RELEASE,,} = "latest" ]]; then
-    mpmrelease=$(curl https://mw-ci-static-dev.s3.amazonaws.com/matlab-deps/v0/versions.json | grep "\"latest\":.*$" | sed 's/^.*latest//'  | tr -cd "[:alnum:]")
-else
-    mpmrelease="${PARAM_RELEASE}"
 fi
 
 # install mpm
