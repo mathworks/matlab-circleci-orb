@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@dev:<<pipeline.git.revision>>
   orb-tools: circleci/orb-tools@11.1
-  win: circleci/windows@2.2.0
+  win: circleci/windows@5.0
 
 filters: &filters
   tags:
@@ -40,7 +40,7 @@ jobs:
           name: Verify the matlab and mex scripts are available
           command: |
             set -e
-            matlab -batch version
+            matlab-batch version
             os=$(uname)
             if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
               mex.bat -h
@@ -57,12 +57,12 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: R2021a
+          release: "R2021bU2"
       - run:
           name: Verify the matlab and mex scripts are available
           command: |
             set -e
-            matlab -batch "assert(strcmp(version('-release'),'2021a'))"
+            matlab-batch "assert(strcmp(version('-release'),'2021b'))"
           shell: bash
 
   integration-test-run-command:
@@ -110,7 +110,8 @@ jobs:
     executor: <<parameters.executor>>
     steps:
     # Setup for Integ tests for matlab/run-tests
-      - matlab/install
+      - matlab/install:
+          products: MATLAB Simulink Simulink_Test Simulink_Coverage
       - run:
           command: |
             echo 'myvar = 123' > startup.m
@@ -375,29 +376,33 @@ workflows:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       - integration-test-install:
+          context:
+            - batch-token
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-install-release:
+          context:
+            - batch-token
           matrix:
             parameters:
-              executor: [linux, windows, macos]
-
+              executor: [linux, windows]
+              
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-run-build:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - orb-tools/pack:
           filters: *filters
