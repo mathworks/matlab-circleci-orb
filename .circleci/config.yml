@@ -21,6 +21,8 @@ jobs:
     - run:
         name: publish v2-beta as dev orb
         command: |
+          circleci --help
+          circleci version
           circleci orb publish --host "https://circleci.com" --skip-update-check "./dist/orb.yml" "mathworks/matlab@dev:v2-beta" --token "$CIRCLE_TOKEN"
 
 workflows:
@@ -46,7 +48,9 @@ workflows:
       - publish-v2-beta:
         when:
           condition:
-            equal: [ publish-v2-beta, << pipeline.schedule.name >> ]
+            and:
+              not: publish-v2-beta
+              equal: [ publish-v2-beta, << pipeline.schedule.name >> ]
       # Triggers the next workflow in the Orb Development Kit.
       - orb-tools/continue:
           pipeline-number: << pipeline.number >>
