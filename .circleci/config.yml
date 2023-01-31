@@ -4,9 +4,26 @@ orbs:
   orb-tools: circleci/orb-tools@11.1
   shellcheck: circleci/shellcheck@3.1
 
+parameters:
+  publish-v2-beta:
+    type: boolean
+    default: false
+
 filters: &filters
   tags:
     only: /.*/
+
+jobs:
+  publish-v2-beta:
+    executor:
+      name: default
+      resource_class: medium
+      tag: latest
+  steps:
+    - run:
+        name: publish v2-beta as dev orb
+        command: |
+          circleci orb publish --host "https://circleci.com" --skip-update-check "./dist/orb.yml" "mathworks/matlab@dev:v2-beta" --token "$CIRCLE_TOKEN"
 
 workflows:
   lint-pack:
@@ -27,10 +44,15 @@ workflows:
           vcs-type: << pipeline.project.type >>
           requires:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
-          filters: *filters
+          filters: *filters          
+      - publish-v2-beta:
+          condition: 
+            equal: [ publish-v2-beta, << pipeline.schedule.name >> ]
       # Triggers the next workflow in the Orb Development Kit.
       - orb-tools/continue:
           pipeline-number: << pipeline.number >>
           vcs-type: << pipeline.project.type >>
           requires: [orb-tools/publish]
           filters: *filters
+          condition: 
+            not: << pipeline.parameters.publish-v2-beta >>
