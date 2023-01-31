@@ -15,11 +15,9 @@ filters: &filters
 
 jobs:
   publish-v2-beta:
-    executor:
-      name: default
-      resource_class: medium
-      tag: latest
-  steps:
+    machine:
+      image: ubuntu-2004:202010-01
+    steps:
     - run:
         name: publish v2-beta as dev orb
         command: |
@@ -46,7 +44,8 @@ workflows:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
           filters: *filters          
       - publish-v2-beta:
-          condition: 
+        when:
+          condition:
             equal: [ publish-v2-beta, << pipeline.schedule.name >> ]
       # Triggers the next workflow in the Orb Development Kit.
       - orb-tools/continue:
@@ -54,5 +53,3 @@ workflows:
           vcs-type: << pipeline.project.type >>
           requires: [orb-tools/publish]
           filters: *filters
-          condition: 
-            not: << pipeline.parameters.publish-v2-beta >>
