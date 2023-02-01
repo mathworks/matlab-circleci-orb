@@ -46,7 +46,8 @@ workflows:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
           filters: *filters          
       - publish-v2-beta:
-          requires: [orb-tools/publish]
+          requires:
+            [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
       #     when:
       #       condition:
       #         and:
