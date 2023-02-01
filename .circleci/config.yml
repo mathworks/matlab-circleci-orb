@@ -15,8 +15,8 @@ filters: &filters
 
 jobs:
   publish-v2-beta:
-    machine:
-      image: ubuntu-2004:202010-01
+    docker:
+      - image: circleci/circleci-cli:latest
     steps:
     - run:
         name: publish v2-beta as dev orb
@@ -45,12 +45,12 @@ workflows:
           requires:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
           filters: *filters          
-      - publish-v2-beta:
-        when:
-          condition:
-            and:
-              not: publish-v2-beta
-              equal: [ publish-v2-beta, << pipeline.schedule.name >> ]
+      - publish-v2-beta
+        #when:
+        #  condition:
+        #    and:
+        #      equal: [ true, << pipeline.parameters.publish-v2-beta >> ]
+        #      equal: [ publish-v2-beta, << pipeline.schedule.name >> ]
       # Triggers the next workflow in the Orb Development Kit.
       - orb-tools/continue:
           pipeline-number: << pipeline.number >>
