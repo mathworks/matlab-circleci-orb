@@ -50,11 +50,11 @@ workflows:
       - publish-v2-beta:
           requires:
             [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
-      #     when:
-      #       condition:
-      #         and:
-      #           equal: [ true, << pipeline.parameters.publish-v2-beta >> ]
-      #           equal: [ publish-v2-beta, << pipeline.schedule.name >> ]
+          when:
+            condition:
+              and:
+                - equal: [ true, << pipeline.parameters.publish-v2-beta >> ]
+                - equal: [ publish-v2-beta, << pipeline.schedule.name >> ]
       # Triggers the next workflow in the Orb Development Kit.
       - orb-tools/continue:
           pipeline-number: << pipeline.number >>
