@@ -18,6 +18,8 @@ jobs:
     docker:
       - image: circleci/circleci-cli:latest
     steps:
+    - attach_workspace:
+        at: ./dist/
     - run:
         name: publish v2-beta as dev orb
         command: |
