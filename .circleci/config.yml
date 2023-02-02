@@ -56,6 +56,4 @@ workflows:
     when:
       condition: << pipeline.parameters.publish-v2-beta >>
       jobs:
-        - publish-v2-beta:
-            requires:
-              [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
+        - publish-v2-beta
