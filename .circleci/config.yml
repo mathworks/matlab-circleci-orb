@@ -54,8 +54,7 @@ workflows:
           requires: [orb-tools/publish]
           filters: *filters
     when:
-      condition:
-        equal: [ true, << pipeline.parameters.publish-v2-beta >> ]
+      condition: << pipeline.parameters.publish-v2-beta >>
       jobs:
         - publish-v2-beta:
             requires:
