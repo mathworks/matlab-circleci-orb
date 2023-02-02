@@ -26,8 +26,6 @@ jobs:
             - run:
                 name: publish v2-beta as dev orb
                 command: |
-                  circleci --help
-                  circleci version
                   circleci orb publish --host "https://circleci.com" --skip-update-check "./dist/orb.yml" "mathworks/matlab@dev:v2-beta" --token "$CIRCLE_TOKEN"
       - unless:
           condition: << pipeline.parameters.publish-v2-beta >>
