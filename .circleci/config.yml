@@ -55,9 +55,7 @@ workflows:
           filters: *filters
     when:
       condition:
-        and:
-          - equal: [ true, << pipeline.parameters.publish-v2-beta >> ]
-          - equal: [ publish-v2-beta, << pipeline.schedule.name >> ]
+        equal: [ true, << pipeline.parameters.publish-v2-beta >> ]
       jobs:
         - publish-v2-beta:
             requires:
