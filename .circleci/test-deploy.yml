@@ -5,7 +5,7 @@ orbs:
   win: circleci/windows@5.0
 
 parameters:
-  publish-v2-beta:
+  publish-v1-beta:
     type: boolean
     default: false
 
