@@ -4,6 +4,11 @@ orbs:
   orb-tools: circleci/orb-tools@11.1
   win: circleci/windows@5.0
 
+parameters:
+  publish-v1-beta:
+    type: boolean
+    default: false
+
 filters: &filters
   tags:
     only: /.*/
