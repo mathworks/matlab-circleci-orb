@@ -29,7 +29,8 @@ rootdir="$tmpdir/matlab_root"
 mpmbaseurl="https://www.mathworks.com/mpm"
 
 # resolve release
-if [[ ${PARAM_RELEASE,,} = "latest" ]]; then
+parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
+if [[ $parsedrelease = "latest" ]]; then
     mpmrelease=$(curl https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
 else
     mpmrelease="${PARAM_RELEASE}"
