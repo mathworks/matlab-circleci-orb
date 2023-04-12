@@ -24,7 +24,6 @@ downloadAndRun() {
 }
 
 os=$(uname)
-echo $os
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
 mpmbaseurl="https://www.mathworks.com/mpm"
@@ -62,8 +61,9 @@ elif [[ $os = Darwin ]]; then
     rootdir="$rootdir/MATLAB.app"
     batchinstalldir='/opt/matlab-batch'
     mpmpath="$tmpdir/mpm"
-    mpmsetup=""
+    mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mwarch="maci64"
+    echo $os
 else
     batchinstalldir='/opt/matlab-batch'
     mpmpath="$tmpdir/mpm"
