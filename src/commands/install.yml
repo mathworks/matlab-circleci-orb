@@ -30,4 +30,4 @@ steps:
         PARAM_PRODUCTS: <<parameters.products>>
       command: <<include(scripts/install.sh)>>
       shell: bash
-      no-output-timeout: <<parameters.no-output-timeout>>
+      no_output_timeout: <<parameters.no-output-timeout>>
