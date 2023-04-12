@@ -60,10 +60,9 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 elif [[ $os = Darwin ]]; then
     rootdir="$rootdir/MATLAB.app"
     batchinstalldir='/opt/matlab-batch'
-    mpmpath="$tmpdir/mpm"
+    mpmpath="$tmpdir/mpm/bin/maci64/mpm"
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mwarch="maci64"
-    echo $os
 else
     batchinstalldir='/opt/matlab-batch'
     mpmpath="$tmpdir/mpm"
