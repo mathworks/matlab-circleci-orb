@@ -62,9 +62,6 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - checkout
-      - run:
-          name: test
-          command: uname
       - matlab/install:
           release: "R2021bU2"
           no-output-timeout: 30m

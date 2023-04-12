@@ -24,6 +24,7 @@ downloadAndRun() {
 }
 
 os=$(uname)
+echo $os
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
 mpmbaseurl="https://www.mathworks.com/mpm"
