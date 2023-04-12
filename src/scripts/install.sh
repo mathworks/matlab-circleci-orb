@@ -60,7 +60,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 elif [[ $os = Darwin ]]; then
     rootdir="$rootdir/MATLAB.app"
     batchinstalldir='/opt/matlab-batch'
-    mpmpath="$tmpdir/mpm/bin/maci64/mpm"
+    mpmpath="$tmpdir/bin/maci64/mpm"
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mwarch="maci64"
 else
@@ -73,7 +73,6 @@ fi
 # install mpm
 curl -o "$tmpdir/mpm" -sfL "$mpmbaseurl/$mwarch/mpm"
 eval $mpmsetup
-ls $mpmpath
 chmod +x "$mpmpath"
 mkdir -p "$rootdir"
 
