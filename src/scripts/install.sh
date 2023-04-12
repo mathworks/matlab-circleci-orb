@@ -73,6 +73,7 @@ fi
 # install mpm
 curl -o "$tmpdir/mpm" -sfL "$mpmbaseurl/$mwarch/mpm"
 eval $mpmsetup
+ls $mpmpath
 chmod +x "$mpmpath"
 mkdir -p "$rootdir"
 
