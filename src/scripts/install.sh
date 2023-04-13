@@ -29,7 +29,8 @@ rootdir="$tmpdir/matlab_root"
 mpmbaseurl="https://www.mathworks.com/mpm"
 
 # resolve release
-if [[ ${PARAM_RELEASE,,} = "latest" ]]; then
+parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
+if [[ $parsedrelease = "latest" ]]; then
     mpmrelease=$(curl https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
 else
     mpmrelease="${PARAM_RELEASE}"
@@ -56,6 +57,12 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 
     rootdir=$(cygpath "$rootdir")
     mpmpath=$(cygpath "$mpmpath")
+elif [[ $os = Darwin ]]; then
+    rootdir="$rootdir/MATLAB.app"
+    batchinstalldir='/opt/matlab-batch'
+    mpmpath="$tmpdir/bin/maci64/mpm"
+    mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
+    mwarch="maci64"
 else
     batchinstalldir='/opt/matlab-batch'
     mpmpath="$tmpdir/mpm"
