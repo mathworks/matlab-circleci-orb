@@ -32,8 +32,5 @@ cat << EOF >> "$scriptpath"
 ${PARAM_COMMAND}
 EOF
 
-# DEBUG
-echo ${PARAM_ARGS}
-echo "${tmpdir}/bin/run-matlab-command$binext" "cd('${scriptdir//\'/\'\'}');$script" $PARAM_ARGS
 # run MATLAB command
 "${tmpdir}/bin/run-matlab-command$binext" "cd('${scriptdir//\'/\'\'}');$script" $PARAM_ARGS
