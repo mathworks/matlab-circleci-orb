@@ -106,7 +106,7 @@ jobs:
           command: disp("Hello world!")
           startup-options: -logfile mylog.log
       - matlab/run-command:
-          command: assert(isfile(mylog.log), 'logfile was not created as expected')
+          command: assert(isfile("mylog.log"), 'logfile was not created as expected')
 
   integration-test-run-tests:
     parameters:
