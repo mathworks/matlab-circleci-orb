@@ -12,6 +12,12 @@ parameters:
       script or function, do not specify the file extension. If you specify more than one MATLAB
       command, use a comma or semicolon to separate the commands.
     type: string
+  startup-options:
+    description: >
+      Options passed to MATLAB at startup. If you specify more than one option, use a space to
+      separate the options.
+    type: string
+    default: ""
   no-output-timeout:
     description: >
       Elapsed time the command can run without output. The string is a decimal with unit suffix,
@@ -25,6 +31,7 @@ steps:
       name: Run MATLAB command
       environment:
         PARAM_COMMAND: <<parameters.command>>
+        PARAM_ARGS: <<parameters.startup-options>>
       command: <<include(scripts/run-command.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
