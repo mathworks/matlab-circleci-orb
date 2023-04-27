@@ -14,7 +14,7 @@ parameters:
     type: string
   startup-options:
     description: >
-      Options passed to MATLAB at startup. If you specify more than one option, use a space to
+      MATLAB startup options. If you specify more than one option, use a space to
       separate the options.
     type: string
     default: ""
