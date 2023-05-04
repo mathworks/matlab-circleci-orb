@@ -207,16 +207,17 @@ jobs:
             grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
             rm console.log
           shell: bash
-      - matlab/run-tests:
-          use-parallel: true
-          source-folder: src
-      - run:
-          name: Verify tests ran in parallel
-          command: |
-            set -e
-            grep -q "parallel pool" console.log
-            rm console.log
-          shell: bash
+            # Running test in parallel is currently unsupported
+            #      - matlab/run-tests:
+            #          use-parallel: true
+            #          source-folder: src
+            #      - run:
+            #          name: Verify tests ran in parallel
+            #          command: |
+            #            set -e
+            #            grep -q "parallel pool" console.log
+            #            rm console.log
+            #          shell: bash
       - matlab/run-tests:
           output-detail: Detailed
           source-folder: src
