@@ -37,7 +37,7 @@ else
 fi
 
 # validate release is supported
-if [[ mpmrelease < "r2020b" ]]; then
+if [[ $mpmrelease < "r2020b" ]]; then
     error "Release '${releaseInfo.name}' is not supported. Use 'R2020b' or a later release."
 fi
 
