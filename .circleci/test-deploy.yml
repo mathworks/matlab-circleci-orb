@@ -63,7 +63,7 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: "R2021bU2"
+          release: "R2020aU2"
           no-output-timeout: 30m
       - run:
           name: Verify the matlab and mex scripts are available
