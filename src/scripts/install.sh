@@ -38,7 +38,8 @@ fi
 
 # validate release is supported
 if [[ $mpmrelease < "r2020b" ]]; then
-    error "Release '${mpmrelease}' is not supported. Use 'R2020b' or a later release."
+    echo "Release '${mpmrelease}' is not supported. Use 'R2020b' or a later release.">&2
+    exit 1
 fi
 
 # install system dependencies
