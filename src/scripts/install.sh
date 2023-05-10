@@ -33,7 +33,13 @@ parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
 if [[ $parsedrelease = "latest" ]]; then
     mpmrelease=$(curl https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
 else
-    mpmrelease="${PARAM_RELEASE}"
+    mpmrelease="${parsedrelease}"
+fi
+
+# validate release is supported
+if [[ $mpmrelease < "r2020b" ]]; then
+    echo "Release '${mpmrelease}' is not supported. Use 'R2020b' or a later release.">&2
+    exit 1
 fi
 
 # install system dependencies
