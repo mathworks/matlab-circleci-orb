@@ -36,8 +36,7 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - checkout
-      - matlab/install:
-          no-output-timeout: 30m
+      - matlab/install
       - run:
           name: Verify the matlab and mex scripts are available
           command: |
