@@ -159,9 +159,9 @@ jobs:
           name: Verify tests ran with startup options
           command: |
             set -e
-            grep StartupTest console.log
-            grep FirstTest console.log
-            grep simpleTest console.log
+            grep mytest console.log
+            grep TaggedTest console.log
+            grep filtertest console.log
             rm console.log
           shell: bash
       - run:
