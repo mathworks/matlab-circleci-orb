@@ -36,4 +36,4 @@ $buildCommand
 EOF
 
 # run MATLAB command
-"${tmpdir}/bin/run-matlab-command$binext" "cd('${scriptdir//\'/\'\'}');$script"
+"${tmpdir}/bin/run-matlab-command$binext" "cd('${scriptdir//\'/\'\'}');$script" $PARAM_ARGS

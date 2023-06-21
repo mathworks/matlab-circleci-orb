@@ -137,6 +137,7 @@ jobs:
     # Integ tests for matlab/run-tests
       - matlab/run-tests:
           source-folder: src
+          startup-options: -logfile console.log
       - matlab/run-tests:
           test-results-junit: test-results/matlab/results.xml
           code-coverage-cobertura: code-coverage/coverage.xml
@@ -152,6 +153,15 @@ jobs:
           test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
 
+      - run:
+          name: Verify tests ran with startup options
+          command: |
+            set -e
+            grep mytest console.log
+            grep TaggedTest console.log
+            grep filtertest console.log
+            rm console.log
+          shell: bash
       - run:
           name: Verify test results file was created
           command: |
@@ -364,16 +374,22 @@ jobs:
             rm buildlog.txt
           shell: bash
       # run build with default tasks
-      - matlab/run-build
+      - matlab/run-build:
+          startup-options: -logfile console.log
       - run:
           name: Verify that correct tasks appear in buildlog.txt
           command: |
             set -e
             grep "building" buildlog.txt
+            grep "build" console.log
             grep "testing" buildlog.txt
+            grep "test" console.log
             ! grep "deploying" buildlog.txt
+            ! grep "deploy" console.log
             ! grep "checking" buildlog.txt
+            ! grep "check" console.log
             rm buildlog.txt
+            rm console.log
           shell: bash
 
 workflows:
