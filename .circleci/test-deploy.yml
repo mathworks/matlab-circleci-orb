@@ -139,6 +139,7 @@ jobs:
     # Integ tests for matlab/run-tests
       - matlab/run-tests:
           source-folder: src
+          startup-options: -logfile console.log
       - matlab/run-tests:
           test-results-junit: test-results/matlab/results.xml
           code-coverage-cobertura: code-coverage/coverage.xml
@@ -153,9 +154,16 @@ jobs:
       - matlab/run-tests:
           test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
-      - matlab/run-tests:
-          startup-options: -logfile console.log
 
+      - run:
+          name: Verify tests ran with startup options
+          command: |
+            set -e
+            grep StartupTest console.log
+            grep FirstTest console.log
+            grep simpleTest console.log
+            rm console.log
+          shell: bash
       - run:
           name: Verify test results file was created
           command: |
@@ -194,16 +202,6 @@ jobs:
             grep -q TaggedTest test-results/matlab/filterdtagresult.xml
             grep -v FirstTest test-results/matlab/filterdtagresult.xml
             grep -v simpleTest test-results/matlab/filterdtagresult.xml
-          shell: bash
-
-      - run:
-          name: Verify tests ran with startup options
-          command: |
-            set -e
-            grep StartupTest console.log
-            grep FirstTest console.log
-            grep simpleTest console.log
-            rm console.log
           shell: bash
 
       - run:
@@ -378,16 +376,22 @@ jobs:
             rm buildlog.txt
           shell: bash
       # run build with default tasks
-      - matlab/run-build
+      - matlab/run-build:
+          startup-options: -logfile console.log
       - run:
           name: Verify that correct tasks appear in buildlog.txt
           command: |
             set -e
             grep "building" buildlog.txt
+            grep "building" console.log
             grep "testing" buildlog.txt
+            grep "testing" console.log
             ! grep "deploying" buildlog.txt
+            ! grep "deploying" console.log
             ! grep "checking" buildlog.txt
+            ! grep "checking" console.log
             rm buildlog.txt
+            rm console.log
           shell: bash
 
 workflows:
