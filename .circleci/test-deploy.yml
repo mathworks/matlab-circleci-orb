@@ -383,13 +383,13 @@ jobs:
           command: |
             set -e
             grep "building" buildlog.txt
-            grep "building" console.log
+            grep "build" console.log
             grep "testing" buildlog.txt
-            grep "testing" console.log
+            grep "test" console.log
             ! grep "deploying" buildlog.txt
-            ! grep "deploying" console.log
+            ! grep "deploy" console.log
             ! grep "checking" buildlog.txt
-            ! grep "checking" console.log
+            ! grep "check" console.log
             rm buildlog.txt
             rm console.log
           shell: bash
