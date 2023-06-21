@@ -47,4 +47,4 @@ fi
     disp('Running MATLAB script with contents:');\
     disp(testScript.Contents);\
     fprintf('__________\n\n');\
-    run(testScript);"
+    run(testScript);" $PARAM_ARGS

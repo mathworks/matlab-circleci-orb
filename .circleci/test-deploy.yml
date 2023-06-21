@@ -153,6 +153,8 @@ jobs:
       - matlab/run-tests:
           test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
+      - matlab/run-tests:
+          startup-options: -logfile console.log
 
       - run:
           name: Verify test results file was created
@@ -192,6 +194,16 @@ jobs:
             grep -q TaggedTest test-results/matlab/filterdtagresult.xml
             grep -v FirstTest test-results/matlab/filterdtagresult.xml
             grep -v simpleTest test-results/matlab/filterdtagresult.xml
+          shell: bash
+
+      - run:
+          name: Verify tests ran with startup options
+          command: |
+            set -e
+            grep StartupTest console.log
+            grep FirstTest console.log
+            grep simpleTest console.log
+            rm console.log
           shell: bash
 
       - run:
