@@ -59,6 +59,9 @@ jobs:
           command: version
 
   integration-test-install-release:
+    environment:
+      MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
+      MATHWORKS_LICENSING_ENDPOINT: stage
     parameters:
       executor:
         type: executor
