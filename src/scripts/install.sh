@@ -24,7 +24,7 @@ downloadAndRun() {
 }
 
 os=$(uname)
-osext=""
+binext=""
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
@@ -59,7 +59,7 @@ fi
 
 # set os specific options
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-    osext=".exe"
+    binext=".exe"
     mpmpath="$tmpdir/bin/win64/mpm"
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mwarch="win64"
@@ -85,7 +85,7 @@ mkdir -p "$rootdir"
 mkdir -p "$batchdir"
 
 # install matlab-batch
-curl -o "$batchdir/matlab-batch" -sfL "$batchbaseurl/$mwarch/matlab-batch$osext"
+curl -o "$batchdir/matlab-batch" -sfL "$batchbaseurl/$mwarch/matlab-batch$binsext"
 chmod +x "$batchdir/matlab-batch"
 
 # install matlab
