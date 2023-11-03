@@ -60,7 +60,7 @@ fi
 
 # set os specific options
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-    osext=".exe"
+    binext=".exe"
     mpmpath="$tmpdir/bin/win64/mpm"
     mwarch="win64"
     rootdir=$(cygpath "$rootdir")
