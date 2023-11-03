@@ -47,7 +47,6 @@ jobs:
           name: Verify the matlab and mex scripts are available
           command: |
             set -e
-            matlab-batch version
             os=$(uname)
             if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
               mex.bat -h
@@ -66,12 +65,8 @@ jobs:
       - matlab/install:
           release: "R2021bU2"
           no-output-timeout: 30m
-      - run:
-          name: Verify the matlab and mex scripts are available
-          command: |
-            set -e
-            matlab-batch "assert(strcmp(version('-release'),'2021b'))"
-          shell: bash
+      - matlab/run-command:
+          command: "assert(strcmp(version('-release'),'2021b'))"
 
   integration-test-run-command:
     environment:
