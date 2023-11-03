@@ -45,6 +45,7 @@ jobs:
     steps:
       - checkout
       - matlab/install:
+          release: r2023a
           no-output-timeout: 30m
       - run:
           name: Verify the matlab and mex scripts are available
@@ -83,6 +84,7 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - matlab/install:
+          release: r2023a
           no-output-timeout: 30m
       - matlab/run-command:
           command: f = fopen('myscript.m', 'w'); fwrite(f, 'assert(true)'); fclose(f);
@@ -124,6 +126,7 @@ jobs:
     # Setup for Integ tests for matlab/run-tests
       - matlab/install:
           products: MATLAB Simulink Simulink_Test Simulink_Coverage
+          release: r2023a
           no-output-timeout: 30m
       - run:
           command: |
@@ -322,6 +325,7 @@ jobs:
     steps:
       # Setup for Integ tests for matlab/run-build
       - matlab/install:
+          release: r2023a
           no-output-timeout: 30m
       - run:
           command: |
