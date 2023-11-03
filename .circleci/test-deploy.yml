@@ -72,6 +72,9 @@ jobs:
           command: "assert(strcmp(version('-release'),'2021b'))"
 
   integration-test-run-command:
+    environment:
+      MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
+      MATHWORKS_LICENSING_ENDPOINT: stage
     parameters:
       executor:
         type: executor
@@ -112,6 +115,9 @@ jobs:
           command: assert(myvar==123, 'myvar was not set as expected by startup.m')
 
   integration-test-run-tests:
+    environment:
+      MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
+      MATHWORKS_LICENSING_ENDPOINT: stage
     parameters:
       executor:
         type: executor
@@ -312,6 +318,9 @@ jobs:
                 shell: bash
 
   integration-test-run-build:
+    environment:
+      MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
+      MATHWORKS_LICENSING_ENDPOINT: stage
     parameters:
       executor:
         type: executor
@@ -385,9 +394,6 @@ jobs:
 
 workflows:
   test-deploy:
-    environment:
-      MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
-      MATHWORKS_LICENSING_ENDPOINT: stage
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       - integration-test-install:
