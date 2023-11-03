@@ -24,8 +24,11 @@ downloadAndRun() {
 }
 
 os=$(uname)
+osext=""
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
+batchdir="$tmpdir/matlab-batch"
+batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 
 # resolve release
@@ -56,7 +59,7 @@ fi
 
 # set os specific options
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-    batchinstalldir='/c/Program Files/matlab-batch'
+    osext=".exe"
     mpmpath="$tmpdir/bin/win64/mpm"
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mwarch="win64"
@@ -65,12 +68,10 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     mpmpath=$(cygpath "$mpmpath")
 elif [[ $os = Darwin ]]; then
     rootdir="$rootdir/MATLAB.app"
-    batchinstalldir='/opt/matlab-batch'
     mpmpath="$tmpdir/bin/maci64/mpm"
     mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mwarch="maci64"
 else
-    batchinstalldir='/opt/matlab-batch'
     mpmpath="$tmpdir/mpm"
     mpmsetup=""
     mwarch="glnxa64"
@@ -81,15 +82,17 @@ curl -o "$tmpdir/mpm" -sfL "$mpmbaseurl/$mwarch/mpm"
 eval $mpmsetup
 chmod +x "$mpmpath"
 mkdir -p "$rootdir"
+mkdir -p "$batchdir"
+
+# install matlab-batch
+curl -o "$batchdir/matlab-batch" -sfL "$batchbaseurl/$mwarch/matlab-batch$osext"
+chmod +x "$batchdir/matlab-batch"
 
 # install matlab
 "$mpmpath" install \
     --release=$mpmrelease \
     --destination="$rootdir" \
-    --products ${PARAM_PRODUCTS} MATLAB Parallel_Computing_Toolbox
-
-# install matlab-batch
-downloadAndRun https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v0/install.sh "$batchinstalldir"
+    --products ${PARAM_PRODUCTS} MATLAB
 
 # add MATLAB and matlab-batch to path
-echo 'export PATH="'$rootdir'/bin:'$batchinstalldir':$PATH"' >> $BASH_ENV
+echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV

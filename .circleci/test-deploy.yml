@@ -32,6 +32,10 @@ executors:
   windows:
     win/default
 
+environment:
+  MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
+  MATHWORKS_LICENSING_ENDPOINT: stage
+
 jobs:
   integration-test-install:
     parameters:
