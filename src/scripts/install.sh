@@ -85,7 +85,7 @@ mkdir -p "$rootdir"
 mkdir -p "$batchdir"
 
 # install matlab-batch
-curl -o "$batchdir/matlab-batch" -sfL "$batchbaseurl/$mwarch/matlab-batch$binsext"
+curl -o "$batchdir/matlab-batch" -sfL "$batchbaseurl/$mwarch/matlab-batch$binext"
 chmod +x "$batchdir/matlab-batch"
 
 # install matlab
