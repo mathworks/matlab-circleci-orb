@@ -17,15 +17,14 @@ jobs:
   publish-v1-rc:
     docker:
       - image: circleci/circleci-cli:latest
-      steps:
-        - attach_workspace:
-            at: ./dist/
-        - run:
-            name: publish v1-rc as dev orb
-            command: |
-              circleci orb publish --host "https://circleci.com" --skip-update-check "./dist/orb.yml" "mathworks/matlab@dev:v1-rc" --token "$CIRCLE_TOKEN"
+    steps:
+      - attach_workspace:
+          at: ./dist/
+      - run:
+          name: publish v1-rc as dev orb
+          command: |
+            circleci orb publish --host "https://circleci.com" --skip-update-check "./dist/orb.yml" "mathworks/matlab@dev:v1-rc" --token "$CIRCLE_TOKEN"
 
-jobs:
 workflows:
   lint-pack:
     jobs:
