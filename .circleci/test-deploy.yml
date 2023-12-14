@@ -107,6 +107,14 @@ jobs:
           startup-options: -logfile mylog.log
       - matlab/run-command:
           command: assert(isfile("mylog.log"), 'logfile was not created as expected')
+      - run:
+          command: |
+            mkdir subdir
+            echo 'onetyone = 11' > subdir/startup.m
+          shell: bash
+      - matlab/run-command:
+          command: assert(onetyone==11, 'onetyone was not set as expected by subdir/startup.m')
+          startup-options: -sd subdir
 
   integration-test-run-tests:
     parameters:
