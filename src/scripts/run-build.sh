@@ -15,11 +15,9 @@ downloadAndRun https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v1/i
 
 # form OS appropriate paths for MATLAB
 os=$(uname)
-workdir=$(pwd)
 scriptdir=$tmpdir
 binext=""
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-    workdir=$(cygpath -w "$workdir")
     scriptdir=$(cygpath -w "$scriptdir")
     binext=".exe"
 fi
@@ -30,10 +28,10 @@ buildCommand="buildtool ${PARAM_TASKS}"
 # create script to execute
 script=command_${RANDOM}
 scriptpath=${tmpdir}/${script}.m
-echo "cd('${workdir//\'/\'\'}');" > "$scriptpath"
+echo "cd(getenv('MW_ORIG_WORKING_FOLDER'));" > "$scriptpath"
 cat << EOF >> "$scriptpath"
 $buildCommand
 EOF
 
 # run MATLAB command
-"${tmpdir}/bin/run-matlab-command$binext" "cd('${scriptdir//\'/\'\'}');$script" $PARAM_ARGS
+"${tmpdir}/bin/run-matlab-command$binext" "setenv('MW_ORIG_WORKING_FOLDER', cd('${scriptdir//\'/\'\'}'));$script" $PARAM_ARGS
