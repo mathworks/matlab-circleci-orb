@@ -71,9 +71,12 @@ else
 fi
 
 # install mpm
-wget -O "$mpmpath" "$mpmbaseurl/$mwarch/mpm"
+curl -o "$mpmpath" -sfL "$mpmbaseurl/$mwarch/mpm"
 chmod +x "$mpmpath"
 mkdir -p "$rootdir"
+
+# check install
+"$mpmpath" --version
 
 # install matlab
 "$mpmpath" install \
