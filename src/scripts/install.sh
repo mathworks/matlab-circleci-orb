@@ -27,6 +27,7 @@ os=$(uname)
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
 mpmbaseurl="https://www.mathworks.com/mpm"
+binext=""
 
 # resolve release
 parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
@@ -57,28 +58,22 @@ fi
 # set os specific options
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     batchinstalldir='/c/Program Files/matlab-batch'
-    mpmpath="$tmpdir/bin/win64/mpm"
-    mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mwarch="win64"
-
+    binext=".exe"
     rootdir=$(cygpath "$rootdir")
     mpmpath=$(cygpath "$mpmpath")
 elif [[ $os = Darwin ]]; then
     rootdir="$rootdir/MATLAB.app"
     batchinstalldir='/opt/matlab-batch'
-    mpmpath="$tmpdir/bin/maci64/mpm"
-    mpmsetup="unzip -q $tmpdir/mpm -d $tmpdir"
     mwarch="maci64"
 else
     batchinstalldir='/opt/matlab-batch'
-    mpmpath="$tmpdir/mpm"
-    mpmsetup=""
     mwarch="glnxa64"
 fi
 
 # install mpm
-curl -o "$tmpdir/mpm" -sfL "$mpmbaseurl/$mwarch/mpm"
-eval $mpmsetup
+mpmpath="$tmpdir/mpm$binext"
+curl -o "$mpmpath" -sfL "$mpmbaseurl/$mwarch/mpm"
 chmod +x "$mpmpath"
 mkdir -p "$rootdir"
 
