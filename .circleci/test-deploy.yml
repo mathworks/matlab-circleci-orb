@@ -24,7 +24,10 @@ executors:
   macos:
     macos:
       xcode: 15.1.0
+<<<<<<< HEAD
     resource_class: macos.x86.medium.gen2
+=======
+>>>>>>> 143cc1e (update pipeline)
   windows:
     win/default
 
@@ -36,7 +39,8 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - checkout
-      - matlab/install
+      - matlab/install:
+          no-output-timeout: 30m
       - run:
           name: Verify the matlab and mex scripts are available
           command: |
