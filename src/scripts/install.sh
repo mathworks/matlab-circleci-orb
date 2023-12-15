@@ -62,6 +62,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     rootdir=$(cygpath "$rootdir")
     mpmpath=$(cygpath "$mpmpath.exe")
 elif [[ $os = Darwin ]]; then
+    sudoIfAvailable -c "launchctl limit maxfiles 65536 unlimited" # g3185941
     rootdir="$rootdir/MATLAB.app"
     batchinstalldir='/opt/matlab-batch'
     mwarch="maci64"
