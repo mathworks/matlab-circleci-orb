@@ -23,7 +23,7 @@ executors:
       image: ubuntu-2204:2022.07.1
   macos:
     macos:
-      xcode: 13.4.1
+      xcode: 15.1.0
   windows:
     win/default
 
@@ -40,7 +40,6 @@ jobs:
           name: Verify the matlab and mex scripts are available
           command: |
             set -e
-            matlab -batch version
             os=$(uname)
             if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
               mex.bat -h
@@ -48,6 +47,8 @@ jobs:
               mex -h
             fi
           shell: bash
+      - matlab/run-command:
+          command: version
 
   integration-test-install-release:
     parameters:
@@ -57,13 +58,9 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: R2021a
-      - run:
-          name: Verify the matlab and mex scripts are available
-          command: |
-            set -e
-            matlab -batch "assert(strcmp(version('-release'),'2021a'))"
-          shell: bash
+          release: "R2021b"
+      - matlab/run-command:
+          command: assert(strcmp(version('-release'),'2021b'))
 
   integration-test-run-command:
     parameters:
@@ -107,6 +104,14 @@ jobs:
           startup-options: -logfile mylog.log
       - matlab/run-command:
           command: assert(isfile("mylog.log"), 'logfile was not created as expected')
+      - run:
+          command: |
+            mkdir subdir
+            echo 'onetyone = 11' > subdir/startup.m
+          shell: bash
+      - matlab/run-command:
+          command: assert(onetyone==11, 'onetyone was not set as expected by subdir/startup.m')
+          startup-options: -sd subdir
 
   integration-test-run-tests:
     parameters:
