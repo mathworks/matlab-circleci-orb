@@ -27,6 +27,7 @@ os=$(uname)
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
 mpmbaseurl="https://www.mathworks.com/mpm"
+mpmpath="$tmpdir/mpm$binext"
 binext=""
 
 # resolve release
@@ -72,7 +73,6 @@ else
 fi
 
 # install mpm
-mpmpath="$tmpdir/mpm$binext"
 curl -o "$mpmpath" -sfL "$mpmbaseurl/$mwarch/mpm"
 chmod +x "$mpmpath"
 mkdir -p "$rootdir"
