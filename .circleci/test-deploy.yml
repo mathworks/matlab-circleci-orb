@@ -35,8 +35,7 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - checkout
-      - matlab/install:
-          no-output-timeout: 30m
+      - matlab/install
       - run:
           name: Verify the matlab and mex scripts are available
           command: |
@@ -60,7 +59,6 @@ jobs:
       - checkout
       - matlab/install:
           release: "R2021bU2"
-          no-output-timeout: 30m
       - matlab/run-command:
           command: assert(strcmp(version('-release'),'2021b'))
 
