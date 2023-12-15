@@ -71,9 +71,12 @@ else
 fi
 
 # install mpm
+echo "DEBUG1"
 curl -o "$mpmpath" -sfL "$mpmbaseurl/$mwarch/mpm"
+echo "DEBUG2"
 chmod +x "$mpmpath"
 mkdir -p "$rootdir"
+echo "DEBUG3"
 
 # install matlab
 "$mpmpath" install \
