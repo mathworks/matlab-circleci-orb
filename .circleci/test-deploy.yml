@@ -58,7 +58,7 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: "R2021bU2"
+          release: "R2021b"
       - matlab/run-command:
           command: assert(strcmp(version('-release'),'2021b'))
 
