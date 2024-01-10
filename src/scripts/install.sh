@@ -28,9 +28,9 @@ binext=""
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
+mpmdir="$tmpdir/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
-mpmpath="$tmpdir/mpm"
 
 # resolve release
 parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
@@ -60,33 +60,33 @@ fi
 
 # set os specific options
 if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-    binext=".exe"
-    mpmpath="$tmpdir/bin/win64/mpm"
     mwarch="win64"
+    binext=".exe"
     rootdir=$(cygpath "$rootdir")
-    mpmpath=$(cygpath "$mpmpath.exe")
+    mpmdir=$(cygpath "$mpmdir")
+    batchdir=$(cygpath "$batchdir")
 elif [[ $os = Darwin ]]; then
-    sudoIfAvailable -c "launchctl limit maxfiles 65536 unlimited" # g3185941
-    rootdir="$rootdir/MATLAB.app"
-    mpmpath="$tmpdir/mpm"
     mwarch="maci64"
+    rootdir="$rootdir/MATLAB.app"
+    sudoIfAvailable -c "launchctl limit maxfiles 65536 unlimited" # g3185941
 else
-    mpmpath="$tmpdir/mpm"
     mwarch="glnxa64"
 fi
 
-# install mpm
-curl -o "$mpmpath" -sfL "$mpmbaseurl/$mwarch/mpm"
-chmod +x "$mpmpath"
 mkdir -p "$rootdir"
 mkdir -p "$batchdir"
+mkdir -p "$mpmdir"
+
+# install mpm
+curl -o "$mpmdir/mpm$binext" -sfL "$mpmbaseurl/$mwarch/mpm"
+chmod +x "$mpmdir/mpm$binext"
 
 # install matlab-batch
-curl -o "$batchdir/matlab-batch" -sfL "$batchbaseurl/$mwarch/matlab-batch$binext"
-chmod +x "$batchdir/matlab-batch"
+curl -o "$batchdir/matlab-batch$binext" -sfL "$batchbaseurl/$mwarch/matlab-batch$binext"
+chmod +x "$batchdir/matlab-batch$binext"
 
 # install matlab
-"$mpmpath" install \
+"$mpmdir/mpm$binext" install \
     --release=$mpmrelease \
     --destination="$rootdir" \
     --products ${PARAM_PRODUCTS} MATLAB
