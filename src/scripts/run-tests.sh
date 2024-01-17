@@ -11,6 +11,7 @@ downloadAndRun() {
 tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
 
 # install run-matlab-command
+export MATHWORKS_RMC_BASE_URL=https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v2
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v2/install.sh "${tmpdir}/bin"
 
 # download script generator
