@@ -68,7 +68,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 elif [[ $os = Darwin ]]; then
     mwarch="maci64"
     rootdir="$rootdir/MATLAB.app"
-    sudoIfAvailable -c "launchctl limit maxfiles 65536 unlimited" # g3185941
+    sudoIfAvailable -c "launchctl limit maxfiles 65536 200000" # g3185941
 else
     mwarch="glnxa64"
 fi
