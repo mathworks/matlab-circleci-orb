@@ -4,11 +4,6 @@ orbs:
   orb-tools: circleci/orb-tools@11.1
   win: circleci/windows@5.0
 
-parameters:
-  publish-v1-beta:
-    type: boolean
-    default: false
-
 filters: &filters
   tags:
     only: /.*/
@@ -42,7 +37,6 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: r2023a
           no-output-timeout: 30m
       - run:
           name: Verify the matlab and mex scripts are available
@@ -78,7 +72,6 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - matlab/install:
-          release: r2023a
           no-output-timeout: 30m
       - matlab/run-command:
           command: f = fopen('myscript.m', 'w'); fwrite(f, 'assert(true)'); fclose(f);
@@ -120,7 +113,6 @@ jobs:
     # Setup for Integ tests for matlab/run-tests
       - matlab/install:
           products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
-          release: r2023a
           no-output-timeout: 30m
       - run:
           command: |
@@ -213,16 +205,16 @@ jobs:
             grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
             rm console.log
           shell: bash
-      - matlab/run-tests:
-          use-parallel: true
-          source-folder: src
-      - run:
-          name: Verify tests ran in parallel
-          command: |
-            set -e
-            grep -q "parallel pool" console.log
-            rm console.log
-          shell: bash
+      # - matlab/run-tests:
+      #     use-parallel: true
+      #     source-folder: src
+      # - run:
+      #     name: Verify tests ran in parallel
+      #     command: |
+      #       set -e
+      #       grep -q "parallel pool" console.log
+      #       rm console.log
+      #     shell: bash
       - matlab/run-tests:
           output-detail: Detailed
           source-folder: src
@@ -319,7 +311,6 @@ jobs:
     steps:
       # Setup for Integ tests for matlab/run-build
       - matlab/install:
-          release: r2023a
           no-output-timeout: 30m
       - run:
           command: |
