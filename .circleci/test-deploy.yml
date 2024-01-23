@@ -59,9 +59,6 @@ jobs:
           command: version
 
   integration-test-install-release:
-    environment:
-      MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
-      MATHWORKS_LICENSING_ENDPOINT: stage
     parameters:
       executor:
         type: executor
@@ -75,9 +72,6 @@ jobs:
           command: "assert(strcmp(version('-release'),'2021b'))"
 
   integration-test-run-command:
-    environment:
-      MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
-      MATHWORKS_LICENSING_ENDPOINT: stage
     parameters:
       executor:
         type: executor
@@ -118,9 +112,6 @@ jobs:
           command: assert(myvar==123, 'myvar was not set as expected by startup.m')
 
   integration-test-run-tests:
-    environment:
-      MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
-      MATHWORKS_LICENSING_ENDPOINT: stage
     parameters:
       executor:
         type: executor
@@ -321,9 +312,6 @@ jobs:
                 shell: bash
 
   integration-test-run-build:
-    environment:
-      MATHWORKS_RMC_BASE_URL: https://mw-ci-static-dev.s3.amazonaws.com/run-matlab-command/v2
-      MATHWORKS_LICENSING_ENDPOINT: stage
     parameters:
       executor:
         type: executor
