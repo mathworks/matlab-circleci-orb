@@ -24,7 +24,6 @@ jobs:
           name: publish v1-rc as dev orb
           command: |
             circleci orb publish --host "https://circleci.com" --skip-update-check "./dist/orb.yml" "mathworks/matlab@dev:v1-rc" --token "$CIRCLE_TOKEN"
-
 workflows:
   lint-pack:
     jobs:
