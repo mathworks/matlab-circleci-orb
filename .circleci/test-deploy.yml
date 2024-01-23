@@ -70,8 +70,6 @@ jobs:
           no-output-timeout: 30m
       - matlab/run-command:
           command: "assert(strcmp(version('-release'),'2021b'))"
-      - matlab/run-command:
-          command: assert(strcmp(version('-release'),'2021b'))
 
   integration-test-run-command:
     parameters:
