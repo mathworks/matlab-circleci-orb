@@ -406,13 +406,18 @@ workflows:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       - integration-test-install:
+          context:
+            - batch-token
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-install-release:
+          context:
+            - batch-token
           matrix:
             parameters:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
               executor: [linux, windows, macos]
@@ -422,21 +427,24 @@ workflows:
 =======
               executor: [linux, windows, macos]
 >>>>>>> 4975b80 (rebase)
+=======
+              executor: [linux, windows]
+>>>>>>> 5d688b6 (rebase to main)
               
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-run-build:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - orb-tools/pack:
           filters: *filters
