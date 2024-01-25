@@ -24,10 +24,7 @@ executors:
   macos:
     macos:
       xcode: 15.1.0
-<<<<<<< HEAD
     resource_class: macos.x86.medium.gen2
-=======
->>>>>>> 143cc1e (update pipeline)
   windows:
     win/default
 
@@ -409,29 +406,37 @@ workflows:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       - integration-test-install:
+          context:
+            - batch-token
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-install-release:
+          context:
+            - batch-token
           matrix:
             parameters:
+<<<<<<< HEAD
               executor: [linux, windows, macos]
+=======
+              executor: [linux, windows]
+>>>>>>> 4455cb8 (merge conflicts)
               
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - integration-test-run-build:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows]
 
       - orb-tools/pack:
           filters: *filters

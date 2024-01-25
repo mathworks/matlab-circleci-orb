@@ -93,4 +93,3 @@ chmod +x "$batchdir/matlab-batch$binext"
 
 # add MATLAB and matlab-batch to path
 echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
-
