@@ -36,7 +36,8 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - checkout
-      - matlab/install
+      - matlab/install:
+          no-output-timeout: 30m
       - run:
           name: Verify the matlab and mex scripts are available
           command: |
@@ -410,41 +411,29 @@ workflows:
             - batch-token
           matrix:
             parameters:
-              executor: [linux, windows]
+              executor: [linux, windows, macos]
 
       - integration-test-install-release:
           context:
             - batch-token
           matrix:
             parameters:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
               executor: [linux, windows, macos]
-=======
-              executor: [linux, windows]
->>>>>>> 4455cb8 (merge conflicts)
-=======
-              executor: [linux, windows, macos]
->>>>>>> 4975b80 (rebase)
-=======
-              executor: [linux, windows]
->>>>>>> 5d688b6 (rebase to main)
-              
+             
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux, windows]
+              executor: [linux, windows, macos]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows]
+              executor: [linux, windows, macos]
 
       - integration-test-run-build:
           matrix:
             parameters:
-              executor: [linux, windows]
+              executor: [linux, windows, macos]
 
       - orb-tools/pack:
           filters: *filters
