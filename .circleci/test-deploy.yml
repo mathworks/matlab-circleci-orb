@@ -407,15 +407,11 @@ workflows:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       - integration-test-install:
-          context:
-            - batch-token
           matrix:
             parameters:
               executor: [linux, windows, macos]
 
       - integration-test-install-release:
-          context:
-            - batch-token
           matrix:
             parameters:
               executor: [linux, windows, macos]
