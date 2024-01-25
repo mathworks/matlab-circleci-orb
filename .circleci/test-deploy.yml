@@ -60,7 +60,8 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: "R2021b"
+          release: "R2021bU2"
+          no-output-timeout: 30m
       - matlab/run-command:
           command: "assert(strcmp(version('-release'),'2021b'))"
 
@@ -407,15 +408,11 @@ workflows:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       - integration-test-install:
-          context:
-            - batch-token
           matrix:
             parameters:
               executor: [linux, windows, macos]
 
       - integration-test-install-release:
-          context:
-            - batch-token
           matrix:
             parameters:
 <<<<<<< HEAD

@@ -31,6 +31,7 @@ batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
+mpmpath="$tmpdir/mpm"
 
 # resolve release
 parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
