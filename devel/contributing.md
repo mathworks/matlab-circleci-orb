@@ -11,7 +11,7 @@ Familiarize yourself with the best practices in the [orb authoring process](http
 Make changes to the orb in the src folder. After you are done updating, pack and validate the orb locally:
 
 ```
-circleci orb pack > orb.yml
+circleci orb pack src > orb.yml
 circleci orb validate orb.yml
 ```
 Note: the packed orb.yml file does not need to be committed to the repo. CircleCI will take care of all of this on release.
