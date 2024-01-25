@@ -7,7 +7,7 @@ parameters:
     description: >
       List of MathWorks products to install.
     type: string
-    default: ''
+    default: 'MATLAB'
   release:
     description: >
       MATLAB release to install. You can specify R2020a or a later release. By default, the command

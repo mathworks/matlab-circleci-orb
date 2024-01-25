@@ -60,7 +60,8 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: "R2021b"
+          release: "R2021bU3"
+          no-output-timeout: 30m
       - matlab/run-command:
           command: "assert(strcmp(version('-release'),'2021b'))"
 
@@ -415,7 +416,7 @@ workflows:
           matrix:
             parameters:
               executor: [linux, windows, macos]
-             
+
       - integration-test-run-command:
           matrix:
             parameters:
