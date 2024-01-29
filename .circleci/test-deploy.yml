@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@dev:<<pipeline.git.revision>>
   orb-tools: circleci/orb-tools@11.1
-  win: circleci/windows@2.2.0
+  win: circleci/windows@5.0
 
 filters: &filters
   tags:
@@ -24,6 +24,7 @@ executors:
   macos:
     macos:
       xcode: 15.1.0
+    resource_class: macos.x86.medium.gen2
   windows:
     win/default
 
@@ -35,7 +36,8 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - checkout
-      - matlab/install
+      - matlab/install:
+          no-output-timeout: 30m
       - run:
           name: Verify the matlab and mex scripts are available
           command: |
@@ -58,9 +60,10 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: "R2021b"
+          release: "R2021bU3"
+          no-output-timeout: 30m
       - matlab/run-command:
-          command: assert(strcmp(version('-release'),'2021b'))
+          command: "assert(strcmp(version('-release'),'2021b'))"
 
   integration-test-run-command:
     parameters:
@@ -68,7 +71,8 @@ jobs:
         type: executor
     executor: <<parameters.executor>>
     steps:
-      - matlab/install
+      - matlab/install:
+          no-output-timeout: 30m
       - matlab/run-command:
           command: f = fopen('myscript.m', 'w'); fwrite(f, 'assert(true)'); fclose(f);
       - matlab/run-command:
@@ -120,7 +124,9 @@ jobs:
     executor: <<parameters.executor>>
     steps:
     # Setup for Integ tests for matlab/run-tests
-      - matlab/install
+      - matlab/install:
+          products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
+          no-output-timeout: 30m
       - run:
           command: |
             echo 'myvar = 123' > startup.m
@@ -222,17 +228,16 @@ jobs:
             grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
             rm console.log
           shell: bash
-            # Running test in parallel is currently unsupported
-            #      - matlab/run-tests:
-            #          use-parallel: true
-            #          source-folder: src
-            #      - run:
-            #          name: Verify tests ran in parallel
-            #          command: |
-            #            set -e
-            #            grep -q "parallel pool" console.log
-            #            rm console.log
-            #          shell: bash
+      # - matlab/run-tests:
+      #     use-parallel: true
+      #     source-folder: src
+      # - run:
+      #     name: Verify tests ran in parallel
+      #     command: |
+      #       set -e
+      #       grep -q "parallel pool" console.log
+      #       rm console.log
+      #     shell: bash
       - matlab/run-tests:
           output-detail: Detailed
           source-folder: src
@@ -328,7 +333,8 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       # Setup for Integ tests for matlab/run-build
-      - matlab/install
+      - matlab/install:
+          no-output-timeout: 30m
       - run:
           command: |
             cat \<<'_EOF' >> "buildfile.m"

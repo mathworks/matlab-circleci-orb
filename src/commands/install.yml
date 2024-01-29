@@ -3,17 +3,31 @@ description: >
   projects and does not include transformation products, such as MATLAB Coder and MATLAB Compiler.
 
 parameters:
+  products:
+    description: >
+      List of MathWorks products to install.
+    type: string
+    default: 'MATLAB'
   release:
     description: >
       MATLAB release to install. You can specify R2020a or a later release. By default, the command
       installs the latest release of MATLAB.
     type: string
     default: 'latest'
+  no-output-timeout:
+    description: >
+      Elapsed time the tests can run without output. The string is a decimal with unit suffix,
+      such as “20m”, “1.25h”, “5s”. The default is 10 minutes and the maximum is governed by the
+      maximum time a job is allowed to run.
+    type: string
+    default: 10m
 
 steps:
   - run:
       name: Install MATLAB
       environment:
         PARAM_RELEASE: <<parameters.release>>
+        PARAM_PRODUCTS: <<parameters.products>>
       command: <<include(scripts/install.sh)>>
       shell: bash
+      no_output_timeout: <<parameters.no-output-timeout>>
