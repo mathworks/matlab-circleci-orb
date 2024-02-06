@@ -1,6 +1,6 @@
 description: >
   Install a specified version of MATLAB. If you use this step to install transformation products, such
-  as MATLAB Coder™ and MATLAB Compiler™, the action does not automatically license such products for you.
+  as MATLAB Coder™ and MATLAB Compiler™, the orb does not automatically license such products for you.
 
 parameters:
   products:
