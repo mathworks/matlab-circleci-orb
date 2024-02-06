@@ -11,7 +11,9 @@ usage:
         image: ubuntu-2204:2022.07.1
       steps:
         - checkout
-        - matlab/install
+        # Install Simulink and Simulink Test in addition to MATLAB
+        - matlab/install:
+            products: Simulink Simulink_Test
         - matlab/run-tests:
             test-results-junit: test-results/matlab/results.xml
         - store_test_results:
