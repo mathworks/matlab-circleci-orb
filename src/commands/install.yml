@@ -1,26 +1,26 @@
 description: >
-  Install a specific version of MATLAB. If you use this command to install transformation products, such
-  as MATLAB Coder and MATLAB Compiler, the command does not automatically license such products for you.
+  Install a specific version of MATLAB. (If you use this command to install transformation products,
+  such as MATLAB Coder and MATLAB Compiler, the command does not automatically license such products for you.)
 
 parameters:
   products:
     description: >
       Products to install in addition to MATLAB, specified as a list of product names separated by
       spaces. You can specify this parameter to install most MathWorks products and support packages. The
-      command uses MATLAB Package Manager (`mpm`) for installing products. For a list of supported
+      command uses MATLAB Package Manager (`mpm`) to install products. For a list of supported
       products and their correctly formatted names, see
       https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/MPM.md#product-installation-options.
     type: string
     default: ''
   release:
     description: >
-      MATLAB release to install. You can specify R2021a or a later release. By default, the command
-      installs the latest release of MATLAB.
+      MATLAB release to install. You can specify R2021a or a later release. By default, the value of `release`
+      is `latest`. If you do not specify `release`, the command installs the latest release of MATLAB.
     type: string
     default: 'latest'
   no-output-timeout:
     description: >
-      Elapsed time the install command can run without output. The string is a decimal with unit suffix,
+      Elapsed time the command can run without output. The string is a decimal with unit suffix,
       such as “20m”, “1.25h”, “5s”. The default is 10 minutes and the maximum is governed by the
       maximum time a job is allowed to run.
     type: string
