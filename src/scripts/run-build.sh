@@ -25,10 +25,10 @@ fi
 # create buildtool command from parameters
 buildCommand="buildtool"
 
-if [ -z "$PARAM_TASKS" ]; then
+if [ ! -z "$PARAM_TASKS" ]; then
     buildCommand+=" ${PARAM_TASKS}"
 fi
-if [ -z "$PARAM_BUILD_OPTIONS" ]; then
+if [ ! -z "$PARAM_BUILD_OPTIONS" ]; then
     buildCommand+=" ${PARAM_BUILD_OPTIONS}"
 fi
 
