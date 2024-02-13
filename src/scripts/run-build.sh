@@ -23,13 +23,13 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 
 # create buildtool command from parameters
-buildCommand = "buildtool"
+buildCommand="buildtool"
 
 if [ -z "$PARAM_TASKS" ]; then
-    buildCommand += " ${PARAM_TASKS}"
+    buildCommand+=" ${PARAM_TASKS}"
 fi
 if [ -z "$PARAM_BUILD_OPTIONS" ]; then
-    buildCommand += " ${PARAM_BUILD_OPTIONS} -ignoreUnknownOptions"
+    buildCommand+=" ${PARAM_BUILD_OPTIONS}"
 fi
 
 # create script to execute
