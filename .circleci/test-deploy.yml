@@ -356,10 +356,6 @@ jobs:
 
               function checkTask(~)
               f = fopen('buildlog.txt', 'a+'); fprintf(f, 'checking\n'); fclose(f);
-              
-              function errorTask(~)
-              f = fopen('buildlog.txt', 'a+'); fprintf(f, 'erroring\n'); fclose(f);
-              error('Error occured in errorTask');
             _EOF
           shell: bash
       # run build with one specified task
