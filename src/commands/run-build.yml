@@ -12,8 +12,9 @@ parameters:
     default: ""
   build-options:
     description: >
-      Build options for MATLAB build tool. If you specify more than one option, use a space to
-      separate the options.
+      MATLAB build options, specified as a list of options separated by spaces. The command
+      supports the same options that you can pass to the `buildtool` command when running a
+      MATLAB build, see https://in.mathworks.com/help/matlab/ref/buildtool.html
     type: string
     default: ""
   startup-options:
