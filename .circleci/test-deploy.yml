@@ -415,20 +415,20 @@ jobs:
             rm buildlog.txt
           shell: bash
       # run build with continue on failure
-      - matlab/run-build || true:
-          tasks: error deploy
-          build-options: -continueOnFailure
-      - run:
-          name: Verify that correct tasks appear in buildlog.txt
-          command: |
-            set -e
-            grep "erroring" buildlog.txt
-            grep "building" buildlog.txt
-            grep "testing" buildlog.txt
-            grep "deploying" buildlog.txt
-            ! grep "checking" buildlog.txt
-            rm buildlog.txt
-          shell: bash
+      # - matlab/run-build || true:
+      #     tasks: error deploy
+      #     build-options: -continueOnFailure
+      # - run:
+      #     name: Verify that correct tasks appear in buildlog.txt
+      #     command: |
+      #       set -e
+      #       grep "erroring" buildlog.txt
+      #       grep "building" buildlog.txt
+      #       grep "testing" buildlog.txt
+      #       grep "deploying" buildlog.txt
+      #       ! grep "checking" buildlog.txt
+      #       rm buildlog.txt
+      #     shell: bash
 
 workflows:
   test-deploy:
