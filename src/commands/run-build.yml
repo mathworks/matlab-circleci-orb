@@ -12,13 +12,13 @@ parameters:
     default: ""
   build-options:
     description: >
-      Build options for MATLAB build tool. If you specify more than one option, use a space to 
+      Build options for MATLAB build tool. If you specify more than one option, use a space to
       separate the options.
     type: string
     default: ""
   startup-options:
     description: >
-      MATLAB startup options. If you specify more than one option, use a space to separate the 
+      MATLAB startup options. If you specify more than one option, use a space to separate the
       options.
     type: string
     default: ""
