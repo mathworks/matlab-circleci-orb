@@ -429,6 +429,7 @@ jobs:
             ! grep "checking" buildlog.txt
             rm buildlog.txt
           shell: bash
+          when: always
 
 workflows:
   test-deploy:
