@@ -356,6 +356,10 @@ jobs:
 
               function checkTask(~)
               f = fopen('buildlog.txt', 'a+'); fprintf(f, 'checking\n'); fclose(f);
+              
+              function errorTask(~)
+              f = fopen('buildlog.txt', 'a+'); fprintf(f, 'erroring\n'); fclose(f);
+              error('Error occured in errorTask');
             _EOF
           shell: bash
       # run build with one specified task
@@ -402,6 +406,36 @@ jobs:
             rm buildlog.txt
             rm console.log
           shell: bash
+      # run build with task skipping
+      - matlab/run-build:
+          tasks: deploy
+          build-options: -skip test
+      - run:
+          name: Verify that correct tasks appear in buildlog.txt
+          command: |
+            set -e
+            grep "building" buildlog.txt
+            ! grep "testing" buildlog.txt
+            grep "deploying" buildlog.txt
+            ! grep "checking" buildlog.txt
+            rm buildlog.txt
+          shell: bash
+      # run build with continue on failure
+      # - matlab/run-build:
+      #     tasks: error deploy
+      #     build-options: -continueOnFailure
+      # - run:
+      #     name: Verify that correct tasks appear in buildlog.txt
+      #     command: |
+      #       set -e
+      #       grep "erroring" buildlog.txt
+      #       grep "building" buildlog.txt
+      #       grep "testing" buildlog.txt
+      #       grep "deploying" buildlog.txt
+      #       ! grep "checking" buildlog.txt
+      #       rm buildlog.txt
+      #     shell: bash
+      #     when: always
 
 workflows:
   test-deploy:
