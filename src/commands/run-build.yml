@@ -15,7 +15,7 @@ parameters:
       MATLAB build options, specified as a list of options separated by spaces. The command
       supports the same options that you can pass to the `buildtool` command when running a
       MATLAB build. For more information, see
-      https://in.mathworks.com/help/matlab/ref/buildtool.html.
+      https://www.mathworks.com/help/matlab/ref/buildtool.html.
     type: string
     default: ""
   startup-options:
