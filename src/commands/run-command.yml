@@ -31,7 +31,7 @@ steps:
       name: Run MATLAB command
       environment:
         PARAM_COMMAND: <<parameters.command>>
-        PARAM_ARGS: <<parameters.startup-options>>
+        PARAM_STARTUP_OPTIONS: <<parameters.startup-options>>
       command: <<include(scripts/run-command.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>

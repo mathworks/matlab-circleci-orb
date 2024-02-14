@@ -348,7 +348,12 @@ jobs:
               function buildTask(~)
               f = fopen('buildlog.txt', 'a+'); fprintf(f, 'building\n'); fclose(f);
 
-              function testTask(~)
+              function testTask(~,tests,options)
+              arguments
+                ~
+                tests string = pwd
+                options.OutputDetail (1,1) string = "terse"
+              end
               f = fopen('buildlog.txt', 'a+'); fprintf(f, 'testing\n'); fclose(f);
 
               function deployTask(~)
@@ -413,6 +418,19 @@ jobs:
             grep "building" buildlog.txt
             ! grep "testing" buildlog.txt
             grep "deploying" buildlog.txt
+            ! grep "checking" buildlog.txt
+            rm buildlog.txt
+          shell: bash
+      # run build with task args
+      - matlab/run-build:
+          tasks: test("myTests",OutputDetail="concise")
+      - run:
+          name: Verify that correct tasks appear in buildlog.txt
+          command: |
+            set -e
+            grep "building" buildlog.txt
+            grep "testing" buildlog.txt
+            ! grep "deploying" buildlog.txt
             ! grep "checking" buildlog.txt
             rm buildlog.txt
           shell: bash
