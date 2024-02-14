@@ -397,11 +397,26 @@ jobs:
             grep "checking" buildlog.txt
             rm buildlog.txt
           shell: bash
+      # run build with task args
+      - matlab/run-build:
+          tasks: test("myTests",OutputDetail="concise")
+      - run:
+          name: Verify that correct tasks appear in buildlog.txt
+          command: |
+            set -e
+            grep "building" buildlog.txt
+            grep "testing" buildlog.txt
+            grep "myTests" buildlog.txt
+            grep "concise" buildlog.txt
+            ! grep "deploying" buildlog.txt
+            ! grep "checking" buildlog.txt
+            rm buildlog.txt
+          shell: bash
       # run build with default tasks
       - matlab/run-build:
           startup-options: -logfile console.log
       - run:
-          name: Verify that correct tasks appear in buildlog.txt
+          name: Verify that correct tasks appear in buildlog.txt and console.log
           command: |
             set -e
             grep "building" buildlog.txt
@@ -430,21 +445,6 @@ jobs:
             ! grep "tests" buildlog.txt
             ! grep "terse" buildlog.txt
             grep "deploying" buildlog.txt
-            ! grep "checking" buildlog.txt
-            rm buildlog.txt
-          shell: bash
-      # run build with task args
-      - matlab/run-build:
-          tasks: test("myTests",OutputDetail="concise")
-      - run:
-          name: Verify that correct tasks appear in buildlog.txt
-          command: |
-            set -e
-            grep "building" buildlog.txt
-            grep "testing" buildlog.txt
-            grep "myTests" buildlog.txt
-            grep "concise" buildlog.txt
-            ! grep "deploying" buildlog.txt
             ! grep "checking" buildlog.txt
             rm buildlog.txt
           shell: bash
