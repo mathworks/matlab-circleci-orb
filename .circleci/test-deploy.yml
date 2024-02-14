@@ -351,10 +351,14 @@ jobs:
               function testTask(~,tests,options)
               arguments
                 ~
-                tests string = pwd
+                tests string = "tests"
                 options.OutputDetail (1,1) string = "terse"
               end
-              f = fopen('buildlog.txt', 'a+'); fprintf(f, 'testing\n'); fclose(f);
+              f = fopen('buildlog.txt', 'a+');
+              fprintf(f, 'testing\n');
+              fprintf(f, '%s\n', tests);
+              fprintf(f, '%s\n', options.OutputDetail);
+              fclose(f);
 
               function deployTask(~)
               f = fopen('buildlog.txt', 'a+'); fprintf(f, 'deploying\n'); fclose(f);
@@ -372,6 +376,8 @@ jobs:
             set -e
             grep "building" buildlog.txt
             grep "testing" buildlog.txt
+            grep "tests" buildlog.txt
+            grep "terse" buildlog.txt
             grep "deploying" buildlog.txt
             ! grep "checking" buildlog.txt
             rm buildlog.txt
@@ -385,6 +391,8 @@ jobs:
             set -e
             grep "building" buildlog.txt
             grep "testing" buildlog.txt
+            grep "tests" buildlog.txt
+            grep "terse" buildlog.txt
             grep "deploying" buildlog.txt
             grep "checking" buildlog.txt
             rm buildlog.txt
@@ -399,6 +407,8 @@ jobs:
             grep "building" buildlog.txt
             grep "build" console.log
             grep "testing" buildlog.txt
+            grep "tests" buildlog.txt
+            grep "terse" buildlog.txt
             grep "test" console.log
             ! grep "deploying" buildlog.txt
             ! grep "deploy" console.log
@@ -417,6 +427,8 @@ jobs:
             set -e
             grep "building" buildlog.txt
             ! grep "testing" buildlog.txt
+            ! grep "tests" buildlog.txt
+            ! grep "terse" buildlog.txt
             grep "deploying" buildlog.txt
             ! grep "checking" buildlog.txt
             rm buildlog.txt
@@ -430,6 +442,8 @@ jobs:
             set -e
             grep "building" buildlog.txt
             grep "testing" buildlog.txt
+            grep "myTests" buildlog.txt
+            grep "concise" buildlog.txt
             ! grep "deploying" buildlog.txt
             ! grep "checking" buildlog.txt
             rm buildlog.txt
