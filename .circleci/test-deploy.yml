@@ -399,7 +399,7 @@ jobs:
           shell: bash
       # run build with task args
       - matlab/run-build:
-          tasks: test("myTests",OutputDetail="concise")
+          tasks: test("myTests", OutputDetail="concise")
       - run:
           name: Verify that correct tasks appear in buildlog.txt
           command: |
