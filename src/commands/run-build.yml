@@ -10,6 +10,14 @@ parameters:
       in the plan returned by buildfile.m as well as all the tasks on which they depend.
     type: string
     default: ""
+  build-options:
+    description: >
+      MATLAB build options, specified as a list of options separated by spaces. The command
+      supports the same options that you can pass to the `buildtool` command when running a
+      MATLAB build. For more information, see
+      https://www.mathworks.com/help/matlab/ref/buildtool.html.
+    type: string
+    default: ""
   startup-options:
     description: >
       MATLAB startup options. If you specify more than one option, use a space to
@@ -29,7 +37,8 @@ steps:
       name: Run MATLAB build
       environment:
         PARAM_TASKS: <<parameters.tasks>>
-        PARAM_ARGS: <<parameters.startup-options>>
+        PARAM_BUILD_OPTIONS: <<parameters.build-options>>
+        PARAM_STARTUP_OPTIONS: <<parameters.startup-options>>
       command: <<include(scripts/run-build.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>

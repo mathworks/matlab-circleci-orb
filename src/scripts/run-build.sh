@@ -23,7 +23,14 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 
 # create buildtool command from parameters
-buildCommand="buildtool ${PARAM_TASKS}"
+buildCommand="buildtool"
+
+if [ -n "$PARAM_TASKS" ]; then
+    buildCommand+=" ${PARAM_TASKS}"
+fi
+if [ -n "$PARAM_BUILD_OPTIONS" ]; then
+    buildCommand+=" ${PARAM_BUILD_OPTIONS}"
+fi
 
 # create script to execute
 script=command_${RANDOM}
@@ -34,4 +41,4 @@ $buildCommand
 EOF
 
 # run MATLAB command
-"${tmpdir}/bin/run-matlab-command$binext" "setenv('MW_ORIG_WORKING_FOLDER', cd('${scriptdir//\'/\'\'}'));$script" $PARAM_ARGS
+"${tmpdir}/bin/run-matlab-command$binext" "setenv('MW_ORIG_WORKING_FOLDER', cd('${scriptdir//\'/\'\'}'));$script" $PARAM_STARTUP_OPTIONS

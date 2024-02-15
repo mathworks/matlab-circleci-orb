@@ -122,7 +122,7 @@ steps:
         PARAM_USE_PARALLEL: <<parameters.use-parallel>>
         PARAM_OUTPUT_DETAIL: <<parameters.output-detail>>
         PARAM_LOGGING_LEVEL: <<parameters.logging-level>>
-        PARAM_ARGS: <<parameters.startup-options>>
+        PARAM_STARTUP_OPTIONS: <<parameters.startup-options>>
       command: <<include(scripts/run-tests.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>

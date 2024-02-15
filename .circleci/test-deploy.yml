@@ -348,8 +348,17 @@ jobs:
               function buildTask(~)
               f = fopen('buildlog.txt', 'a+'); fprintf(f, 'building\n'); fclose(f);
 
-              function testTask(~)
-              f = fopen('buildlog.txt', 'a+'); fprintf(f, 'testing\n'); fclose(f);
+              function testTask(~,tests,options)
+              arguments
+                ~
+                tests string = "tests"
+                options.OutputDetail (1,1) string = "terse"
+              end
+              f = fopen('buildlog.txt', 'a+');
+              fprintf(f, 'testing\n');
+              fprintf(f, '%s\n', tests);
+              fprintf(f, '%s\n', options.OutputDetail);
+              fclose(f);
 
               function deployTask(~)
               f = fopen('buildlog.txt', 'a+'); fprintf(f, 'deploying\n'); fclose(f);
@@ -367,6 +376,8 @@ jobs:
             set -e
             grep "building" buildlog.txt
             grep "testing" buildlog.txt
+            grep "tests" buildlog.txt
+            grep "terse" buildlog.txt
             grep "deploying" buildlog.txt
             ! grep "checking" buildlog.txt
             rm buildlog.txt
@@ -380,20 +391,39 @@ jobs:
             set -e
             grep "building" buildlog.txt
             grep "testing" buildlog.txt
+            grep "tests" buildlog.txt
+            grep "terse" buildlog.txt
             grep "deploying" buildlog.txt
             grep "checking" buildlog.txt
+            rm buildlog.txt
+          shell: bash
+      # run build with task args
+      - matlab/run-build:
+          tasks: test("myTests",OutputDetail="concise")
+      - run:
+          name: Verify that correct tasks appear in buildlog.txt
+          command: |
+            set -e
+            grep "building" buildlog.txt
+            grep "testing" buildlog.txt
+            grep "myTests" buildlog.txt
+            grep "concise" buildlog.txt
+            ! grep "deploying" buildlog.txt
+            ! grep "checking" buildlog.txt
             rm buildlog.txt
           shell: bash
       # run build with default tasks
       - matlab/run-build:
           startup-options: -logfile console.log
       - run:
-          name: Verify that correct tasks appear in buildlog.txt
+          name: Verify that correct tasks appear in buildlog.txt and console.log
           command: |
             set -e
             grep "building" buildlog.txt
             grep "build" console.log
             grep "testing" buildlog.txt
+            grep "tests" buildlog.txt
+            grep "terse" buildlog.txt
             grep "test" console.log
             ! grep "deploying" buildlog.txt
             ! grep "deploy" console.log
@@ -401,6 +431,22 @@ jobs:
             ! grep "check" console.log
             rm buildlog.txt
             rm console.log
+          shell: bash
+      # run build with task skipping
+      - matlab/run-build:
+          tasks: deploy
+          build-options: -skip test
+      - run:
+          name: Verify that correct tasks appear in buildlog.txt
+          command: |
+            set -e
+            grep "building" buildlog.txt
+            ! grep "testing" buildlog.txt
+            ! grep "tests" buildlog.txt
+            ! grep "terse" buildlog.txt
+            grep "deploying" buildlog.txt
+            ! grep "checking" buildlog.txt
+            rm buildlog.txt
           shell: bash
 
 workflows:
