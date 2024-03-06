@@ -24,6 +24,7 @@ downloadAndRun() {
 }
 
 os=$(uname)
+arch=$(uname -m)
 binext=""
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
@@ -56,9 +57,9 @@ if [[ $os = Linux ]]; then
         wget \
         unzip \
         ca-certificates"
-elif [[ $os = Darwin && $(uname -p) == 'arm' ]]; then
+elif [[ $os = Darwin && $arch == arm64 ]]; then
     # install Java runtime
-    curl -LO https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg
+    curl -sfLO https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg
     sudoIfAvailable -c "installer -pkg amazon-corretto-8-aarch64-macos-jdk.pkg -target /"
 fi
 
@@ -70,7 +71,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     mpmdir=$(cygpath "$mpmdir")
     batchdir=$(cygpath "$batchdir")
 elif [[ $os = Darwin ]]; then
-    if [[ $(uname -p) == 'arm' ]]; then
+    if [[ $arch == arm64 ]]; then
          mwarch="maca64"
      else
          mwarch="maci64"
