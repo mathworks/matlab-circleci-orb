@@ -56,6 +56,10 @@ if [[ $os = Linux ]]; then
         wget \
         unzip \
         ca-certificates"
+elif [[ $os = Darwin && $(uname -p) == 'arm' ]]; then
+    # install Java runtime
+    curl -LO https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg
+    sudoIfAvailable -c "installer -pkg amazon-corretto-8-aarch64-macos-jdk.pkg -target /"
 fi
 
 # set os specific options
