@@ -64,10 +64,10 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: "R2021bU3"
+          release: "R2023bU1"
           no-output-timeout: 30m
       - matlab/run-command:
-          command: "assert(strcmp(version('-release'),'2021b'))"
+          command: "assert(strcmp(version('-release'),'2023b') && strcmp(version('-description'),'Update 1'))"
 
   integration-test-run-command:
     parameters:
