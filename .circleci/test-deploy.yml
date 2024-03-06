@@ -20,7 +20,7 @@ integration-tests: &integration-tests
 executors:
   linux: &linux-executor
     machine:
-      image: ubuntu-2204:2022.07.1
+      image: ubuntu-2204:2024.01.1
   macos:
     macos:
       xcode: 15.1.0
