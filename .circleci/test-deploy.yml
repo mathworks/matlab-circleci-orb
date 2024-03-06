@@ -25,6 +25,10 @@ executors:
     macos:
       xcode: 15.1.0
     resource_class: macos.x86.medium.gen2
+  macos-arm:
+    macos:
+      xcode: 15.1.0
+    resource_class: macos.m1.medium.gen1
   windows:
     win/default
 

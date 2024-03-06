@@ -11,9 +11,9 @@ set -o pipefail
 
 sudoIfAvailable() {
     if [[ -x $(command -v sudo) ]]; then
-    sudo -E bash "$@"
+        sudo -E bash "$@"
     else
-    bash "$@"
+        bash "$@"
     fi
 }
 
@@ -66,7 +66,11 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     mpmdir=$(cygpath "$mpmdir")
     batchdir=$(cygpath "$batchdir")
 elif [[ $os = Darwin ]]; then
-    mwarch="maci64"
+    if [[ $(uname -p) == 'arm' ]]; then
+         mwarch="maca64"
+     else
+         mwarch="maci64"
+     fi
     rootdir="$rootdir/MATLAB.app"
     sudoIfAvailable -c "launchctl limit maxfiles 65536 200000" # g3185941
 else
