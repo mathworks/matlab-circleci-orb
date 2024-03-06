@@ -59,8 +59,9 @@ if [[ $os = Linux ]]; then
         ca-certificates"
 elif [[ $os = Darwin && $arch == arm64 ]]; then
     # install Java runtime
-    curl -sfLO https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg
-    sudoIfAvailable -c "installer -pkg amazon-corretto-8-aarch64-macos-jdk.pkg -target /"
+    jdkpkg="$tmpdir/jdk.pkg"
+    curl -sfL https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg -o $jdkpkg
+    sudoIfAvailable -c "installer -pkg $jdkpkg -target /"
 fi
 
 # set os specific options
