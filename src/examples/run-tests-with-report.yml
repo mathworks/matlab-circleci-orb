@@ -1,5 +1,5 @@
 description: >
-  Run all tests in your project and produce a test results report.
+  Run all tests in your project and produce test results in a JUnit-style XML format.
 
 usage:
   version: 2.1
@@ -8,7 +8,7 @@ usage:
   jobs:
     build:
       machine:
-        image: ubuntu-2204:2022.07.1
+        image: ubuntu-2204:2024.01.1
       steps:
         - checkout
         # Install Simulink and Simulink Test in addition to MATLAB

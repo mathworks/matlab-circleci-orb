@@ -1,69 +1,97 @@
 description: >
-  Run all tests in a MATLAB project and generate test artifacts. MATLAB includes any files in your
-  project that have a Test label. If your pipeline does not leverage a MATLAB project, then MATLAB
-  includes all tests in the the root of your repository including its subfolders.
+  Run MATLAB and Simulink tests and generate test and coverage artifacts. The command uses the
+  topmost MATLAB version on the system path.
 
 parameters:
-  test-results-junit:
-    description: >
-      Path to write test results report in JUnit XML format.
-    type: string
-    default: ''
-  code-coverage-cobertura:
-    description: >
-      Path to write code coverage report in Cobertura XML format.
-    type: string
-    default: ''
-  code-coverage-html:
-    description: >
-      Path to write code coverage report in HTML format.
-    type: string
-    default: ''
   source-folder:
     description: >
       Location of the folder containing source code, relative to the project root folder. The
-      specified folder and its subfolders are added to the top of the MATLAB search path. To
-      generate a code coverage report, MATLAB uses only the source code in the specified folder and
-      its subfolders. You can specify multiple folders using a colon-separated or a
-      semicolon-separated list.
+      specified folder and its subfolders are added to the top of the MATLAB search path. If
+      you specify source-folder and then generate a coverage report, MATLAB uses only the source
+      code in the specified folder and its subfolders to generate the report. You can specify multiple
+      folders using a colon-separated or semicolon-separated list.
     type: string
     default: ''
   select-by-folder:
     description: >
       Location of the folder used to select test suite elements, relative to the project root folder.
-      To generate a test suite, MATLAB uses only the tests in the specified folder and its subfolders.
-      You can specify multiple folders using a colon-separated or a semicolon-separated list.
+      To create a test suite, MATLAB uses only the tests in the specified folder and its subfolders.
+      You can specify multiple folders using a colon-separated or semicolon-separated list.
     type: string
     default: ''
   select-by-tag:
     description: >
-      Test tag used to select test suite elements. To generate a test suite, MATLAB uses only the test elements
+      Test tag used to select test suite elements. To create a test suite, MATLAB uses only the test elements
       with the specified tag.
     type: string
     default: ''
-  model-coverage-cobertura:
+  strict:
     description: >
-      Path to write model coverage report in Cobertura XML format.
+      Option to apply strict checks when running tests, specified as `false` or `true`. If you specify
+      a value of `true`, the command generates a qualification failure whenever a test issues a warning.
+    type: boolean
+    default: false
+  use-parallel:
+    description: >
+      Option to run tests in parallel, specified as `false` or `true`. If the test runner configuration
+      is suited for parallelization, you can specify a value of `true` to run tests in parallel. This
+      input requires a Parallel Computing Toolbox license.
+    type: boolean
+    default: false
+  output-detail:
+    description: >
+      Amount of event detail displayed for the test run, specified as `none`, `terse`, `concise`, `detailed`,
+      or `verbose`. By default, the command displays failing and logged events at the `detailed` level and test
+      run progress at the `concise` level.
     type: string
     default: ''
-  model-coverage-html:
+  logging-level:
     description: >
-      Path to write model coverage report in HTML format.
-    type: string
-    default: ''
-  test-results-simulink-test:
-    description: >
-      Path to export Simulink Test Manager results in MLDATX format.
-    type: string
-    default: ''
-  test-results-html:
-    description: >
-      Path to write test results report in HTML format.
+      Maximum verbosity level for logged diagnostics included for the test run, specified as `none`, `terse`,
+      `concise`, `detailed`, or `verbose`. By default, the command includes diagnostics logged at the `terse` level.
     type: string
     default: ''
   test-results-pdf:
     description: >
-      Path to write test results report in PDF format.
+      Path to write the test results in PDF format. On macOS platforms, this input is supported in MATLAB R2020b and later.
+    type: string
+    default: ''
+  test-results-junit:
+    description: >
+      Path to write the test results in JUnit-style XML format.
+    type: string
+    default: ''
+  test-results-simulink-test:
+    description: >
+      Path to export Simulink Test Manager results in MLDATX format. This input requires a Simulink Test license, and
+      is supported in MATLAB R2019a and later.
+    type: string
+    default: ''
+  test-results-html:
+    description: >
+      Path to write the test results in HTML format.
+    type: string
+    default: ''
+  code-coverage-cobertura:
+    description: >
+      Path to write the code coverage results in Cobertura XML format.
+    type: string
+    default: ''
+  code-coverage-html:
+    description: >
+      Path to write the code coverage results in HTML format.
+    type: string
+    default: ''
+  model-coverage-cobertura:
+    description: >
+      Path to write the model coverage results in Cobertura XML format. This input requires a Simulink Coverage license,
+      and is supported in MATLAB R2018b and later.
+    type: string
+    default: ''
+  model-coverage-html:
+    description: >
+      Path to write the model coverage results in HTML format. This input requires a Simulink Coverage license, and is
+      supported in MATLAB R2018b and later.
     type: string
     default: ''
   no-output-timeout:
@@ -73,33 +101,11 @@ parameters:
       maximum time a job is allowed to run.
     type: string
     default: 10m
-  strict:
-    description: >
-      Whether to apply strict checks when running the tests. For example, the command generates a
-      qualification failure if a test issues a warning.
-    type: boolean
-    default: false
-  use-parallel:
-    description: >
-      Whether to run tests in parallel (requires Parallel Computing Toolbox). This feature might
-      not be compatible with certain arguments, in which case, tests run in serial regardless of
-      the specified value.
-    type: boolean
-    default: false
-  output-detail:
-    description: >
-      Display level for event details produced by the test run, specified as 'None', 'Terse', 'Concise', 'Detailed', or 'Verbose'.
-    type: string
-    default: ''
-  logging-level:
-    description: >
-      Maximum verbosity level for logged diagnostics included for the test run, specified as 'None', 'Terse', 'Concise', 'Detailed', or 'Verbose'.
-    type: string
-    default: ''
   startup-options:
     description: >
-      MATLAB startup options. If you specify more than one option, use a space to
-      separate the options.
+      MATLAB startup options, specified as a list of options separated by spaces. For more
+      information about startup options, see
+      https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html
     type: string
     default: ""
 
