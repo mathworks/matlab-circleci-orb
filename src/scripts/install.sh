@@ -11,9 +11,9 @@ set -o pipefail
 
 sudoIfAvailable() {
     if [[ -x $(command -v sudo) ]]; then
-    sudo -E bash "$@"
+        sudo -E bash "$@"
     else
-    bash "$@"
+        bash "$@"
     fi
 }
 
@@ -24,6 +24,7 @@ downloadAndRun() {
 }
 
 os=$(uname)
+arch=$(uname -m)
 binext=""
 tmpdir=$(dirname "$(mktemp -u)")
 rootdir="$tmpdir/matlab_root"
@@ -56,6 +57,11 @@ if [[ $os = Linux ]]; then
         wget \
         unzip \
         ca-certificates"
+elif [[ $os = Darwin && $arch == arm64 ]]; then
+    # install Java runtime
+    jdkpkg="$tmpdir/jdk.pkg"
+    curl -sfL https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg -o $jdkpkg
+    sudoIfAvailable -c "installer -pkg $jdkpkg -target /"
 fi
 
 # set os specific options
@@ -66,7 +72,11 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     mpmdir=$(cygpath "$mpmdir")
     batchdir=$(cygpath "$batchdir")
 elif [[ $os = Darwin ]]; then
-    mwarch="maci64"
+    if [[ $arch == arm64 ]]; then
+         mwarch="maca64"
+     else
+         mwarch="maci64"
+     fi
     rootdir="$rootdir/MATLAB.app"
     sudoIfAvailable -c "launchctl limit maxfiles 65536 200000" # g3185941
 else

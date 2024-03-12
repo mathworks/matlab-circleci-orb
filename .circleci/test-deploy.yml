@@ -20,11 +20,15 @@ integration-tests: &integration-tests
 executors:
   linux: &linux-executor
     machine:
-      image: ubuntu-2204:2022.07.1
+      image: ubuntu-2204:2024.01.1
   macos:
     macos:
       xcode: 15.1.0
     resource_class: macos.x86.medium.gen2
+  macos-arm:
+    macos:
+      xcode: 15.3.0
+    resource_class: macos.m1.medium.gen1
   windows:
     win/default
 
@@ -60,10 +64,10 @@ jobs:
     steps:
       - checkout
       - matlab/install:
-          release: "R2021bU3"
+          release: "R2023bU1"
           no-output-timeout: 30m
       - matlab/run-command:
-          command: "assert(strcmp(version('-release'),'2021b'))"
+          command: "assert(strcmp(version('-release'),'2023b') && strcmp(version('-description'),'Update 1'))"
 
   integration-test-run-command:
     parameters:
@@ -456,27 +460,27 @@ workflows:
       - integration-test-install:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows, macos, macos-arm]
 
       - integration-test-install-release:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows, macos, macos-arm]
 
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows, macos, macos-arm]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows, macos, macos-arm]
 
       - integration-test-run-build:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux, windows, macos, macos-arm]
 
       - orb-tools/pack:
           filters: *filters
