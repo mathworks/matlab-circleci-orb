@@ -1,5 +1,7 @@
 description: >
-  Run MATLAB and Simulink tests and generate test and coverage artifacts. The command uses the
+  Run all tests in a MATLAB project and generate test artifacts. MATLAB includes any files in your
+  project that have a Test label. If your pipeline does not leverage a MATLAB project, then MATLAB
+  includes all tests in the the root of your repository including its subfolders. The command uses the
   topmost MATLAB version on the system path.
 
 parameters:
