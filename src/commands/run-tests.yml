@@ -1,15 +1,15 @@
 description: >
-  Run all tests in a MATLAB project and generate test artifacts. MATLAB includes any files in your
-  project that have a Test label. If your pipeline does not leverage a MATLAB project, then MATLAB
-  includes all tests in the the root of your repository including its subfolders. The command uses the
-  topmost MATLAB version on the system path.
+  Run MATLAB and Simulink tests and generate artifacts. By default, MATLAB includes any files in
+  your project that have a Test label. If your pipeline does not use a MATLAB project, or if it
+  uses a MATLAB release before R2019a, then MATLAB includes all tests in the root of your
+  repository and in any of its subfolders.
 
 parameters:
   source-folder:
     description: >
       Location of the folder containing source code, relative to the project root folder. The
       specified folder and its subfolders are added to the top of the MATLAB search path. If
-      you specify source-folder and then generate a coverage report, MATLAB uses only the source
+      you specify `source-folder` and then generate a coverage report, MATLAB uses only the source
       code in the specified folder and its subfolders to generate the report. You can specify multiple
       folders using a colon-separated or semicolon-separated list.
     type: string
@@ -37,7 +37,7 @@ parameters:
     description: >
       Option to run tests in parallel, specified as `false` or `true`. If the test runner configuration
       is suited for parallelization, you can specify a value of `true` to run tests in parallel. This
-      input requires a Parallel Computing Toolbox license.
+      parameter requires a Parallel Computing Toolbox license.
     type: boolean
     default: false
   output-detail:
@@ -55,7 +55,7 @@ parameters:
     default: ''
   test-results-pdf:
     description: >
-      Path to write the test results in PDF format. On macOS platforms, this input is supported in MATLAB R2020b and later.
+      Path to write the test results in PDF format. On macOS platforms, this parameter is supported in MATLAB R2020b and later.
     type: string
     default: ''
   test-results-junit:
@@ -65,7 +65,7 @@ parameters:
     default: ''
   test-results-simulink-test:
     description: >
-      Path to export Simulink Test Manager results in MLDATX format. This input requires a Simulink Test license, and
+      Path to export Simulink Test Manager results in MLDATX format. This parameter requires a Simulink Test license, and
       is supported in MATLAB R2019a and later.
     type: string
     default: ''
@@ -86,13 +86,13 @@ parameters:
     default: ''
   model-coverage-cobertura:
     description: >
-      Path to write the model coverage results in Cobertura XML format. This input requires a Simulink Coverage license,
+      Path to write the model coverage results in Cobertura XML format. This parameter requires a Simulink Coverage license,
       and is supported in MATLAB R2018b and later.
     type: string
     default: ''
   model-coverage-html:
     description: >
-      Path to write the model coverage results in HTML format. This input requires a Simulink Coverage license, and is
+      Path to write the model coverage results in HTML format. This parameter requires a Simulink Coverage license, and is
       supported in MATLAB R2018b and later.
     type: string
     default: ''
@@ -107,7 +107,7 @@ parameters:
     description: >
       MATLAB startup options, specified as a list of options separated by spaces. For more
       information about startup options, see
-      https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html
+      https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html.
     type: string
     default: ""
 

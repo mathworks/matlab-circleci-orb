@@ -1,5 +1,5 @@
 description: >
-  Execute a MATLAB script, function, or statement. The command uses the topmost MATLAB version
+  Run MATLAB scripts, functions, and statements. The command uses the topmost MATLAB version
   on the system path.
 
 parameters:
@@ -16,7 +16,7 @@ parameters:
     description: >
       MATLAB startup options, specified as a list of options separated by spaces. For more
       information about startup options, see
-      https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html
+      https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html.
     type: string
     default: ""
   no-output-timeout:
