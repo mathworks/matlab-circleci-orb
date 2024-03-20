@@ -1,16 +1,16 @@
 description: >
   Run a build using the MATLAB build tool. Use this command to run the tasks specified in a file
   named `buildfile.m` in the root of your repository. To use the `run-build` command, you need MATLAB
-  R2022b or a later release. MATLAB exits with exit code 0 if the tasks run without error. Otherwise,
-  MATLAB terminates with a nonzero exit code, which causes the command to fail. The command uses the
-  topmost MATLAB version on the system path.
+  R2022b or a later release. The command uses the topmost MATLAB version on the system path.
 
 parameters:
   tasks:
     description: >
       Tasks to run, specified as a list of task names separated by spaces. If a task accepts arguments,
       enclose them in parentheses. If you do not specify `tasks`, the command runs the default tasks in
-      `buildfile.m` as well as all the tasks on which they depend.
+      `buildfile.m` as well as all the tasks on which they depend. MATLAB exits with exit code 0 if the
+      tasks run without error. Otherwise, MATLAB terminates with a nonzero exit code, which causes the
+      command to fail.
     type: string
     default: ""
   build-options:

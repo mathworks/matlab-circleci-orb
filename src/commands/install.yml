@@ -1,6 +1,6 @@
 description: >
-  Install a specific version of MATLAB. If you do not specify a release, the command sets up the latest
-  release of MATLAB. As part of the install process, the command prepends MATLAB to the PATH system
+  Install a specific release of MATLAB. If you do not specify a release, the command installs the latest
+  release of MATLAB. As part of the installation process, the command prepends MATLAB to the PATH system
   environment variable.
 
 parameters:
