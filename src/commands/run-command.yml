@@ -1,7 +1,6 @@
 description: >
   Run MATLAB scripts, functions, and statements. When you use this command, all of the required
-  files must be on the MATLAB search path. The command uses the topmost MATLAB version on the
-  system path.
+  files must be on the MATLAB search path.
 
 parameters:
   command:

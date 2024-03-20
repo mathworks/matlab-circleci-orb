@@ -1,7 +1,7 @@
 description: >
   Run a build using the MATLAB build tool. Use this command to run the tasks specified in a file
   named `buildfile.m` in the root of your repository. To use the `run-build` command, you need MATLAB
-  R2022b or a later release. The command uses the topmost MATLAB version on the system path.
+  R2022b or a later release.
 
 parameters:
   tasks:
