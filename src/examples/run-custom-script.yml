@@ -1,5 +1,5 @@
 description: >
-  Run a custom MATLAB script in your project.
+  Run a MATLAB script in your project.
 
 usage:
   version: 2.1
@@ -8,7 +8,7 @@ usage:
   jobs:
     build:
       machine:
-        image: ubuntu-2204:2022.07.1
+        image: ubuntu-2204:2024.01.1
       steps:
         - checkout
         - matlab/install

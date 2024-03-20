@@ -1,13 +1,16 @@
 description: >
-  Run builds using the MATLAB build tool. Use this command to run the tasks in the plan returned
-  by a file named buildfile.m in the root of your repository. To use the run-build command, you
-  need MATLAB R2022b or a later release.
+  Run a build using the MATLAB build tool. Use this command to run the tasks specified in a file
+  named `buildfile.m` in the root of your repository. To use the `run-build` command, you need MATLAB
+  R2022b or a later release.
 
 parameters:
   tasks:
     description: >
-      Space-separated list of tasks to run. If not specified, the command runs the default tasks
-      in the plan returned by buildfile.m as well as all the tasks on which they depend.
+      Tasks to run, specified as a list of task names separated by spaces. If a task accepts arguments,
+      enclose them in parentheses. If you do not specify `tasks`, the command runs the default tasks in
+      `buildfile.m` as well as all the tasks on which they depend. MATLAB exits with exit code 0 if the
+      tasks run without error. Otherwise, MATLAB terminates with a nonzero exit code, which causes the
+      command to fail.
     type: string
     default: ""
   build-options:
@@ -20,8 +23,9 @@ parameters:
     default: ""
   startup-options:
     description: >
-      MATLAB startup options. If you specify more than one option, use a space to
-      separate the options.
+      MATLAB startup options, specified as a list of options separated by spaces. For more
+      information about startup options, see
+      https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html.
     type: string
     default: ""
   no-output-timeout:

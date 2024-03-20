@@ -1,21 +1,22 @@
 description: >
-  Execute a MATLAB script, function, or statement. MATLAB exits with exit code 0 if the specified
-  script, function, or statement executes successfully without error. Otherwise, MATLAB terminates
-  with a nonzero exit code, which causes the build to fail. You can use the assert or error
-  functions in the command to ensure that builds fail when necessary. When you use this command,
-  all of the required files must be on the MATLAB search path.
+  Run MATLAB scripts, functions, and statements. When you use this command, all of the required
+  files must be on the MATLAB search path.
 
 parameters:
   command:
     description: >
-      Script, function, or statement to execute. If the value of command is the name of a MATLAB
-      script or function, do not specify the file extension. If you specify more than one MATLAB
-      command, use a comma or semicolon to separate the commands.
+      Script, function, or statement to execute. If the value of `command` is the name of a MATLAB
+      script or function, do not specify the file extension. If you specify more than one script,
+      function, or statement, use a comma or semicolon to separate them. MATLAB exits with exit
+      code 0 if the specified script, function, or statement executes successfully without error.
+      Otherwise, MATLAB terminates with a nonzero exit code, which causes the command to fail.
+      To fail the command in certain conditions, use the `assert` or `error` function.
     type: string
   startup-options:
     description: >
-      MATLAB startup options. If you specify more than one option, use a space to
-      separate the options.
+      MATLAB startup options, specified as a list of options separated by spaces. For more
+      information about startup options, see
+      https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html.
     type: string
     default: ""
   no-output-timeout:
