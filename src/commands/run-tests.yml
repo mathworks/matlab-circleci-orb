@@ -65,7 +65,7 @@ parameters:
     default: ''
   test-results-simulink-test:
     description: >
-      Path to export Simulink Test Manager results in MLDATX format. This parameter requires a Simulink Test license, and
+      Path to export Simulink Test Manager results in MLDATX format. This parameter requires a Simulink Test license and
       is supported in MATLAB R2019a and later.
     type: string
     default: ''
@@ -86,13 +86,13 @@ parameters:
     default: ''
   model-coverage-cobertura:
     description: >
-      Path to write the model coverage results in Cobertura XML format. This parameter requires a Simulink Coverage license,
+      Path to write the model coverage results in Cobertura XML format. This parameter requires a Simulink Coverage license 
       and is supported in MATLAB R2018b and later.
     type: string
     default: ''
   model-coverage-html:
     description: >
-      Path to write the model coverage results in HTML format. This parameter requires a Simulink Coverage license, and is
+      Path to write the model coverage results in HTML format. This parameter requires a Simulink Coverage license and is
       supported in MATLAB R2018b and later.
     type: string
     default: ''
