@@ -13,7 +13,7 @@ integration-tests: &integration-tests
     orb-tools/pack,
     integration-test-install,
     integration-test-install-release,
-    integration-test-install-release-intel-on-arm,
+    integration-test-install-release-macos-intel-on-arm,
     integration-test-run-command,
     integration-test-run-tests
   ]
@@ -472,7 +472,7 @@ workflows:
               release: [R2023bU1]
 
       - integration-test-install-release:
-          name: integration-test-install-release-intel-on-arm
+          name: integration-test-install-release-macos-intel-on-arm
           executor: macos-arm
           release: R2023aU1
 

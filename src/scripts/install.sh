@@ -49,6 +49,7 @@ fi
 
 # install Intel version on Apple silicon prior to R2023b
 if [[ $os = Darwin && $arch = arm64 && $mpmrelease < "r2023b" ]]; then
+    sudoIfAvailable -c "softwareupdate --install-rosetta --agree-to-license"
     arch="x86_64"
 fi
 
