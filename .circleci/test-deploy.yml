@@ -470,7 +470,7 @@ workflows:
               executor: [linux, windows, macos, macos-arm]
               release: [R2023bU1]
 
-      - integration-test-install-intel-on-arm-release:
+      - integration-test-install-release:
           executor: macos-arm
           release: R2023aU1
 
