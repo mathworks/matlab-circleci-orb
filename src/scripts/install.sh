@@ -77,7 +77,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     mpmdir=$(cygpath "$mpmdir")
     batchdir=$(cygpath "$batchdir")
 elif [[ $os = Darwin ]]; then
-    if [[ $arch = arm64 && $mpmrelease >= "r2023b" ]]; then
+    if [[ $arch = arm64 && ! $mpmrelease < "r2023b" ]]; then
          mwarch="maca64"
      else
          mwarch="maci64"
