@@ -47,6 +47,11 @@ if [[ $mpmrelease < "r2020b" ]]; then
     exit 1
 fi
 
+# install Intel version on Apple silicon prior to R2023b
+if [[ $os = Darwin && $arch = arm64 && $mpmrelease < "r2023b" ]]; then
+    arch="x86_64"
+fi
+
 # install system dependencies
 if [[ $os = Linux ]]; then
     # install MATLAB dependencies
@@ -57,7 +62,7 @@ if [[ $os = Linux ]]; then
         wget \
         unzip \
         ca-certificates"
-elif [[ $os = Darwin && $arch == arm64 ]]; then
+elif [[ $os = Darwin && $arch = arm64 ]]; then
     # install Java runtime
     jdkpkg="$tmpdir/jdk.pkg"
     curl -sfL https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg -o $jdkpkg
@@ -72,7 +77,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     mpmdir=$(cygpath "$mpmdir")
     batchdir=$(cygpath "$batchdir")
 elif [[ $os = Darwin ]]; then
-    if [[ $arch == arm64 ]]; then
+    if [[ $arch = arm64 ]]; then
          mwarch="maca64"
      else
          mwarch="maci64"
