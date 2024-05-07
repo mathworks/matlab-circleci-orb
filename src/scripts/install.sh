@@ -47,12 +47,6 @@ if [[ $mpmrelease < "r2020b" ]]; then
     exit 1
 fi
 
-# install Intel version on Apple silicon prior to R2023b
-if [[ $os = Darwin && $arch = arm64 && $mpmrelease < "r2023b" ]]; then
-    sudoIfAvailable -c "softwareupdate --install-rosetta --agree-to-license"
-    arch="x86_64"
-fi
-
 # install system dependencies
 if [[ $os = Linux ]]; then
     # install MATLAB dependencies
@@ -64,10 +58,15 @@ if [[ $os = Linux ]]; then
         unzip \
         ca-certificates"
 elif [[ $os = Darwin && $arch = arm64 ]]; then
-    # install Java runtime
-    jdkpkg="$tmpdir/jdk.pkg"
-    curl -sfL https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg -o $jdkpkg
-    sudoIfAvailable -c "installer -pkg $jdkpkg -target /"
+    if [[ $mpmrelease < "r2023b" ]]; then
+        # install Rosetta 2
+        sudoIfAvailable -c "softwareupdate --install-rosetta --agree-to-license"
+    else
+        # install Java runtime
+        jdkpkg="$tmpdir/jdk.pkg"
+        curl -sfL https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg -o $jdkpkg
+        sudoIfAvailable -c "installer -pkg $jdkpkg -target /"
+    fi
 fi
 
 # set os specific options
@@ -78,7 +77,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     mpmdir=$(cygpath "$mpmdir")
     batchdir=$(cygpath "$batchdir")
 elif [[ $os = Darwin ]]; then
-    if [[ $arch = arm64 ]]; then
+    if [[ $arch = arm64 && $mpmrelease >= "r2023b" ]]; then
          mwarch="maca64"
      else
          mwarch="maci64"
