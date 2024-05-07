@@ -468,7 +468,7 @@ workflows:
           matrix:
             parameters:
               executor: [linux, windows, macos, macos-arm]
-              release: R2023bU1
+              release: [R2023bU1]
 
       - integration-test-install-intel-on-arm-release:
           executor: macos-arm
