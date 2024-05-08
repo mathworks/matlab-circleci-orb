@@ -13,6 +13,7 @@ integration-tests: &integration-tests
     orb-tools/pack,
     integration-test-install,
     integration-test-install-release,
+    integration-test-install-release-macos-intel-on-arm,
     integration-test-run-command,
     integration-test-run-tests
   ]
@@ -60,14 +61,16 @@ jobs:
     parameters:
       executor:
         type: executor
+      release:
+        type: string
     executor: <<parameters.executor>>
     steps:
       - checkout
       - matlab/install:
-          release: "R2023bU1"
+          release: <<parameters.release>>
           no-output-timeout: 30m
       - matlab/run-command:
-          command: "assert(strcmp(version('-release'),'2023b') && strcmp(version('-description'),'Update 1'))"
+          command: "exp='<<parameters.release>>'; assert(strcmp(version('-release'),exp(2:6)))"
 
   integration-test-run-command:
     parameters:
@@ -466,6 +469,12 @@ workflows:
           matrix:
             parameters:
               executor: [linux, windows, macos, macos-arm]
+              release: [R2023bU1]
+
+      - integration-test-install-release:
+          name: integration-test-install-release-macos-intel-on-arm
+          executor: macos-arm
+          release: R2023aU1
 
       - integration-test-run-command:
           matrix:
