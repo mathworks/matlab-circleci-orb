@@ -159,7 +159,7 @@ jobs:
             echo 'diary console.log' >> startup.m
           shell: bash
       - matlab/run-tests:
-          use-split: true 
+          use-splits: true 
           source-folder: src
       - matlab/run-tests:
           output-detail: Detailed
