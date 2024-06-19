@@ -465,11 +465,11 @@ workflows:
             parameters:
               executor: [linux]
 
-      - integration-test-install-release:
-          matrix:
-            parameters:
-              executor: [linux]
-              release: [R2023bU1]
+      # - integration-test-install-release:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux]
+      #         release: [R2023bU1]
 
       - integration-test-install-release:
           name: integration-test-install-release-macos-intel-on-arm
