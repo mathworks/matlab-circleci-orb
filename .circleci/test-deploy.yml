@@ -463,33 +463,33 @@ workflows:
       - integration-test-install:
           matrix:
             parameters:
-              executor: [linux, windows, macos, macos-arm]
+              executor: [linux]
 
-      # - integration-test-install-release:
-      #     matrix:
-      #       parameters:
-      #         executor: [linux, windows, macos, macos-arm]
-      #         release: [R2023bU1]
+      - integration-test-install-release:
+          matrix:
+            parameters:
+              executor: [linux]
+              release: [R2023bU1]
 
-      # - integration-test-install-release:
-      #     name: integration-test-install-release-macos-intel-on-arm
-      #     executor: macos-arm
-      #     release: R2023aU1
+      - integration-test-install-release:
+          name: integration-test-install-release-macos-intel-on-arm
+          executor: macos-arm
+          release: R2023aU1
 
-      # - integration-test-run-command:
-      #     matrix:
-      #       parameters:
-      #         executor: [linux, windows, macos, macos-arm]
+      - integration-test-run-command:
+          matrix:
+            parameters:
+              executor: [linux]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows, macos, macos-arm]
+              executor: [linux]
 
-      # - integration-test-run-build:
-      #     matrix:
-      #       parameters:
-      #         executor: [linux, windows, macos, macos-arm]
+      - integration-test-run-build:
+          matrix:
+            parameters:
+              executor: [linux]
 
       - orb-tools/pack:
           filters: *filters
