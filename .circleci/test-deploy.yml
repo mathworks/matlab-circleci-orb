@@ -159,8 +159,7 @@ jobs:
             echo 'diary console.log' >> startup.m
           shell: bash
       - matlab/run-tests:
-          strict: true
-          source-folder: src
+          use-split: true 
       - matlab/run-tests:
           output-detail: Detailed
           source-folder: src
