@@ -47,4 +47,6 @@ fi
     disp('Running MATLAB script with contents:');\
     disp(testScript.Contents);\
     fprintf('__________\n\n');\
-    run(testScript);" $PARAM_STARTUP_OPTIONS
+    run(testScript);\
+    disp('Calling my own run test');" $PARAM_STARTUP_OPTIONS
+    
