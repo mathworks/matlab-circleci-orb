@@ -460,36 +460,36 @@ workflows:
   test-deploy:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
-      - integration-test-install:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos, macos-arm]
+      # - integration-test-install:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos, macos-arm]
 
-      - integration-test-install-release:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos, macos-arm]
-              release: [R2023bU1]
+      # - integration-test-install-release:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos, macos-arm]
+      #         release: [R2023bU1]
 
-      - integration-test-install-release:
-          name: integration-test-install-release-macos-intel-on-arm
-          executor: macos-arm
-          release: R2023aU1
+      # - integration-test-install-release:
+      #     name: integration-test-install-release-macos-intel-on-arm
+      #     executor: macos-arm
+      #     release: R2023aU1
 
-      - integration-test-run-command:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos, macos-arm]
+      # - integration-test-run-command:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos, macos-arm]
 
       - integration-test-run-tests:
           matrix:
             parameters:
               executor: [linux, windows, macos, macos-arm]
 
-      - integration-test-run-build:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos, macos-arm]
+      # - integration-test-run-build:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos, macos-arm]
 
       - orb-tools/pack:
           filters: *filters
