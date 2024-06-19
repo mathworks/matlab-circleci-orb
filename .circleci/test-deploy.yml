@@ -160,6 +160,7 @@ jobs:
           shell: bash
       - matlab/run-tests:
           use-split: true 
+          source-folder: src
       - matlab/run-tests:
           output-detail: Detailed
           source-folder: src
