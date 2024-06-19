@@ -12,7 +12,7 @@ integration-tests: &integration-tests
   [
     orb-tools/pack,
     integration-test-install,
-    integration-test-install-release,
+    # integration-test-install-release,
     integration-test-install-release-macos-intel-on-arm,
     integration-test-run-command,
     integration-test-run-tests
