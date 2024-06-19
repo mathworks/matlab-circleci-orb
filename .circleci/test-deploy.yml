@@ -460,10 +460,10 @@ workflows:
   test-deploy:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
-      # - integration-test-install:
-      #     matrix:
-      #       parameters:
-      #         executor: [linux, windows, macos, macos-arm]
+      - integration-test-install:
+          matrix:
+            parameters:
+              executor: [linux, windows, macos, macos-arm]
 
       # - integration-test-install-release:
       #     matrix:
