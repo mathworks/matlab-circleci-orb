@@ -45,7 +45,7 @@ fi
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
     disp('Running MATLAB script with contents:');\
-    disp('');\
+    fprintf('__________\n\n');\
     disp(testScript);\
     fprintf('__________\n\n');\
     eval(testScript);\
