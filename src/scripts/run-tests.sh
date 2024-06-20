@@ -27,7 +27,6 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
-    addpath('${gendir}/custom_genscript');\
     testScript = custom_genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
