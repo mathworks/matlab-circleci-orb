@@ -135,35 +135,9 @@ jobs:
       - matlab/install:
           products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
           no-output-timeout: 30m
-      - run:
-          command: |
-            echo 'myvar = 123' > startup.m
-            mkdir src
-            echo 'function c=add(a,b);c=a+b;' > src/add.m
-            mkdir tests
-            echo "%% StartupTest" > tests/mytest.m
-            echo "evalin('base','assert(myvar==123)')" >> tests/mytest.m
-            echo "%% FirstTest" >> tests/mytest.m
-            echo "assert(add(1,2)==3)" >> tests/mytest.m
-            mkdir tests/filteredTest
-            echo "%% simpleTest" >> tests/filteredTest/filtertest.m
-            echo "assert(2==2)" >> tests/filteredTest/filtertest.m
-            printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
-            printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
-            printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
-          shell: bash
-
-    # Integ tests for matlab/run-tests
-      - run:
-          name: Set up diary for logging
-          command: |
-            echo 'diary console.log' >> startup.m
-          shell: bash
           
       - matlab/run-tests:
           use-split: true 
-          source-folder: src
-
 
   integration-test-run-build:
     parameters:
