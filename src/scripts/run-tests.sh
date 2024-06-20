@@ -44,8 +44,10 @@ fi
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
-    disp('Running MATLAB script with contents:\n');\
+    disp('Running MATLAB script with contents:');\
+    disp('');\
     disp(testScript);\
     fprintf('__________\n\n');\
-    eval(testScript);\" $PARAM_STARTUP_OPTIONS
+    eval(testScript);\
+    disp('Calling my own run test');" $PARAM_STARTUP_OPTIONS
     
