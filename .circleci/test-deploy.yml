@@ -39,6 +39,7 @@ jobs:
       executor:
         type: executor
     executor: <<parameters.executor>>
+    parallelism: 2
     steps:
       - checkout
       - matlab/install:
