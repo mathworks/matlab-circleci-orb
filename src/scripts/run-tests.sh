@@ -27,8 +27,8 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
-    addpath('${gendir}/scriptgen');\
-    testScript = genscript('Test',\
+    addpath('${gendir}/custom_genscript');\
+    testScript = custom_genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
     'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
@@ -41,12 +41,13 @@ fi
     'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
     'Strict',${PARAM_STRICT},\
+    'UseSplit', ${PARAM_USE_SPLIT},\
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
     disp('Running MATLAB script with contents:');\
-    disp(testScript.Contents);\
+    disp(testScript);\
     fprintf('__________\n\n');\
-    run(testScript);\
+    eval(testScript);\
     disp('Calling my own run test');" $PARAM_STARTUP_OPTIONS
     
