@@ -27,6 +27,8 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 
 echo "Present Working Directory: $(pwd)"
+TESTFILES = $(circleci tests glob "**/*.m" | xargs -n1 basename | sed ''s/\.m$//'' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}' | sed 's/,$//') 
+echo "$TESTFILES"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = custom_genscript('Test',\
