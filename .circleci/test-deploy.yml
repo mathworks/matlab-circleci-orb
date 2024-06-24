@@ -39,7 +39,6 @@ jobs:
       executor:
         type: executor
     executor: <<parameters.executor>>
-    parallelism: 2
     steps:
       - checkout
       - matlab/install:
@@ -130,6 +129,7 @@ jobs:
       executor:
         type: executor
     executor: <<parameters.executor>>
+    parallelism: 2    
     steps:
       - checkout
     # Setup for Integ tests for matlab/run-tests
