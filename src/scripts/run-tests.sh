@@ -49,7 +49,7 @@ fi
     'UseSplit', ${PARAM_USE_SPLIT},\
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
-    'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
+    'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
     'TestFiles',{${TESTFILES}});\
     disp('Running MATLAB script with contents:');\
     fprintf('__________\n\n');\
