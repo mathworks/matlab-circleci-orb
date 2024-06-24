@@ -26,7 +26,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
-cd tests
+cd tests || exit
 TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed ''s/\.m$//'' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}' | sed 's/,$//') 
 echo "$TESTFILES"
 
