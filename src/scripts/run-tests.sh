@@ -48,6 +48,5 @@ fi
     fprintf('__________\n\n');\
     disp(testScript);\
     fprintf('__________\n\n');\
-    eval(testScript);\
-    disp('Calling my own run test');" $PARAM_STARTUP_OPTIONS
+    eval(testScript);" $PARAM_STARTUP_OPTIONS
     
