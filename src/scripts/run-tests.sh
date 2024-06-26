@@ -28,7 +28,8 @@ fi
 
 if [ "$PARAM_USE_SPLIT" -eq 1 ]; then
   cd tests || exit
-  TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed 's/\.m$//' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}' | sed 's/,$//')
+  TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed 's/\.m$//' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}'| paste -sd "," -)
+  TESTFILES="{${TESTFILES}}"
   cd ..
 fi
 
@@ -50,7 +51,7 @@ fi
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles',{${TESTFILES}});\
+    'TestFiles',${TESTFILES});\
     disp('Running MATLAB script with contents:');\
     fprintf('__________\n\n');\
     disp(testScript);\
