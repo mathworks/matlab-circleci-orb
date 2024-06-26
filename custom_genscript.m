@@ -1,12 +1,9 @@
 function scriptText = custom_genscript(varargin)
     %GENSCRIPT Generate a MATLAB script for running tests.
     
-    p = inputParser;
-    addParameter(p, 'TestFiles', {}, @(x) ischar(x) || iscell(x));
-    parse(p, varargin{:});
-    
-    % Extract parameters
-    TestFiles = p.Results.TestFiles;
+    TestFiles= varargin{36};
+    disp('Varargin');
+    disp(TestFiles);
 
 
     % Define the script as a single string with newline characters
