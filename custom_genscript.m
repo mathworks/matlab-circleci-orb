@@ -1,7 +1,7 @@
 function scriptText = custom_genscript(varargin)
     %GENSCRIPT Generate a MATLAB script for running tests.
     
-    TestFiles= varargin{36};
+    TestFiles= varargin{35};
     disp('Varargin');
     disp(TestFiles);
 
