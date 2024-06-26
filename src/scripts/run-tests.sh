@@ -26,11 +26,11 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
-echo "PARAM_USE_SPLIT is set to: $PARAM_USE_SPLIT"
-cd tests || exit
-TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed ''s/\.m$//'' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}' | sed 's/,$//') 
-echo "$TESTFILES" 
-cd .. 
+if [ "$PARAM_USE_SPLIT" -eq 1 ]; then
+  cd tests || exit
+  TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed 's/\.m$//' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}' | sed 's/,$//')
+  cd ..
+fi
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = custom_genscript('Test',\
