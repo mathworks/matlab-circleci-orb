@@ -26,11 +26,9 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
-if [ "$PARAM_USE_PARALLEL" = "true" ]; then
-    cd tests || exit
-    TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed ''s/\.m$//'' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}' | sed 's/,$//') 
-    echo "$TESTFILES"
-fi    
+cd tests || exit
+TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed ''s/\.m$//'' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}' | sed 's/,$//') 
+echo "$TESTFILES"  
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = custom_genscript('Test',\
@@ -54,6 +52,5 @@ fi
     disp('Running MATLAB script with contents:');\
     fprintf('__________\n\n');\
     disp(testScript);\
-    fprintf('__________\n\n');\
-    eval(testScript);" $PARAM_STARTUP_OPTIONS
+    fprintf('__________\n\n');" $PARAM_STARTUP_OPTIONS
     
