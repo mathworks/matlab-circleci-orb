@@ -133,9 +133,9 @@ jobs:
     steps:
       - checkout
     # Setup for Integ tests for matlab/run-tests
-      - matlab/install:
-          products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
-          no-output-timeout: 30m
+      # - matlab/install:
+      #     products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
+      #     no-output-timeout: 30m
           
       - matlab/run-tests:
           use-split: true 
