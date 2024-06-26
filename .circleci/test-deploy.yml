@@ -132,7 +132,7 @@ jobs:
     parallelism: 2    
     steps:
       - checkout
-    Setup for Integ tests for matlab/run-tests
+    # Setup for Integ tests for matlab/run-tests
       - matlab/install:
           products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
           no-output-timeout: 30m
