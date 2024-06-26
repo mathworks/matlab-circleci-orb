@@ -28,10 +28,11 @@ fi
 
 if [ "$PARAM_USE_SPLIT" -eq 1 ]; then
   cd tests || exit
-  TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed 's/\.m$//' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}'| paste -sd "," -)
+  TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed 's/\.m$//' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}'| sed 's/,$//')
   TESTFILES="{${TESTFILES}}"
   cd ..
 fi
+echo "Formatted TESTFILES: ${TESTFILES}"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = custom_genscript('Test',\
