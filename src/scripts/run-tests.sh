@@ -26,7 +26,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
-if [ "$PARAM_USE_SPLIT" -eq 1 ]; then
+if [ -n "$PARAM_SPLIT_TYPE" ]; then
   cd tests || exit
   TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed 's/\.m$//' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}'| sed 's/,$//')
   TESTFILES="{${TESTFILES}}"
@@ -48,7 +48,7 @@ fi
     'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
     'Strict',${PARAM_STRICT},\
-    'UseSplit', ${PARAM_USE_SPLIT},\
+    'SplitType', ${PARAM_SPLIT_TYPE},\
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\

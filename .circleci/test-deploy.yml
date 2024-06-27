@@ -138,7 +138,9 @@ jobs:
           no-output-timeout: 30m
           
       - matlab/run-tests:
-          use-split: true 
+          split-type: 'timings'
+          select-by-folder: 'tests'
+          test-results-junit: results 
 
   integration-test-run-build:
     parameters:

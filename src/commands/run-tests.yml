@@ -40,11 +40,11 @@ parameters:
       parameter requires a Parallel Computing Toolbox license.
     type: boolean
     default: false
-  use-split:
+  split-type:
     description: >
-      Option to use CircleCI Test Split feature, specified as `false` or `true`.
-    type: boolean
-    default: false
+      Option to use CircleCI Test Split feature.
+    type: string
+    default: ''
   output-detail:
     description: >
       Amount of event detail displayed for the test run, specified as `none`, `terse`, `concise`, `detailed`,
@@ -132,7 +132,7 @@ steps:
         PARAM_TEST_RESULTS_PDF: <<parameters.test-results-pdf>>
         PARAM_STRICT: <<parameters.strict>>
         PARAM_USE_PARALLEL: <<parameters.use-parallel>>
-        PARAM_USE_SPLIT: <<parameters.use-split>>
+        PARAM_SPLIT_TYPE: <<parameters.split-type>>
         PARAM_OUTPUT_DETAIL: <<parameters.output-detail>>
         PARAM_LOGGING_LEVEL: <<parameters.logging-level>>
         PARAM_STARTUP_OPTIONS: <<parameters.startup-options>>
