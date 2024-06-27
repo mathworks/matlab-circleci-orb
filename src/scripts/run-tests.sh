@@ -32,7 +32,7 @@ if [ "$PARAM_USE_SPLIT" -eq 1 ]; then
   TESTFILES="{${TESTFILES}}"
   cd ..
 fi
-echo "Formatted TESTFILES: ${TESTFILES}"
+
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = custom_genscript('Test',\
@@ -52,7 +52,5 @@ echo "Formatted TESTFILES: ${TESTFILES}"
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles',${TESTFILES});\
-    disp('Running MATLAB script with contents:');\
-    fprintf('__________\n\n');" $PARAM_STARTUP_OPTIONS
+    'TestFiles',${TESTFILES});" $PARAM_STARTUP_OPTIONS
     
