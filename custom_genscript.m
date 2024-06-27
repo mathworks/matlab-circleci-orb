@@ -2,10 +2,6 @@ function scriptText = custom_genscript(varargin)
     %GENSCRIPT Generate a MATLAB script for running tests.
     
     TestFiles= varargin{35};
-    disp('Varargin');
-    disp(TestFiles);
-
-
     % Define the script as a single string with newline characters
     scriptText = [...
     "import matlab.unittest.TestRunner;", ...

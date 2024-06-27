@@ -54,7 +54,5 @@ echo "Formatted TESTFILES: ${TESTFILES}"
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
     'TestFiles',${TESTFILES});\
     disp('Running MATLAB script with contents:');\
-    fprintf('__________\n\n');\
-    disp(testScript);\
     fprintf('__________\n\n');" $PARAM_STARTUP_OPTIONS
     
