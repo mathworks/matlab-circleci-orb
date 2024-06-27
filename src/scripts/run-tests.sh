@@ -48,7 +48,7 @@ fi
     'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
     'Strict',${PARAM_STRICT},\
-    'SplitType', ${PARAM_SPLIT_TYPE},\
+    'SplitType', '${PARAM_SPLIT_TYPE}',\
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
