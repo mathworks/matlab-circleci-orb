@@ -28,14 +28,17 @@ fid = fopen(tempFile1, 'w');
 fprintf(fid, '%s\n', testFileNames{:});
 fclose(fid);
 
-tempFile = tempname; 
-command = 'circleci tests split --split-by=timings tempFile1 2>' + string(tempFile);
+% Step 2: Create another temporary file to capture the output
+tempFile2 = tempname;
+
+% Step 3: Construct the command string
+command = sprintf('circleci tests split --split-by=timings %s 2> %s', tempFile1, tempFile2);
 
 [status, stdout] = system(command);
-stderr = fileread(tempFile);
+stderr = fileread(tempFile2);
 disp('Standard Error (stderr):');
 disp(stderr);
-delete(tempFile);
+delete(tempFile2);
 disp('Output after running circleci command:');
 disp(stdout);
 % suite = testsuite_generation(stdout, tempFile);
