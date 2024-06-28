@@ -29,15 +29,20 @@ fprintf(fid, '%s\n', testFileNames{:});
 fclose(fid);
 
 tempFile = tempname; 
-command = 'circleci tests split --split-by=timings tempFile1 2>' + string(tempFile);
+command = 'circleci tests glob "**/*.m" | xargs -n1 basename | sed ''s/\.m$//'' | circleci tests split --split-by=timings 2>' + string(tempFile);
 
 [status, stdout] = system(command);
 stderr = fileread(tempFile);
+disp('Standard Output (stdout):');
+disp(stdout);
 disp('Standard Error (stderr):');
 disp(stderr);
 delete(tempFile);
+
+
 disp('Output after running circleci command:');
 disp(stdout);
+
 % suite = testsuite_generation(stdout, tempFile);
 % delete(tempFile);
 % 
