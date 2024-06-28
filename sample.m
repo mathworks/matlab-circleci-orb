@@ -28,6 +28,9 @@ testFileNamesStr = strjoin(testFileNames, ' ');
 command = ['echo "', testFileNamesStr, '" | circleci tests split --split-by=timings 2>', tempFile];
 [status, stdout] = system(command);
 
+disp('Output after running circleci command:');
+disp(stdout);
+
 suite = testsuite_generation(stdout, tempFile);
 delete(tempFile);
 
