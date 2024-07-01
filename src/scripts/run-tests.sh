@@ -28,4 +28,25 @@ fi
 
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
-    sample;" $PARAM_STARTUP_OPTIONS
+    testScript = custom_genscript('Test',\
+    'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
+    'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
+    'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
+    'SourceFolder','${PARAM_SOURCE_FOLDER}',\
+    'SelectByFolder','${PARAM_SELECT_BY_FOLDER}',\
+    'SelectByTag','$PARAM_SELECT_BY_TAG',\
+    'CoberturaModelCoverage','${PARAM_MODEL_COVERAGE_COBERTURA}',\
+    'HTMLModelCoverage','${PARAM_MODEL_COVERAGE_HTML}',\
+    'SimulinkTestResults','${PARAM_TEST_RESULTS_SIMULINK_TEST}',\
+    'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
+    'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
+    'Strict',${PARAM_STRICT},\
+    'SplitType', '${PARAM_SPLIT_TYPE}',\
+    'UseParallel',${PARAM_USE_PARALLEL},\
+    'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
+    'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
+    disp('Running MATLAB script with contents:');\
+    fprintf('__________\n\n');\
+    disp(testScript);\
+    fprintf('__________\n\n');\
+    eval(testScript);" $PARAM_STARTUP_OPTIONS
