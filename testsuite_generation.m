@@ -1,12 +1,17 @@
 function suite = testsuite_generation(stdout, tempFile)
+
     import matlab.unittest.TestSuite;
-
-    % Read and display standard error
-    disp(fileread(tempFile));
-
-    % Process stdout and filter out empty lines
+    stderr = fileread(tempFile);
+    disp(stderr);
+    
     stdout = strtrim(strsplit(stdout, '\n'));
     stdout = stdout(~cellfun('isempty', stdout));
-
-    suite = testsuite(stdout);
+    
+    suites = {};
+    cd tests
+    for i = 1:length(stdout)
+    testFilePath = fullfile('.', [stdout{i}, '.m']);
+    suites{end+1} = TestSuite.fromFile(testFilePath);
+    end
+    suite = [suites{:}];
 end
