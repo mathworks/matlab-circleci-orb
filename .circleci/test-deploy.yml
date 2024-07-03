@@ -141,6 +141,9 @@ jobs:
           split-type: 'timings'
           select-by-folder: 'tests'
           test-results-junit: results 
+      
+      - store_test_results:
+          path: results.xml
 
   integration-test-run-build:
     parameters:
