@@ -143,7 +143,7 @@ jobs:
           test-results-junit: results 
       
       - store_test_results:
-          path: results.xml
+          path: tests/results.xml
 
   integration-test-run-build:
     parameters:
