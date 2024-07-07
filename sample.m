@@ -1,26 +1,27 @@
-t1 = testsuite(pwd, 'IncludingSubfolders', true);
-uniqueTestParentNames = unique({t1.TestParentName});
-tempFile1 = tempname;
+import matlab.unittest.TestRunner;
+import matlab.unittest.plugins.XMLPlugin;
+import matlab.unittest.plugins.TestReportPlugin;
 
-
-fid = fopen(tempFile1, 'w');
-fprintf(fid, '%s\n', uniqueTestParentNames{:});
+suite = testsuite(pwd, 'IncludingSubfolders', true);
+testFiles = unique({suite.TestParentName});
+[~,~] = mkdir('tests');
+tempAllFile = tempname;
+tempSplitFile = tempname;
+fid = fopen(tempAllFile, 'w');
+fprintf(fid, '%s\n', testFiles{:});
 fclose(fid);
-
-
-tempFile2 = tempname;
-
-
-command = sprintf('circleci tests split --split-by=timings %s 2> %s', tempFile1, tempFile2);
-
+command = sprintf('circleci tests split --split-by=timings %s 2> %s', tempAllFile, tempSplitFile); 
 [status, stdout] = system(command);
-stderr = fileread(tempFile2);
-disp('Standard Error (stderr):');
-disp(stderr);
+suite = testsuite_generation(stdout, tempSplitFile);
+delete(tempAllFile);
+delete(tempSplitFile);
 
-delete(tempFile1);
-delete(tempFile2);
+runner = TestRunner.withTextOutput();
+runner.addPlugin(TestReportPlugin.producingPDF('tests/results.pdf'));
+runner.addPlugin(XMLPlugin.producingJUnitFormat('tests/results.xml'));
 
-disp('Output after running circleci command:');
-disp(stdout);
+results = runner.run(suite);
+display(results);
 
+
+assertSuccess(results);

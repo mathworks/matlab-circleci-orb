@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<testsuites>
+  <testsuite errors="0" failures="0" name="BaseClassWithMethodsToBeOverridden" skipped="0" tests="1" time="0.036819">
+    <testcase classname="BaseClassWithMethodsToBeOverridden" name="test1" time="0.036819"/>
+  </testsuite>
+  <testsuite errors="0" failures="0" name="BaseTestCase" skipped="0" tests="2" time="0.10655">
+    <testcase classname="BaseTestCase" name="baseTest" time="0.069938"/>
+    <testcase classname="BaseTestCase" name="baseTest2" time="0.036617"/>
+  </testsuite>
+  <testsuite errors="0" failures="0" name="ClassTestWithNotATestMethod" skipped="0" tests="1" time="0.000175">
+    <testcase classname="ClassTestWithNotATestMethod" name="test1" time="0.000175"/>
+  </testsuite>
+  <testsuite errors="0" failures="0" name="ClassWithNonAlphaNumericTestTags" skipped="0" tests="12" time="0.0025478">
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test12" time="0.0001977"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test11" time="0.0002114"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test10" time="0.0002253"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test9" time="0.0001844"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test8" time="0.0001969"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test7" time="0.000178"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test6" time="0.0002218"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test5" time="0.0002219"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test4" time="0.0001732"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test3" time="0.0002195"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test2" time="0.0002828"/>
+    <testcase classname="ClassWithNonAlphaNumericTestTags" name="test1" time="0.0002349"/>
+  </testsuite>
+</testsuites>
