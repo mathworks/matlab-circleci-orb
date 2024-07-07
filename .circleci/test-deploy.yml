@@ -139,11 +139,19 @@ jobs:
           
       - matlab/run-tests:
           split-type: 'timings'
-          select-by-folder: 'tests'
-          test-results-junit: results 
+          test-results-pdf: tests/results.pdf
+          test-results-junit: tests/results.xml 
        
       - store_test_results:
           path: tests/results.xml
+
+      - store_artifacts:
+          path: tests/results.xml
+          destination: results.xml
+
+      - store_artifacts:
+          path: tests/results.pdf
+          destination: results.pdf          
 
   integration-test-run-build:
     parameters:
