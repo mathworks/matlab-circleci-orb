@@ -7,11 +7,12 @@ function suite = testsuite_generation(stdout, tempFile)
     stdout = stdout(~cellfun('isempty', stdout));
     stdout = strtrim(stdout);
     stdoutCellArray = stdout(:)';
+    disp(stdoutCellArray);
 
     suites = {};
-    cd tests
+    %cd tests
     for i = 1:length(stdoutCellArray)
-        testFilePath = fullfile('.', [stdoutCellArray{i}, '.m']);
+        testFilePath = fullfile([stdoutCellArray{i}, '.m']);
         suites{end+1} = TestSuite.fromFile(testFilePath);
     end
     suite = [suites{:}];
