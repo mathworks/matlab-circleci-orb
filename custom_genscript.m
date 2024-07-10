@@ -30,4 +30,4 @@ function scriptText = my_genscript(varargin)
 
     % Convert to character array 
     scriptText = char(scriptText);
-end
+end 
