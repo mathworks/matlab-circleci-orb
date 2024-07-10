@@ -6,8 +6,8 @@ import matlab.unittest.plugins.TestReportPlugin;
 
 suite = testsuite(pwd, 'IncludingSubfolders', true);
 testFiles = unique({suite.TestParentName});
-testFiles = strcat('tests/', testFiles);
-[~,~] = mkdir('tests');
+%testFiles = strcat('tests/', testFiles);
+
 tempAllFile = tempname;
 tempSplitFile = tempname;
 fid = fopen(tempAllFile, 'w');

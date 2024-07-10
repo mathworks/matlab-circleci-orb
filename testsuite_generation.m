@@ -1,4 +1,4 @@
-function suite = testsuite_generation(stdout, tempFile)
+function selectedSuite = testsuite_generation(stdout, tempFile, suite)
     import matlab.unittest.TestSuite;
     stderr = fileread(tempFile);
     disp(stderr);
@@ -7,13 +7,8 @@ function suite = testsuite_generation(stdout, tempFile)
     stdout = stdout(~cellfun('isempty', stdout));
     stdout = strtrim(stdout);
     stdoutCellArray = stdout(:)';
-    disp(stdoutCellArray);
 
-    suites = {};
-    %cd tests
-    for i = 1:length(stdoutCellArray)
-        testFilePath = fullfile([stdoutCellArray{i}, '.m']);
-        suites{end+1} = TestSuite.fromFile(testFilePath);
-    end
-    suite = [suites{:}];
+    patterns = strcat(stdoutCellArray, '/*');
+    selectedSuite = selectIf(suite, "Name", patterns);
+  
 end
