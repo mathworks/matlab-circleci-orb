@@ -26,13 +26,9 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
-if [ -n "$PARAM_SPLIT_TYPE" ]; then
-  TESTFILES=$(circleci tests glob "tests/**/*.m" | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}'| sed 's/,$//')
-  TESTFILES="{${TESTFILES}}"
-fi
-
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
+    TESTFILES = run_circleci();
     testScript = custom_genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
@@ -50,5 +46,5 @@ fi
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles',${TESTFILES});" $PARAM_STARTUP_OPTIONS
+    'TestFiles',TESTFILES);" $PARAM_STARTUP_OPTIONS
     
