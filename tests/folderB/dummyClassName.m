@@ -5,6 +5,7 @@ classdef dummyClassName < matlab.unittest.TestCase
     methods (Test)
         
         function test2(~)
+            disp('calling from folder B');
         end
         
     end
