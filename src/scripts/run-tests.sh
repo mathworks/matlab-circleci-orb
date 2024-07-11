@@ -27,10 +27,8 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 
 if [ -n "$PARAM_SPLIT_TYPE" ]; then
-  cd tests || exit
-  TESTFILES=$(circleci tests glob "**/*.m" | xargs -n1 basename | sed 's/\.m$//' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}'| sed 's/,$//')
+  TESTFILES=$(circleci tests glob "tests/**/*.m" | xargs -n1 basename | sed 's/\.m$//' | circleci tests split --split-by=timings | awk '{printf "\x27%s\x27,", $0}'| sed 's/,$//')
   TESTFILES="{${TESTFILES}}"
-  cd ..
 fi
 
 
