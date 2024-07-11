@@ -29,5 +29,5 @@ function scriptText = custom_genscript(varargin)
     disp(scriptText);
     disp('__________');
 
-    eval(scriptText);
+    eval(scriptText);  
 end  
