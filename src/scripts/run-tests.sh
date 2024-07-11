@@ -28,7 +28,8 @@ fi
 
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
-    TESTFILES = run_circleci();
+    TESTFILES = run_circleci();\
+    disp(TESTFILES);\
     testScript = custom_genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
