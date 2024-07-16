@@ -17,7 +17,7 @@ parameters:
   select-by-files:
     description: >
       Specific test files to include in the test suite. Use the CircleCI command to glob and split test files
-      as needed. For example: `=$(circleci tests glob 'tests/**/*.m' | circleci tests split)`.
+      as needed.
     type: string
     default: ''  
   select-by-folder:
