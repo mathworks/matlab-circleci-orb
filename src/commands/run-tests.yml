@@ -16,10 +16,11 @@ parameters:
     default: ''
   select-by-files:
     description: >
-      Specific test files to include in the test suite. Use the CircleCI command to glob and split test files
-      as needed.
+      Location of the folder used to select test suite elements, relative to the project root folder.
+      To create a test suite, MATLAB uses only the tests in the specified folder and its subfolders.
+      You can specify multiple folders using a colon-separated or semicolon-separated list.
     type: string
-    default: ''  
+    default: ''
   select-by-folder:
     description: >
       Location of the folder used to select test suite elements, relative to the project root folder.
