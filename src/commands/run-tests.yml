@@ -14,6 +14,12 @@ parameters:
       folders using a colon-separated or semicolon-separated list.
     type: string
     default: ''
+  select-by-files:
+    description: >
+      Specific test files to include in the test suite. Use the CircleCI command to glob and split test files
+      as needed. For example: `=$(circleci tests glob 'tests/**/*.m' | circleci tests split)`.
+    type: string
+    default: ''  
   select-by-folder:
     description: >
       Location of the folder used to select test suite elements, relative to the project root folder.
@@ -133,6 +139,7 @@ steps:
         PARAM_STRICT: <<parameters.strict>>
         PARAM_USE_PARALLEL: <<parameters.use-parallel>>
         PARAM_SPLIT_TYPE: <<parameters.split-type>>
+        PARAM_SELECT_BY_FILES: <<parameters.select-by-files>>
         PARAM_OUTPUT_DETAIL: <<parameters.output-detail>>
         PARAM_LOGGING_LEVEL: <<parameters.logging-level>>
         PARAM_STARTUP_OPTIONS: <<parameters.startup-options>>
