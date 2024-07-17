@@ -26,24 +26,27 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
+${PARAM_SELECT_BY_FILES}=$(echo "${PARAM_SELECT_BY_FILES}" | awk '{printf "\x27%s\x27, ", $0}' | sed 's/,$//')
+${PARAM_SELECT_BY_FILES}="{${PARAM_SELECT_BY_FILES}}"
+echo ${PARAM_SELECT_BY_FILES}
 
-"${tmpdir}/bin/run-matlab-command$binext" "\
-    testScript = custom_genscript('Test',\
-    'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
-    'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
-    'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
-    'SourceFolder','${PARAM_SOURCE_FOLDER}',\
-    'SelectByFolder','${PARAM_SELECT_BY_FOLDER}',\
-    'SelectByTag','$PARAM_SELECT_BY_TAG',\
-    'CoberturaModelCoverage','${PARAM_MODEL_COVERAGE_COBERTURA}',\
-    'HTMLModelCoverage','${PARAM_MODEL_COVERAGE_HTML}',\
-    'SimulinkTestResults','${PARAM_TEST_RESULTS_SIMULINK_TEST}',\
-    'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
-    'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
-    'Strict',${PARAM_STRICT},\
-    'SplitType', '${PARAM_SPLIT_TYPE}',\
-    'UseParallel',${PARAM_USE_PARALLEL},\
-    'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
-    'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles','${PARAM_SELECT_BY_FILES}');" $PARAM_STARTUP_OPTIONS
+# "${tmpdir}/bin/run-matlab-command$binext" "\
+#     testScript = custom_genscript('Test',\
+#     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
+#     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
+#     'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
+#     'SourceFolder','${PARAM_SOURCE_FOLDER}',\
+#     'SelectByFolder','${PARAM_SELECT_BY_FOLDER}',\
+#     'SelectByTag','$PARAM_SELECT_BY_TAG',\
+#     'CoberturaModelCoverage','${PARAM_MODEL_COVERAGE_COBERTURA}',\
+#     'HTMLModelCoverage','${PARAM_MODEL_COVERAGE_HTML}',\
+#     'SimulinkTestResults','${PARAM_TEST_RESULTS_SIMULINK_TEST}',\
+#     'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
+#     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
+#     'Strict',${PARAM_STRICT},\
+#     'SplitType', '${PARAM_SPLIT_TYPE}',\
+#     'UseParallel',${PARAM_USE_PARALLEL},\
+#     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
+#     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
+#     'TestFiles','${PARAM_SELECT_BY_FILES}');" $PARAM_STARTUP_OPTIONS
     
