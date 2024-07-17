@@ -25,8 +25,8 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
     binext=".exe"
 fi
-echo "Command to be executed: $PARAM_SELECT_BY_FILES"
 TESTFILES=$(eval echo "$PARAM_SELECT_BY_FILES")
+echo $TESTFILES
 TESTFILES="{${TESTFILES}}"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\

@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <testsuites>
-  <testsuite errors="0" failures="0" name="HasNoAncestorClassTagsButHasTestMethodsWithAndWithoutTags" skipped="0" tests="3" time="0.0009861">
-    <testcase classname="HasNoAncestorClassTagsButHasTestMethodsWithAndWithoutTags" name="testNoTags1" time="0.0004795"/>
-    <testcase classname="HasNoAncestorClassTagsButHasTestMethodsWithAndWithoutTags" name="testNoTags2" time="0.0002692"/>
-    <testcase classname="HasNoAncestorClassTagsButHasTestMethodsWithAndWithoutTags" name="test1" time="0.0002374"/>
+  <testsuite errors="0" failures="0" name="HasSealedTestTags" skipped="0" tests="1" time="0.0001226">
+    <testcase classname="HasSealedTestTags" name="test1" time="0.0001226"/>
   </testsuite>
-  <testsuite errors="0" failures="0" name="dummyClassName" skipped="0" tests="1" time="0.0018088">
-    <testcase classname="dummyClassName" name="test2" time="0.0018088"/>
-  </testsuite>
-  <testsuite errors="0" failures="0" name="dummyClassName" skipped="0" tests="1" time="0.0017222">
-    <testcase classname="dummyClassName" name="test2" time="0.0017222"/>
+  <testsuite errors="0" failures="0" name="dummyClassName" skipped="0" tests="1" time="0.0017014">
+    <testcase classname="dummyClassName" name="test2" time="0.0017014"/>
   </testsuite>
 </testsuites>
