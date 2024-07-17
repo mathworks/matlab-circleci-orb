@@ -27,7 +27,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 echo "Command to be executed: $PARAM_SELECT_BY_FILES"
 TESTFILES=$(eval echo "$PARAM_SELECT_BY_FILES")
-TESTFILES = "{${TESTFILES}}"
+TESTFILES="{${TESTFILES}}"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = custom_genscript('Test',\
