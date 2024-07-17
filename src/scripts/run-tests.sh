@@ -27,9 +27,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 echo "Command to be executed: $PARAM_SELECT_BY_FILES"
 TEMP_TESTFILES=$(eval echo "$PARAM_SELECT_BY_FILES")
-# Print the output to verify it
-echo "Output of the command:"
-echo "$TEMP_TESTFILES"
+TESTFILES = "{${TESTFILES}}"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = custom_genscript('Test',\
@@ -48,5 +46,6 @@ echo "$TEMP_TESTFILES"
     'SplitType', '${PARAM_SPLIT_TYPE}',\
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
-    'LoggingLevel','${PARAM_LOGGING_LEVEL}');" $PARAM_STARTUP_OPTIONS
+    'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
+    'TestFiles',${TESTFILES});" $PARAM_STARTUP_OPTIONS
      
