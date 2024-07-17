@@ -25,8 +25,8 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
     binext=".exe"
 fi
-
-TESTFILES=$(echo "${PARAM_SELECT_BY_FILES}" | awk '{printf "\x27%s\x27, ", $0}' | sed 's/,$//')
+TESTFILES=$(eval $PARAM_SELECT_BY_FILES | awk '{printf "\x27%s\x27, ", $0}' | sed 's/,$//')
+# TESTFILES=$(echo "${PARAM_SELECT_BY_FILES}" | awk '{printf "\x27%s\x27, ", $0}' | sed 's/,$//')
 TESTFILES="{${TESTFILES}}"
 echo $TESTFILES
 
