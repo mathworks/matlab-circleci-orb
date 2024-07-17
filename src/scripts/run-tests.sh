@@ -25,11 +25,13 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
     binext=".exe"
 fi
+echo "Command to be executed: $PARAM_SELECT_BY_FILES"
 TESTFILES=$(eval "$PARAM_SELECT_BY_FILES")
-# TESTFILES=$(echo "${PARAM_SELECT_BY_FILES}" | awk '{printf "\x27%s\x27, ", $0}' | sed 's/,$//')
-# TESTFILES="{${TESTFILES}}"
-echo "below are the test files: "
-echo $TESTFILES
+TEMP_TESTFILES=$(eval "$PARAM_SELECT_BY_FILES")
+
+# Print the output to verify it
+echo "Output of the command:"
+echo "$TEMP_TESTFILES"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = custom_genscript('Test',\
@@ -48,6 +50,5 @@ echo $TESTFILES
     'SplitType', '${PARAM_SPLIT_TYPE}',\
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
-    'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles',${TESTFILES});" $PARAM_STARTUP_OPTIONS
+    'LoggingLevel','${PARAM_LOGGING_LEVEL}');" $PARAM_STARTUP_OPTIONS
      
