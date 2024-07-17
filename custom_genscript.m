@@ -1,8 +1,8 @@
 function scriptText = custom_genscript(varargin)
     %GENSCRIPT Generate a MATLAB script for running tests.
-    TestFiles= varargin{35};
+    % TestFiles= varargin{35};
     disp("Output of testfiles");
-    disp(TestFiles);
+    % disp(TestFiles);
     % testFilesStr = strjoin(cellfun(@(x) ['''', x, ''''], TestFiles, 'UniformOutput', false), ', ');
     % scriptText = join([ ...
     %     "import matlab.unittest.TestRunner;", ...

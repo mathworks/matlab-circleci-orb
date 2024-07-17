@@ -25,9 +25,10 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
     binext=".exe"
 fi
-TESTFILES=$(eval $PARAM_SELECT_BY_FILES | awk '{printf "\x27%s\x27, ", $0}' | sed 's/,$//')
+TESTFILES=$(eval $PARAM_SELECT_BY_FILES)
 # TESTFILES=$(echo "${PARAM_SELECT_BY_FILES}" | awk '{printf "\x27%s\x27, ", $0}' | sed 's/,$//')
-TESTFILES="{${TESTFILES}}"
+# TESTFILES="{${TESTFILES}}"
+echo "below are the test files: "
 echo $TESTFILES
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
