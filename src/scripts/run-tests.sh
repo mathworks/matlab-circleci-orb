@@ -26,7 +26,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 echo "Command to be executed: $PARAM_SELECT_BY_FILES"
-TEMP_TESTFILES=$(eval "$PARAM_SELECT_BY_FILES")
+TEMP_TESTFILES=$("$PARAM_SELECT_BY_FILES")
 
 # Print the output to verify it
 echo "Output of the command:"
