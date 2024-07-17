@@ -26,7 +26,7 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 TESTFILES=$(eval echo "$PARAM_SELECT_BY_FILES")
-echo "displaying, {$TESTFILES}"
+echo "Evaluated output in TESTFILES: $TESTFILES"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = custom_genscript('Test',\
