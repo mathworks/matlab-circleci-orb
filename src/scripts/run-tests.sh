@@ -26,9 +26,9 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
-${PARAM_SELECT_BY_FILES}=$(echo "${PARAM_SELECT_BY_FILES}" | awk '{printf "\x27%s\x27, ", $0}' | sed 's/,$//')
-${PARAM_SELECT_BY_FILES}="{${PARAM_SELECT_BY_FILES}}"
-echo ${PARAM_SELECT_BY_FILES}
+TESTFILES=$(echo "${PARAM_SELECT_BY_FILES}" | awk '{printf "\x27%s\x27, ", $0}' | sed 's/,$//')
+TESTFILES="{${TESTFILES}}"
+echo $TESTFILES
 
 # "${tmpdir}/bin/run-matlab-command$binext" "\
 #     testScript = custom_genscript('Test',\
