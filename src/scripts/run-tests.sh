@@ -57,7 +57,7 @@ unzip -qod "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
 os=$(uname)
 gendir="$tmpdir"
 binext=""
-if [[ "$os" = "CYGWIN*" || "$os" = "MINGW*" || "$os" = "MSYS*" ]]; then
+if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
     binext=".exe"
 fi

@@ -40,7 +40,7 @@ stream https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v2/install.s
 os=$(uname)
 scriptdir="$tmpdir"
 binext=""
-if [[ "$os" = "CYGWIN*" || "$os" = "MINGW*" || "$os" = "MSYS*" ]]; then
+if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     scriptdir=$(cygpath -w "$scriptdir")
     binext=".exe"
 fi

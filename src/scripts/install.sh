@@ -91,7 +91,7 @@ elif [[ "$os" = "Darwin" && "$arch" = "arm64" ]]; then
 fi
 
 # set os specific options
-if [[ "$os" = "CYGWIN*" || "$os" = "MINGW*" || "$os" = "MSYS*" ]]; then
+if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     mwarch="win64"
     binext=".exe"
     rootdir=$(cygpath "$rootdir")
