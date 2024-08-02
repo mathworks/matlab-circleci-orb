@@ -10,12 +10,10 @@ set -o errexit
 set -o pipefail
 
 sudoIfAvailable() {
-    local cmd="$1"
-    shift
     if command -v sudo >/dev/null 2>&1; then
-        sudo -E bash "$cmd" "$@"
+        sudo -E bash "$@"
     else
-        bash "$cmd" "$@"
+        bash "$@"
     fi
 }
 
