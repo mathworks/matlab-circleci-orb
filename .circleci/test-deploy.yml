@@ -13,7 +13,6 @@ integration-tests: &integration-tests
     orb-tools/pack,
     integration-test-install,
     integration-test-install-release,
-    integration-test-install-release-macos-intel-on-arm,
     integration-test-run-command,
     integration-test-run-tests
   ]
@@ -23,10 +22,6 @@ executors:
     machine:
       image: ubuntu-2204:2024.01.1
   macos:
-    macos:
-      xcode: 15.1.0
-    resource_class: macos.x86.medium.gen2
-  macos-arm:
     macos:
       xcode: 15.3.0
     resource_class: macos.m1.medium.gen1
@@ -463,33 +458,28 @@ workflows:
       - integration-test-install:
           matrix:
             parameters:
-              executor: [linux, windows, macos, macos-arm]
+              executor: [linux, windows, macos]
 
       - integration-test-install-release:
           matrix:
             parameters:
-              executor: [linux, windows, macos, macos-arm]
+              executor: [linux, windows, macos]
               release: [R2023bU1]
-
-      - integration-test-install-release:
-          name: integration-test-install-release-macos-intel-on-arm
-          executor: macos-arm
-          release: R2023aU1
 
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux, windows, macos, macos-arm]
+              executor: [linux, windows, macos]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows, macos, macos-arm]
+              executor: [linux, windows, macos]
 
       - integration-test-run-build:
           matrix:
             parameters:
-              executor: [linux, windows, macos, macos-arm]
+              executor: [linux, windows, macos]
 
       - orb-tools/pack:
           filters: *filters
