@@ -40,11 +40,6 @@ parameters:
       parameter requires a Parallel Computing Toolbox license.
     type: boolean
     default: false
-  split-type:
-    description: >
-      Option to use CircleCI Test Split feature.
-    type: string
-    default: ''
   output-detail:
     description: >
       Amount of event detail displayed for the test run, specified as `none`, `terse`, `concise`, `detailed`,
@@ -115,7 +110,7 @@ parameters:
       https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html.
     type: string
     default: ""
-    
+
 steps:
   - run:
       name: Run MATLAB tests
@@ -133,7 +128,6 @@ steps:
         PARAM_TEST_RESULTS_PDF: <<parameters.test-results-pdf>>
         PARAM_STRICT: <<parameters.strict>>
         PARAM_USE_PARALLEL: <<parameters.use-parallel>>
-        PARAM_SPLIT_TYPE: <<parameters.split-type>>
         PARAM_OUTPUT_DETAIL: <<parameters.output-detail>>
         PARAM_LOGGING_LEVEL: <<parameters.logging-level>>
         PARAM_STARTUP_OPTIONS: <<parameters.startup-options>>
