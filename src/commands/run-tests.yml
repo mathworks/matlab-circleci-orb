@@ -134,4 +134,3 @@ steps:
       command: <<include(scripts/run-tests.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
-      
