@@ -45,5 +45,9 @@ fi
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles',TESTFILES);" $PARAM_STARTUP_OPTIONS
+    'TestFiles',TESTFILES);\
+    disp('Running MATLAB script with contents:');\
+    disp(testScript.Contents);\
+    fprintf('__________\n\n');\
+    run(testScript);" $PARAM_STARTUP_OPTIONS
     
