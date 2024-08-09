@@ -28,7 +28,7 @@ fi
 
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
-    TESTFILES = run_circleci(${PARAM_SPLIT_TYPE});\
+    TESTFILES = run_circleci('${PARAM_SPLIT_TYPE}');\
     disp(TESTFILES);\
     testScript = custom_genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
