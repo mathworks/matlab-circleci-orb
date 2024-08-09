@@ -140,7 +140,7 @@ jobs:
       - matlab/run-tests:
           split-type: 'timings'
           select-by-folder: 'tests'
-          test-results-junit: results 
+          test-results-junit: 'results.xml' 
       
       - store_test_results:
            path: results.xml
