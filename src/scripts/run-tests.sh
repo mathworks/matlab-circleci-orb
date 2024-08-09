@@ -29,8 +29,7 @@ fi
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     TESTFILES = run_circleci('${PARAM_SPLIT_TYPE}');\
-    disp(TESTFILES);\
-    testScript = custom_genscript('Test',\
+    testScript = genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
     'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
