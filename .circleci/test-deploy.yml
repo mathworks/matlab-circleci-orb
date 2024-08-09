@@ -138,16 +138,16 @@ jobs:
           no-output-timeout: 30m
           
       - matlab/run-tests:
+          split-type: 'timings'
           select-by-folder: 'tests'
-          select-by-files: "$(circleci tests glob 'tests/**/*.m' | circleci tests split)"
           test-results-junit: results 
       
-      # - store_test_results:
-      #      path: results.xml
+      - store_test_results:
+           path: results.xml
 
-      # - store_artifacts:
-      #     path: results.xml
-      #     destination: test-results/results.xml
+      - store_artifacts:
+          path: results.xml
+          destination: test-results/results.xml
        
        
 

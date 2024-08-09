@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <testsuites>
-  <testsuite errors="0" failures="0" name="HasSealedTestTags" skipped="0" tests="1" time="0.0001226">
-    <testcase classname="HasSealedTestTags" name="test1" time="0.0001226"/>
-  </testsuite>
-  <testsuite errors="0" failures="0" name="dummyClassName" skipped="0" tests="1" time="0.0017014">
-    <testcase classname="dummyClassName" name="test2" time="0.0017014"/>
-  </testsuite>
+  <testsuite errors="0" failures="0" name="" skipped="0" tests="0" time="0"/>
 </testsuites>

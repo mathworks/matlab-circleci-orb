@@ -25,10 +25,11 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
     binext=".exe"
 fi
-TESTFILES=$(eval echo "$PARAM_SELECT_BY_FILES")
-echo "Evaluated output in TESTFILES: $TESTFILES"
+
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
+    TESTFILES = run_circleci(${PARAM_SPLIT_TYPE});\
+    disp(TESTFILES);\
     testScript = custom_genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
@@ -46,5 +47,5 @@ echo "Evaluated output in TESTFILES: $TESTFILES"
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles',{$TESTFILES});" $PARAM_STARTUP_OPTIONS
-      
+    'TestFiles',TESTFILES);" $PARAM_STARTUP_OPTIONS
+    

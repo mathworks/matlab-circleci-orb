@@ -1,4 +1,4 @@
-function stdout = run_circleci()
+function stdout = run_circleci(splitBy)
     suite = testsuite('tests', 'IncludingSubfolders', true);
     testFilePaths = {};
     
@@ -21,7 +21,7 @@ function stdout = run_circleci()
     fid = fopen(tempAllFile, 'w');
     fprintf(fid, '%s\n', testNames{:});
     fclose(fid);
-    command = sprintf('circleci tests split --split-by=timings %s 2> %s', tempAllFile, tempErrorFile);
+    command = sprintf('circleci tests split --split-by=%s %s 2> %s', splitBy, tempAllFile, tempErrorFile);
     [~, stdout] = system(command);
     stderr = fileread(tempErrorFile);
     disp(stderr);

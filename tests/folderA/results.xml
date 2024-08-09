@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<testsuites>
+  <testsuite errors="0" failures="0" name="HasSealedTestTags" skipped="0" tests="1" time="0.0007188">
+    <testcase classname="HasSealedTestTags" name="test1" time="0.0007188"/>
+  </testsuite>
+  <testsuite errors="0" failures="0" name="HasUnsealedTestTags" skipped="0" tests="1" time="0.0002625">
+    <testcase classname="HasUnsealedTestTags" name="test1" time="0.0002625"/>
+  </testsuite>
+  <testsuite errors="0" failures="0" name="dummyClassName" skipped="0" tests="1" time="0.0031145">
+    <testcase classname="dummyClassName" name="test2" time="0.0031145"/>
+  </testsuite>
+</testsuites>
