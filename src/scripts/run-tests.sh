@@ -28,7 +28,7 @@ fi
 
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
-    TESTFILES = run_circleci('${PARAM_SPLIT_TYPE}','${PARAM_SELECT_BY_TAG}');\
+    TESTFILES = run_circleci('${PARAM_SPLIT_TYPE}','${PARAM_SELECT_BY_TAG}','${PARAM_SELECT_BY_FOLDER}','${PARAM_SOURCE_FOLDER}');\
     testScript = genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
