@@ -138,7 +138,6 @@ jobs:
           no-output-timeout: 30m
           
       - matlab/run-tests:
-          split-type: 'timings'
           use-parallel: true
  
       
