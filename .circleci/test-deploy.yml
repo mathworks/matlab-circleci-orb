@@ -139,8 +139,8 @@ jobs:
           
       - matlab/run-tests:
           split-type: 'timings'
-          select-by-folder: 'tests'
-          test-results-junit: 'results.xml' 
+          use-parallel: true
+ 
       
       - store_test_results:
            path: results.xml
