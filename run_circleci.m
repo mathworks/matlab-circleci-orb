@@ -38,9 +38,11 @@ function stdout = run_circleci(paramSplitType, paramSelectByTag, paramSelectByFo
         testFilePaths{end+1} = testFilePath; 
     end
 
-    uniqueTestFilePaths = unique(testFilePaths);
-    [~, testNames, ~] = cellfun(@fileparts, uniqueTestFilePaths, 'UniformOutput', false);
+    testNames= unique(testFilePaths);
 
+    if strcmp(paramSplitType, 'timings')
+        [~, testNames, ~] = cellfun(@fileparts, testNames, 'UniformOutput', false);
+    end
     tempAllFile = tempname;
     tempErrorFile = tempname;
     fid = fopen(tempAllFile, 'w');
