@@ -12,6 +12,8 @@ classdef CreateTestFilesExpressionBuilder < scriptgen.expressions.test.CreateTes
             import scriptgen.internal.isAbsolutePath;
             import scriptgen.Expression;
             
+            % erase function uses R2016b or later
+            obj.TestFiles = erase(obj.TestFiles, '.m');
             quotedTestFiles = cellfun(@(x) ['''' x ''''], obj.TestFiles, 'UniformOutput', false);
             testFilesStr = ['{' strjoin(quotedTestFiles, ', ') '}'];
             text = sprintf('TestFiles = %s;', testFilesStr);

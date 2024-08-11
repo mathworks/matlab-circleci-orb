@@ -49,7 +49,11 @@ function stdout = run_circleci(paramSplitType, paramSelectByTag, paramSelectByFo
     fprintf(fid, '%s\n', testNames{:});
     fclose(fid);
 
-    command = sprintf('circleci tests split --split-by=%s %s 2> %s', paramSplitType, tempAllFile, tempErrorFile);
+    if strcmp(paramSplitType, 'filename')
+        command = sprintf('circleci tests split %s 2> %s', tempAllFile, tempErrorFile);
+    else
+        command = sprintf('circleci tests split --split-by=%s %s 2> %s', paramSplitType, tempAllFile, tempErrorFile);
+    end
     [~, stdout] = system(command);
 
     stderr = fileread(tempErrorFile);
