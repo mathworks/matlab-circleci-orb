@@ -137,9 +137,8 @@ jobs:
           products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
           no-output-timeout: 30m
           
-      - matlab/run-tests
+      - matlab/run-tests:
           split-type: 'filesize'
-
  
       
       - store_test_results:
