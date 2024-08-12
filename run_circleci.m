@@ -62,10 +62,12 @@ function stdout = run_circleci(paramSplitType, paramSelectByTag, paramSelectByFo
     stderr = fileread(tempErrorFile);
     disp(stderr);
 
+    
     stdout = strsplit(stdout, '\n');
     stdout = stdout(~cellfun('isempty', stdout));
     stdout = strtrim(stdout);
     stdout = stdout(:)';
+    [~, stdout, ~] = cellfun(@fileparts, stdout, 'UniformOutput', false);
 
     delete(tempAllFile);
     delete(tempErrorFile);
