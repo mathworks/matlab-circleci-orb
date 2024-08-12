@@ -26,23 +26,27 @@ function stdout = run_circleci(paramSplitType, paramSelectByTag, paramSelectByFo
     end  
 
     testFilePaths = {};
+
     for i = 1:numel(suite)
         baseFolder = suite(i).BaseFolder;
+        relativePath = strrep(baseFolder, [pwd, filesep], '');
         testClass = suite(i).TestParentName;
     
         if isstring(testClass)
             testClass = char(testClass);
         end
     
-        testFilePath = fullfile(baseFolder, strcat(testClass, '.m'));
+        testFilePath = fullfile(relativePath, strcat(testClass, '.m'));
         testFilePaths{end+1} = testFilePath; 
     end
 
     testNames= unique(testFilePaths);
+    [~, testNames, ~] = cellfun(@fileparts, testNames, 'UniformOutput', false);
 
-    if strcmp(paramSplitType, 'timings')
-        [~, testNames, ~] = cellfun(@fileparts, testNames, 'UniformOutput', false);
+    if strcmp(paramSplitType, 'filename') || strcmp(paramSplitType, 'filesize')
+        testNames = strcat(testNames,'.m');
     end
+
     tempAllFile = tempname;
     tempErrorFile = tempname;
     fid = fopen(tempAllFile, 'w');

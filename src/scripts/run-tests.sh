@@ -26,9 +26,14 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
+if [[ -n "${PARAM_SPLIT_TYPE}" && -n "${CIRCLECI}" ]]; then
+    RUN_CIRCLECI_CMD="TESTFILES = run_circleci('${PARAM_SPLIT_TYPE}','${PARAM_SELECT_BY_TAG}','${PARAM_SELECT_BY_FOLDER}','${PARAM_SOURCE_FOLDER}');"
+else
+    RUN_CIRCLECI_CMD="TESTFILES = '';"
+fi
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
-    TESTFILES = run_circleci('${PARAM_SPLIT_TYPE}','${PARAM_SELECT_BY_TAG}','${PARAM_SELECT_BY_FOLDER}','${PARAM_SOURCE_FOLDER}');\
+    ${RUN_CIRCLECI_CMD}\   
     testScript = genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
