@@ -138,9 +138,8 @@ jobs:
           no-output-timeout: 30m
           
       - matlab/run-tests:
-          split-type: 'filesize'
- 
-      
+          split-type: 'timings'
+
       - store_test_results:
            path: results.xml
 
