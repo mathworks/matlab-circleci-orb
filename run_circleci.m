@@ -41,10 +41,9 @@ function stdout = run_circleci(paramSplitType, paramSelectByTag, paramSelectByFo
     end
 
     testNames= unique(testFilePaths);
-    [~, testNames, ~] = cellfun(@fileparts, testNames, 'UniformOutput', false);
-
-    if strcmp(paramSplitType, 'filename') || strcmp(paramSplitType, 'filesize')
-        testNames = strcat(testNames,'.m');
+   
+    if strcmp(paramSplitType, 'timings')
+        [~, testNames, ~] = cellfun(@fileparts, testNames, 'UniformOutput', false);
     end
 
     tempAllFile = tempname;
