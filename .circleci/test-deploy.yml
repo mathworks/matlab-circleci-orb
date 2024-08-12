@@ -138,7 +138,7 @@ jobs:
           no-output-timeout: 30m
           
       - matlab/run-tests:
-          split-type: 'filename'
+          split-type: 'filesize'
  
       
       - store_test_results:
