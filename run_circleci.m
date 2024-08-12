@@ -64,7 +64,7 @@ function stdout = run_circleci(paramSplitType, paramSelectByTag, paramSelectByFo
 
     
     stdout = strsplit(stdout, '\n');
-    stdout = stdout(~cellfun('isempty', stdout));
+    stdout = stdout(~cellfun('isempty', stdout)); 
     stdout = strtrim(stdout);
     stdout = stdout(:)';
     [~, stdout, ~] = cellfun(@fileparts, stdout, 'UniformOutput', false);
