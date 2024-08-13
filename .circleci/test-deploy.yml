@@ -143,13 +143,11 @@ jobs:
           test-results-junit: 'test_result'
 
       - store_test_results:
-           path: results.xml
+           path: test_result
 
       - store_artifacts:
-          path: results.xml
-          destination: test-results/results.xml
-       
-       
+          path: test_result
+            
 
   integration-test-run-build:
     parameters:
