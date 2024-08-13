@@ -141,6 +141,7 @@ jobs:
           split-type: 'timings'
           select-by-folder: 'tests/folderA'
           test-results-junit: 'test_result'
+          use-parallel: true
 
       - store_test_results:
            path: test_result
