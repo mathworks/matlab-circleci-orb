@@ -26,9 +26,10 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     binext=".exe"
 fi
 
-if [[ -n "${PARAM_SPLIT_TYPE}" && -n "${CIRCLECI}" ]]; then
+if [[ -n "${PARAM_SPLIT_TYPE}" ]]; then
     "${tmpdir}/bin/run-matlab-command$binext" "\
-    TESTFILES = run_circleci('${PARAM_SPLIT_TYPE}','${PARAM_SELECT_BY_TAG}','${PARAM_SELECT_BY_FOLDER}','${PARAM_SOURCE_FOLDER}');\
+    circleciTestFiles = getCircleCISplitFiles('${PARAM_SPLIT_TYPE}','${PARAM_SELECT_BY_TAG}','${PARAM_SELECT_BY_FOLDER}','${PARAM_SOURCE_FOLDER}');\
+    addpath('${gendir}/scriptgen');\
     testScript = genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
@@ -45,13 +46,14 @@ if [[ -n "${PARAM_SPLIT_TYPE}" && -n "${CIRCLECI}" ]]; then
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles',TESTFILES);\
+    'CircleCITestFiles',circleciTestFiles);\
     disp('Running MATLAB script with contents:');\
     disp(testScript.Contents);\
     fprintf('__________\n\n');\
     run(testScript);" $PARAM_STARTUP_OPTIONS
 else
     "${tmpdir}/bin/run-matlab-command$binext" "\
+    addpath('${gendir}/scriptgen');\
     testScript = genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\

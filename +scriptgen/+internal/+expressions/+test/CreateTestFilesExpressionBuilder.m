@@ -12,10 +12,10 @@ classdef CreateTestFilesExpressionBuilder < scriptgen.expressions.test.CreateTes
             import scriptgen.internal.isAbsolutePath;
             import scriptgen.Expression;
             
-            quotedTestFiles = cellfun(@(x) ['''' x ''''], obj.TestFiles, 'UniformOutput', false);
+            quotedTestFiles = cellfun(@(x) ['''' x ''''], obj.CircleCITestFiles, 'UniformOutput', false);
             testFilesStr = ['{' strjoin(quotedTestFiles, ', ') '}'];
-            text = sprintf('TestFiles = %s;', testFilesStr);
-            patternsStr = 'patterns = strcat(TestFiles, ''/*'');';
+            text = sprintf('CircleCITestFiles = %s;', testFilesStr);
+            patternsStr = 'patterns = strcat(CircleCITestFiles, ''/*'');';
             suiteStr = 'suite = selectIf(suite, ''Name'', patterns);';
             fullText = sprintf('%s\n%s\n%s', text, patternsStr, suiteStr);
             

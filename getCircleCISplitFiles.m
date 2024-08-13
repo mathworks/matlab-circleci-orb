@@ -1,4 +1,25 @@
-function stdout = run_circleci(paramSplitType, paramSelectByTag, paramSelectByFolder, paramSourceFolder)
+function stdout = getCircleCISplitFiles(paramSplitType, paramSelectByTag, paramSelectByFolder, paramSourceFolder)
+% getCircleCISplitFiles - splits test files using CircleCI split command.
+%
+%   The getCircleCISplitFiles function provides a convenient way to
+%   split test files based on specified parameters.
+%
+%   STDOUT = getCircleCISplitFiles(PARAMSPLITTYPE, PARAMSELECTBYTAG, 
+%   PARAMSELECTBYFOLDER, PARAMSOURCEFOLDER) generates and returns a list of 
+%   split test files. The parameters are as follows:
+%       - PARAMSPLITTYPE: The type of split (e.g., 'timings', 'filename' or 'filesize').
+%       - PARAMSELECTBYTAG: A tag to filter tests by.
+%       - PARAMSELECTBYFOLDER: folder(s) to filter tests by.
+%       - PARAMSOURCEFOLDER: The source folder(s) to add to the path.
+%
+%   These parameters are used to update the test suite and extract the list 
+%   of MATLAB test files to be passed to the CircleCI test split command.
+%
+%   Examples:
+%
+%       resultFiles = getCircleCISplitFiles('timings', 'MyTag', 'MyFolder', 'src');
+%       disp(resultFiles);
+  
 
     import matlab.unittest.selectors.HasTag;
     import matlab.unittest.constraints.StartsWithSubstring;
@@ -8,21 +29,21 @@ function stdout = run_circleci(paramSplitType, paramSelectByTag, paramSelectByFo
     if ~isempty(paramSourceFolder)
         dirs = strtrim(strsplit(paramSourceFolder, {';', ':'}));
         for i = numel(dirs):-1:1
-            code{i} = sprintf('addpath(genpath(''%s''));', strrep(dirs{i}, '''', ''''''));
-            eval(code{i});
+            statement{i} = sprintf('addpath(genpath(''%s''));', strrep(dirs{i}, '''', ''''''));
+            eval(statement{i});
         end
     end    
 
     suite = testsuite(pwd, 'IncludingSubfolders', true);
 
     if ~isempty(paramSelectByTag)
-        dynamicStatement = sprintf('suite = suite.selectIf(HasTag(''%s''));', paramSelectByTag);
-        eval(dynamicStatement);
+        Statement = sprintf('suite = suite.selectIf(HasTag(''%s''));', paramSelectByTag);
+        eval(Statement);
     end     
 
     if ~isempty(paramSelectByFolder)
-        text = sample_script(paramSelectByFolder);
-        eval(text);
+        Statement =  generateFolderSelectionStatement(paramSelectByFolder);
+        eval(Statement);
     end  
 
     testFilePaths = {};

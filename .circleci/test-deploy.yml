@@ -138,7 +138,7 @@ jobs:
           no-output-timeout: 30m
           
       - matlab/run-tests:
-          split-type: 'timings'
+          split-type: 'filesize'
           select-by-folder: 'tests/folderA'
           test-results-junit: 'test_result'
           use-parallel: true

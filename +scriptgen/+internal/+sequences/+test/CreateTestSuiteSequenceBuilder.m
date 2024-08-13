@@ -26,8 +26,8 @@ classdef CreateTestSuiteSequenceBuilder < scriptgen.sequences.test.CreateTestSui
                     'CreateHasTagSelector', 'Tag', obj.SelectByTag);
             end
 
-            if ~isempty(obj.TestFiles)
-                expression= testCodeProvider.createExpression('CreateTestFiles','TestFiles', obj.TestFiles);
+            if ~isempty(obj.CircleCITestFiles)
+                expression= testCodeProvider.createExpression('CreateTestFiles','CircleCITestFiles', obj.CircleCITestFiles);
                 statements(end+1) = Statement(expression.Text, expression.RequiredImports);
             end    
             

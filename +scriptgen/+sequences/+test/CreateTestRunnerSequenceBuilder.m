@@ -18,7 +18,7 @@ classdef CreateTestRunnerSequenceBuilder < scriptgen.CodeBuilder
         OutputDetail = ''
         Strict = false
         UseParallel = false
-        TestFiles = {}
+        CircleCITestFiles = {}
     end
     
     methods
@@ -101,9 +101,9 @@ classdef CreateTestRunnerSequenceBuilder < scriptgen.CodeBuilder
             validateattributes(value, {'logical','numeric'}, {'scalar'});
             obj.UseParallel = value;
         end
-        function set.TestFiles(obj, value)
+        function set.CircleCITestFiles(obj, value)
             scriptgen.internal.validateText(value);
-            obj.TestFiles = value;
+            obj.CircleCITestFiles = value;
         end
     end
 end

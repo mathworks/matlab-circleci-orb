@@ -2,13 +2,13 @@ classdef CreateTestFilesExpressionBuilder < scriptgen.CodeBuilder
     % Copyright 2020 The MathWorks, Inc.
     
     properties
-        TestFiles = {}
+        CircleCITestFiles = {}
     end
     
     methods
-        function set.TestFiles(obj, value)
+        function set.CircleCITestFiles(obj, value)
             scriptgen.internal.validateTextArray(value);
-            obj.TestFiles = value;
+            obj.CircleCITestFiles = value;
         end
     end
 end

@@ -42,7 +42,7 @@ parameters:
     default: false
   split-type:
     description: >
-      Option to use CircleCI Test Split feature.
+      Option to use CircleCI Test Split feature, specified as 'timings', 'filename' or 'filesize'.
     type: string
     default: ''
   output-detail:
