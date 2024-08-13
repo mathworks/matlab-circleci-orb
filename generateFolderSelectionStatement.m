@@ -1,4 +1,4 @@
-function finalStatement= generateFolderSelectionStatement(text)
+function finalStatement= generateFolderSelectionStatement(statement)
 import scriptgen.internal.unquoteText;
 import scriptgen.internal.isAbsolutePath;
 
