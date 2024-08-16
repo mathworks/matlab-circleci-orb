@@ -47,5 +47,5 @@ TESTFILES="{${TESTFILES}}"
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles',${TESTFILES});" $PARAM_STARTUP_OPTIONS
+    'TestFiles',${TESTFILES});" $PARAM_STARTUP_OPTIONS 
       
