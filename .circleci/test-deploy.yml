@@ -139,15 +139,15 @@ jobs:
           
       - matlab/run-tests:
           select-by-folder: 'tests'
-          select-by-files: "$(circleci tests glob 'tests/**/*.m' | circleci tests split | awk '{printf \"\\x27%s\\x27, \", $0}' | sed 's/,$//')"
+          select-by-files: "$(circleci tests glob 'tests/**/*.m' | circleci tests split --split-by=timings| awk '{printf \"\\x27%s\\x27, \", $0}' | sed 's/,$//')"
           test-results-junit: results 
       
-      # - store_test_results:
-      #      path: results.xml
+      - store_test_results:
+           path: results.xml
 
-      # - store_artifacts:
-      #     path: results.xml
-      #     destination: test-results/results.xml
+      - store_artifacts:
+          path: results.xml
+          destination: test-results/results.xml
        
        
 
