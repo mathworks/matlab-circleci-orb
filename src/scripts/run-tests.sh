@@ -64,6 +64,8 @@ fi
 addpath('${gendir}/scriptgen');\
 if ~isempty('${PARAM_SPLIT_TYPE}')
     circleciTestFiles = getCircleCISplitFiles('${PARAM_SPLIT_TYPE}', '${PARAM_SELECT_BY_TAG}', '${PARAM_SELECT_BY_FOLDER}', '${PARAM_SOURCE_FOLDER}');
+else
+    circleciTestFiles = '';
 end;\
 testScript = genscript('Test', ...
     'JUnitTestResults', '${PARAM_TEST_RESULTS_JUNIT}', ...
