@@ -60,54 +60,31 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     binext=".exe"
 fi
 
-if [[ -n "${PARAM_SPLIT_TYPE}" ]]; then
-    "${tmpdir}/bin/run-matlab-command$binext" "\
-    circleciTestFiles = getCircleCISplitFiles('${PARAM_SPLIT_TYPE}','${PARAM_SELECT_BY_TAG}','${PARAM_SELECT_BY_FOLDER}','${PARAM_SOURCE_FOLDER}');\
-    addpath('${gendir}/scriptgen');\
-    testScript = genscript('Test',\
-    'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
-    'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
-    'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
-    'SourceFolder','${PARAM_SOURCE_FOLDER}',\
-    'SelectByFolder','${PARAM_SELECT_BY_FOLDER}',\
-    'SelectByTag','$PARAM_SELECT_BY_TAG',\
-    'CoberturaModelCoverage','${PARAM_MODEL_COVERAGE_COBERTURA}',\
-    'HTMLModelCoverage','${PARAM_MODEL_COVERAGE_HTML}',\
-    'SimulinkTestResults','${PARAM_TEST_RESULTS_SIMULINK_TEST}',\
-    'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
-    'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
-    'Strict',${PARAM_STRICT},\
-    'UseParallel',${PARAM_USE_PARALLEL},\
-    'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
-    'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'CircleCITestFiles',circleciTestFiles);\
-    disp('Running MATLAB script with contents:');\
-    disp(testScript.Contents);\
-    fprintf('__________\n\n');\
-    run(testScript);" $PARAM_STARTUP_OPTIONS
-else
-    "${tmpdir}/bin/run-matlab-command$binext" "\
-    addpath('${gendir}/scriptgen');\
-    testScript = genscript('Test',\
-    'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
-    'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
-    'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
-    'SourceFolder','${PARAM_SOURCE_FOLDER}',\
-    'SelectByFolder','${PARAM_SELECT_BY_FOLDER}',\
-    'SelectByTag','$PARAM_SELECT_BY_TAG',\
-    'CoberturaModelCoverage','${PARAM_MODEL_COVERAGE_COBERTURA}',\
-    'HTMLModelCoverage','${PARAM_MODEL_COVERAGE_HTML}',\
-    'SimulinkTestResults','${PARAM_TEST_RESULTS_SIMULINK_TEST}',\
-    'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
-    'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
-    'Strict',${PARAM_STRICT},\
-    'UseParallel',${PARAM_USE_PARALLEL},\
-    'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
-    'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
-    disp('Running MATLAB script with contents:');\
-    disp(testScript.Contents);\
-    fprintf('__________\n\n');\
-    run(testScript);" $PARAM_STARTUP_OPTIONS
-fi
+"${tmpdir}/bin/run-matlab-command$binext" "\
+addpath('${gendir}/scriptgen');\
+if ~isempty('${PARAM_SPLIT_TYPE}')
+    circleciTestFiles = getCircleCISplitFiles('${PARAM_SPLIT_TYPE}', '${PARAM_SELECT_BY_TAG}', '${PARAM_SELECT_BY_FOLDER}', '${PARAM_SOURCE_FOLDER}');
+end;\
+testScript = genscript('Test', ...
+    'JUnitTestResults', '${PARAM_TEST_RESULTS_JUNIT}', ...
+    'CoberturaCodeCoverage', '${PARAM_CODE_COVERAGE_COBERTURA}', ...
+    'HTMLCodeCoverage', '${PARAM_CODE_COVERAGE_HTML}', ...
+    'SourceFolder', '${PARAM_SOURCE_FOLDER}', ...
+    'SelectByFolder', '${PARAM_SELECT_BY_FOLDER}', ...
+    'SelectByTag', '${PARAM_SELECT_BY_TAG}', ...
+    'CoberturaModelCoverage', '${PARAM_MODEL_COVERAGE_COBERTURA}', ...
+    'HTMLModelCoverage', '${PARAM_MODEL_COVERAGE_HTML}', ...
+    'SimulinkTestResults', '${PARAM_TEST_RESULTS_SIMULINK_TEST}', ...
+    'HTMLTestReport', '${PARAM_TEST_RESULTS_HTML}', ...
+    'PDFTestReport', '${PARAM_TEST_RESULTS_PDF}', ...
+    'Strict', ${PARAM_STRICT}, ...
+    'UseParallel', ${PARAM_USE_PARALLEL}, ...
+    'OutputDetail', '${PARAM_OUTPUT_DETAIL}', ...
+    'LoggingLevel', '${PARAM_LOGGING_LEVEL}', ...
+    'CircleCITestFiles', circleciTestFiles);\
+disp('Running MATLAB script with contents:');\
+disp(testScript.Contents);\
+fprintf('__________\n\n');\
+run(testScript);" $PARAM_STARTUP_OPTIONS
 
     
