@@ -139,7 +139,8 @@ jobs:
           
       - matlab/run-tests:
           select-by-folder: 'tests'
-          select-by-files: "$(circleci tests glob 'tests/**/*.m' | circleci tests split --split-by=timings| awk '{printf \"\\x27%s\\x27, \", $0}' | sed 's/,$//')"
+          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1) "/*"}')
+          # select-by-files: "$(circleci tests glob 'tests/**/*.m' | circleci tests split --split-by=timings| awk '{printf \"\\x27%s\\x27, \", $0}' | sed 's/,$//')"
           test-results-junit: results 
       
       - store_test_results:
