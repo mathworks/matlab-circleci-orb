@@ -25,15 +25,10 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
     binext=".exe"
 fi
-# echo "Command to be executed: $PARAM_SELECT_BY_FILES"
-# TESTFILES=$(eval echo "$PARAM_SELECT_BY_FILES")
-# TESTFILES="{${TESTFILES}}"
-
 echo "Command to be executed 2: $PARAM_SELECT_BY_NAME"
 TESTFILES=$(eval echo "$PARAM_SELECT_BY_NAME")
 TESTFILES="{${TESTFILES}}"
 echo "TestFiles are: $TESTFILES"
-
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = my_genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
