@@ -2,33 +2,35 @@ downloadAndRun() {
     url=$1
     shift
     if [[ -x $(command -v sudo) ]]; then
-    curl -sfL $url | sudo -E bash -s -- "$@"
+        curl -sfL "$url" | sudo -E bash -s -- "$@"
     else
-    curl -sfL $url | bash -s -- "$@"
+        curl -sfL "$url" | bash -s -- "$@"
     fi
 }
 
 tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
 
-# install run-matlab-command
+# Install run-matlab-command
 downloadAndRun https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v2/install.sh "${tmpdir}/bin"
 
-# download script generator
+# Download script generator
 curl -sfLo "${tmpdir}/scriptgen.zip" https://ssd.mathworks.com/supportfiles/ci/matlab-script-generator/v0/matlab-script-generator.zip
 unzip -qod "${tmpdir}/scriptgen" "${tmpdir}/scriptgen.zip"
 
-# form OS appropriate paths for MATLAB
+# Form OS-appropriate paths for MATLAB
 os=$(uname)
 gendir=$tmpdir
 binext=""
-if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+if [[ $os == CYGWIN* || $os == MINGW* || $os == MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
     binext=".exe"
 fi
+
 echo "Command to be executed 2: $PARAM_SELECT_BY_NAME"
 TESTFILES=$(eval echo "$PARAM_SELECT_BY_NAME")
 TESTFILES="{${TESTFILES}}"
 echo "TestFiles are: $TESTFILES"
+
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = my_genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
@@ -43,9 +45,8 @@ echo "TestFiles are: $TESTFILES"
     'HTMLTestReport','${PARAM_TEST_RESULTS_HTML}',\
     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
     'Strict',${PARAM_STRICT},\
-    'SplitType', '${PARAM_SPLIT_TYPE}',\
+    'SplitType','${PARAM_SPLIT_TYPE}',\
     'UseParallel',${PARAM_USE_PARALLEL},\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}',\
-    'TestFiles',${TESTFILES});" $PARAM_STARTUP_OPTIONS 
-      
+    'TestFiles',${TESTFILES});" $PARAM_STARTUP_OPTIONS
