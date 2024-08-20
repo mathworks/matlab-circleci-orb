@@ -57,7 +57,7 @@ gendir="$tmpdir"
 binext=""
 if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     gendir=$(cygpath -w "$gendir")
-    binext=".exe"
+    binext=".exe" 
 fi
 
 echo "Command to be executed: $PARAM_SELECT_BY_NAME"
