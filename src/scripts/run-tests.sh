@@ -27,8 +27,8 @@ if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
 fi
 echo "Command to be executed: $PARAM_SELECT_BY_NAME"
 TESTFILES=$(eval echo "$PARAM_SELECT_BY_NAME")
-TESTFILES="{${TESTFILES}}"
-echo "TESTFILES ARE: $TESTFILES"
+circleciTestFiles="{${TESTFILES}}"
+echo "TESTFILES ARE: $circleciTestFiles"
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = genscript('Test', ...
     'JUnitTestResults', '${PARAM_TEST_RESULTS_JUNIT}', ...
@@ -46,7 +46,7 @@ echo "TESTFILES ARE: $TESTFILES"
     'UseParallel', ${PARAM_USE_PARALLEL}, ...
     'OutputDetail', '${PARAM_OUTPUT_DETAIL}', ...
     'LoggingLevel', '${PARAM_LOGGING_LEVEL}', ...
-    'CircleCITestFiles', circleciTestFiles);\
+    'CircleCITestFiles', ${circleciTestFiles};\
     disp('Running MATLAB script with contents:');\
     disp(testScript.Contents);\
     fprintf('__________\n\n');\
