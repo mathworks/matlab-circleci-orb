@@ -28,7 +28,7 @@ fi
 echo "Command to be executed: $PARAM_SELECT_BY_NAME"
 TESTFILES=$(eval echo "$PARAM_SELECT_BY_NAME")
 TESTFILES="{${TESTFILES}}"
-
+echo "TESTFILES ARE: $TESTFILES"
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = my_genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
