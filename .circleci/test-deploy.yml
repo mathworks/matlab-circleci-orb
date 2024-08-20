@@ -143,11 +143,11 @@ jobs:
           test-results-junit: results
       
       - store_test_results:
-           path: results.xml
+           path: results
 
       - store_artifacts:
-          path: results.xml
-          destination: test-results/results.xml
+          path: results
+          destination: test-results/results
        
        
 
