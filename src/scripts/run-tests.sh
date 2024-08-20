@@ -30,7 +30,7 @@ TESTFILES=$(eval echo "$PARAM_SELECT_BY_NAME")
 TESTFILES="{${TESTFILES}}"
 echo "TESTFILES ARE: $TESTFILES"
 "${tmpdir}/bin/run-matlab-command$binext" "\
-    testScript = my_genscript('Test',\
+    testScript = genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
     'HTMLCodeCoverage','${PARAM_CODE_COVERAGE_HTML}',\
