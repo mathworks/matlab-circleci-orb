@@ -1,4 +1,4 @@
-# Continuous Integration with MATLAB on CircleCI
+# Use MATLAB with CircleCI
 
 This orb provides tasks to build and test MATLAB and Simulink projects on CircleCI.
 
@@ -156,17 +156,17 @@ steps:
     tasks: test
 ```
 
-## Tasks
+## Commands
 You can access the extension tasks using the YAML pipeline editor in Azure DevOps. 
 
 ![tasks](https://github.com/mathworks/matlab-azure-devops-extension/assets/48831250/d48ddb8b-a87f-4334-a301-64293b822647)
 
-### Install MATLAB
+### `install`
 Use the **Install MATLAB** task to install MATLAB and other MathWorks&reg; products on a Microsoft-hosted agent. When you specify this task as part of your pipeline, the task installs your preferred MATLAB release (R2021a or later) on a Linux, Windows, or macOS agent and prepends it to the `PATH` system environment variable. If you do not specify a release, the task installs the latest release of MATLAB.
 
 Specify the **Install MATLAB** task in your YAML pipeline as `InstallMATLAB@1`. The task accepts optional inputs.
 
-Input       | Description 
+Parameter   | Description 
 ------------| ------------
 `release`   | <p>(Optional) MATLAB release to install. You can specify R2021a or a later release. By default, the value of `release` is `latest`, which corresponds to the latest release of MATLAB.</p><p><ul><li>To install the latest update of a release, specify only the release name, for example, `R2023b`.</li><li>To install a specific update release, specify the release name with an update number suffix, for example, `R2023bU4`.</li><li>To install a release without updates, specify the release name with an update 0 or general release suffix, for example, `R2023bU0` or `R2023bGR`.</li></ul></p><p>**Example**: `release: R2023b`<br/>**Example**: `release: latest`<br/>**Example**: `release: R2023bU4`</p>
 `products`  | <p>(Optional) Products to install in addition to MATLAB, specified as a list of product names separated by spaces. You can specify `products` to set up most MathWorks products and support packages. The action uses [MATLAB Package Manager](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/MPM.md) (`mpm`) to set up products.</p><p>For a list of supported products, open the input file for your preferred release from the [`mpm-input-files`](https://github.com/mathworks-ref-arch/matlab-dockerfile/tree/main/mpm-input-files) folder on GitHub&reg;. Specify products using the format shown in the input file, excluding the `#product.` prefix. For example, to set up Deep Learning Toolbox&trade; in addition to MATLAB, specify `products: Deep_Learning_Toolbox`.</p><p>For an example of how to use the `products` input, see [Run Tests in Parallel](#run-tests-in-parallel).</p><p>**Example**: `products: Simulink`<br/>**Example:** `products: Simulink Deep_Learning_Toolbox`</p>
@@ -181,25 +181,25 @@ To use a MATLAB batch licensing token, first set it as a [secret variable](https
 
 >**Note:** The **Install MATLAB** task automatically includes the [MATLAB batch licensing executable](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md) (`matlab-batch`). To use a MATLAB batch licensing token in a pipeline that does not use this task, you must first download the executable and add it to the system path.
 
-### Run MATLAB Build
-Use the **Run MATLAB Build** task to run a build using the MATLAB build tool. Starting in R2022b, you can use this task to run the MATLAB build tasks specified in a build file. By default, the **Run MATLAB Build** task looks for a build file named `buildfile.m` in the root of your repository. For more information about the build tool, see [Overview of MATLAB Build Tool](https://www.mathworks.com/help/matlab/matlab_prog/overview-of-matlab-build-tool.html).
+### `run-build`
+Use the `run-build` command to run a build using the MATLAB build tool. Starting in R2022b, you can use this command to run the MATLAB build tasks specified in a build file. By default, the **Run MATLAB Build** task looks for a build file named `buildfile.m` in the root of your repository. For more information about the build tool, see [Overview of MATLAB Build Tool](https://www.mathworks.com/help/matlab/matlab_prog/overview-of-matlab-build-tool.html).
 
-Specify the **Run MATLAB Build** task in your YAML pipeline as `RunMATLABBuild@1`. The task accepts optional inputs.
+Specify the **Run MATLAB Build** command in your pipeline as `matlab/run-build`. The command accepts optional parameters.
 
-Input                    | Description
+Parameter                | Description
 -------------------------| ---------------
 `tasks`                  | <p>(Optional) MATLAB build tasks to run, specified as a list of task names separated by spaces. If a build task accepts arguments, enclose them in parentheses. If you do not specify `tasks`, the extension task runs the default build tasks in your build file as well as all the tasks on which they depend.</p><p>MATLAB exits with exit code 0 if the build tasks run without error. Otherwise, MATLAB terminates with a nonzero exit code, which causes the extension task to fail.</p><p>**Example:** `tasks: test`<br/>**Example:** `tasks: compile test`<br/>**Example:** `tasks: check test("myFolder",OutputDetail="concise") archive("source.zip")`</p>
 `buildOptions`           | <p>(Optional) MATLAB build options, specified as a list of options separated by spaces. The task supports the same [options](https://www.mathworks.com/help/matlab/ref/buildtool.html#mw_50c0f35e-93df-4579-963d-f59f2fba1dba) that you can pass to the `buildtool` command.</p><p>**Example:** `buildOptions: -continueOnFailure`<br/>**Example:** `buildOptions: -continueOnFailure -skip test`</p>
 `startupOptions`         | <p>(Optional) MATLAB startup options, specified as a list of options separated by spaces. For more information about startup options, see [Commonly Used Startup Options](https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html).</p><p>Using this input to specify the `-batch` or `-r` option is not supported.</p><p>**Example:** `startupOptions: -nojvm`<br/>**Example:** `startupOptions: -nojvm -logfile output.log`</p>
 
-### Run MATLAB Tests
+### `run-tests`
 Use the **Run MATLAB Tests** task to run tests authored using the MATLAB unit testing framework or Simulink Test and generate test and coverage artifacts.
 
 By default, the task includes any files in your project that have a `Test` label. If your pipeline does not use a MATLAB project, or if it uses a MATLAB release before R2019a, then the task includes all tests in the root of your repository and in any of its subfolders. The task fails if any of the included tests fail.
 
 Specify the **Run MATLAB Tests** task in your YAML pipeline as `RunMATLABTests@1`. The task accepts optional inputs.
 
-Input                     | Description
+Parameter                 | Description
 ------------------------- | ---------------
 `sourceFolder`            | <p>(Optional) Location of the folder containing source code, specified as a path relative to the project root folder. The specified folder and its subfolders are added to the top of the MATLAB search path. If you specify `sourceFolder` and then generate a coverage report, the task uses only the source code in the specified folder and its subfolders to generate the report. You can specify multiple folders using a colon-separated or semicolon-separated list.</p><p>**Example:** `sourceFolder: source`<br/>**Example:** `sourceFolder: source/folderA; source/folderB`</p>
 `selectByFolder`          | <p>(Optional) Location of the folder used to select test suite elements, specified as a path relative to the project root folder. To create a test suite, the task uses only the tests in the specified folder and its subfolders. You can specify multiple folders using a colon-separated or semicolon-separated list.</p><p>**Example:** `selectByFolder: test`<br/>**Example:** `selectByFolder: test/folderA; test/folderB`</p>
@@ -217,12 +217,12 @@ Input                     | Description
 
 >**Note:** To customize the pretest state of the system, you can specify startup code that automatically executes before your tests run. For information on how to specify startup or shutdown files in a MATLAB project, see [Automate Startup and Shutdown Tasks](https://www.mathworks.com/help/matlab/matlab_prog/automate-startup-and-shutdown-tasks.html). If your pipeline does not use a MATLAB project, specify the commands you want executed at startup in a `startup.m` file instead, and save the file to the root of your repository. See [`startup`](https://www.mathworks.com/help/matlab/ref/startup.html) for more information.
 
-### Run MATLAB Command
-Use the **Run MATLAB Command** task to run MATLAB scripts, functions, and statements. You can use this task to flexibly customize your test run or add a step in MATLAB to your pipeline. 
+### `run-command`
+Use the **Run MATLAB Command** command to run MATLAB scripts, functions, and statements. You can use this task to flexibly customize your test run or add a step in MATLAB to your pipeline. 
 
 Specify the **Run MATLAB Command** task in your YAML pipeline as `RunMATLABCommand@1`. The task requires an input and also accepts an optional input.
 
-Input                     | Description
+Parameter                 | Description
 ------------------------- | ---------------
 `command`                 | <p>(Required) Script, function, or statement to execute. If the value of `command` is the name of a MATLAB script or function, do not specify the file extension. If you specify more than one script, function, or statement, use a comma or semicolon to separate them.</p><p>MATLAB exits with exit code 0 if the specified script, function, or statement executes successfully without error. Otherwise, MATLAB terminates with a nonzero exit code, which causes the task to fail. To fail the task in certain conditions, use the [`assert`](https://www.mathworks.com/help/matlab/ref/assert.html) or [`error`](https://www.mathworks.com/help/matlab/ref/error.html) function.</p><p>**Example:** `command: myscript`<br/>**Example:** `command: results = runtests, assertSuccess(results);`</p>
 `startupOptions`         | <p>(Optional) MATLAB startup options, specified as a list of options separated by spaces. For more information about startup options, see [Commonly Used Startup Options](https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html).</p><p>Using this input to specify the `-batch` or `-r` option is not supported.</p><p>**Example:** `startupOptions: -nojvm`<br/>**Example:** `startupOptions: -nojvm -logfile output.log`</p>
