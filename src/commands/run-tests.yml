@@ -23,9 +23,8 @@ parameters:
     default: ''
   select-by-name:
     description: >
-      Location of the folder used to select test suite elements, relative to the project root folder.
-      To create a test suite, MATLAB uses only the tests in the specified folder and its subfolders.
-      You can specify multiple folders using a colon-separated or semicolon-separated list.
+      Name or pattern used to select test suite elements. To create a test suite, MATLAB uses only the test elements
+      that match the specified name or pattern.
     type: string
     default: ''
   select-by-folder:

@@ -68,6 +68,7 @@ else
 fi
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
+    addpath('${gendir}/scriptgen');\
     testScript = genscript('Test',\
     'JUnitTestResults','${PARAM_TEST_RESULTS_JUNIT}',\
     'CoberturaCodeCoverage','${PARAM_CODE_COVERAGE_COBERTURA}',\
