@@ -20,7 +20,7 @@ classdef TestScriptBuilder < scriptgen.CodeBuilder
         OutputDetail = ''
         Strict = false
         UseParallel = false
-        CircleCITestFiles = {}
+        CircleCITestFiles = ''
     end
     
     methods
@@ -114,7 +114,7 @@ classdef TestScriptBuilder < scriptgen.CodeBuilder
             obj.UseParallel = value;
         end
         function set.CircleCITestFiles(obj, value)
-            scriptgen.internal.validateText(value);
+            scriptgen.internal.validateTextScalar(value);
             obj.CircleCITestFiles = value;
         end  
     end

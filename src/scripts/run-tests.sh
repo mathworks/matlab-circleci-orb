@@ -60,7 +60,7 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     binext=".exe" 
 fi
 
-selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{for(i=1;i<=NF;i++) printf "\x27%s\x27%s", $i, (i==NF ? "" : ", ")}')
+selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{for(i=1;i<=NF;i++) printf "\x27\x27%s\x27\x27%s", $i, (i==NF ? "" : ", ")}')
 circleciTestFiles="{$selectByName}"
 echo "TESTFILES ARE:$circleciTestFiles"
 
@@ -79,7 +79,7 @@ echo "TESTFILES ARE:$circleciTestFiles"
     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
     'Strict',${PARAM_STRICT},\
     'UseParallel',${PARAM_USE_PARALLEL},\
-    'CircleCITestFiles', $circleciTestFiles,\
+    'CircleCITestFiles', '$circleciTestFiles',\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
     disp('Running MATLAB script with contents:');\
