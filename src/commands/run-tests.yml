@@ -14,13 +14,6 @@ parameters:
       folders using a colon-separated or semicolon-separated list.
     type: string
     default: ''
-  select-by-files:
-    description: >
-      Location of the folder used to select test suite elements, relative to the project root folder.
-      To create a test suite, MATLAB uses only the tests in the specified folder and its subfolders.
-      You can specify multiple folders using a colon-separated or semicolon-separated list.
-    type: string
-    default: ''
   select-by-name:
     description: >
       Name or pattern used to select test suite elements. To create a test suite, MATLAB uses only the test elements
@@ -53,11 +46,6 @@ parameters:
       parameter requires a Parallel Computing Toolbox license.
     type: boolean
     default: false
-  split-type:
-    description: >
-      Option to use CircleCI Test Split feature.
-    type: string
-    default: ''
   output-detail:
     description: >
       Amount of event detail displayed for the test run, specified as `none`, `terse`, `concise`, `detailed`,
@@ -145,8 +133,6 @@ steps:
         PARAM_TEST_RESULTS_PDF: <<parameters.test-results-pdf>>
         PARAM_STRICT: <<parameters.strict>>
         PARAM_USE_PARALLEL: <<parameters.use-parallel>>
-        PARAM_SPLIT_TYPE: <<parameters.split-type>>
-        PARAM_SELECT_BY_FILES: <<parameters.select-by-files>>
         PARAM_SELECT_BY_NAME: <<parameters.select-by-name>>
         PARAM_OUTPUT_DETAIL: <<parameters.output-detail>>
         PARAM_LOGGING_LEVEL: <<parameters.logging-level>>
