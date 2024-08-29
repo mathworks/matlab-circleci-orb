@@ -60,8 +60,12 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     binext=".exe" 
 fi
 
-selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{for(i=1;i<=NF;i++) printf "\x27\x27%s\x27\x27%s", $i, (i==NF ? "" : ", ")}')
-selectByName="{$selectByName}"
+if [[ -n "$PARAM_SELECT_BY_NAME" ]]; then
+    selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{for(i=1;i<=NF;i++) printf "\x27\x27%s\x27\x27%s", $i, (i==NF ? "" : ", ")}')
+    selectByName="{$selectByName}"
+else
+    selectByName=''
+fi
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = genscript('Test',\
