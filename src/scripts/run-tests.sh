@@ -61,8 +61,7 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
 fi
 
 selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{for(i=1;i<=NF;i++) printf "\x27\x27%s\x27\x27%s", $i, (i==NF ? "" : ", ")}')
-circleciTestFiles="{$selectByName}"
-echo "TESTFILES ARE:$circleciTestFiles"
+selectByName="{$selectByName}"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = genscript('Test',\
@@ -79,7 +78,7 @@ echo "TESTFILES ARE:$circleciTestFiles"
     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
     'Strict',${PARAM_STRICT},\
     'UseParallel',${PARAM_USE_PARALLEL},\
-    'CircleCITestFiles', '$circleciTestFiles',\
+    'SelectByName', '$selectByName',\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
     disp('Running MATLAB script with contents:');\

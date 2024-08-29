@@ -6,7 +6,7 @@ classdef CreateTestSuiteSequenceBuilder < scriptgen.CodeBuilder
         SuiteName = 'suite'
         SelectByFolder = {}
         SelectByTag = ''
-        CircleCITestFiles = ''
+        SelectByName = ''
     end
     
     methods
@@ -30,9 +30,9 @@ classdef CreateTestSuiteSequenceBuilder < scriptgen.CodeBuilder
             obj.SelectByTag = value;
         end
 
-        function set.CircleCITestFiles(obj, value)
+        function set.SelectByName(obj, value)
             scriptgen.internal.validateText(value);
-            obj.CircleCITestFiles = value;
+            obj.SelectByName = value;
         end    
     end
 end

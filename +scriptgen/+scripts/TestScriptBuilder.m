@@ -20,7 +20,7 @@ classdef TestScriptBuilder < scriptgen.CodeBuilder
         OutputDetail = ''
         Strict = false
         UseParallel = false
-        CircleCITestFiles = ''
+        SelectByName = ''
     end
     
     methods
@@ -113,9 +113,9 @@ classdef TestScriptBuilder < scriptgen.CodeBuilder
             validateattributes(value, {'logical','numeric'}, {'scalar'});
             obj.UseParallel = value;
         end
-        function set.CircleCITestFiles(obj, value)
+        function set.SelectByName(obj, value)
             scriptgen.internal.validateTextScalar(value);
-            obj.CircleCITestFiles = value;
+            obj.SelectByName = value;
         end  
     end
 end

@@ -1,4 +1,4 @@
-classdef CreateTestFilesExpressionBuilder < scriptgen.expressions.test.CreateTestFilesExpressionBuilder ...
+classdef CreateHasNameSelectorExpressionBuilder < scriptgen.expressions.test.CreateHasNameSelectorExpressionBuilder ...
         & scriptgen.internal.mixin.VersionDependent
     % Copyright 2020 The MathWorks, Inc.
     
@@ -12,10 +12,7 @@ classdef CreateTestFilesExpressionBuilder < scriptgen.expressions.test.CreateTes
             import scriptgen.internal.isAbsolutePath;
             import scriptgen.Expression;
             
-            % quotedTestFiles = cellfun(@(x) ['''' x ''''], obj.CircleCITestFiles, 'UniformOutput', false);
-            % testFilesStr = ['{' strjoin(quotedTestFiles, ', ') '}'];
-            text = sprintf('names = %s;', obj.CircleCITestFiles);
-            % patternsStr = 'names = strcat(CircleCITestFiles, ''/*'');';
+            text = sprintf('names = %s;', obj.SelectByName);
             suiteStr = 'suite = suite.selectIf(''Name'', names);';
             fullText = sprintf('%s\n%s', text, suiteStr);
             
