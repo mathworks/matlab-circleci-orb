@@ -60,10 +60,9 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     binext=".exe" 
 fi
 
-echo "Command to be executed: $PARAM_SELECT_BY_NAME"
-TESTFILES=$(eval echo "$PARAM_SELECT_BY_NAME")
-circleciTestFiles="{${TESTFILES}}"
-echo "TESTFILES ARE: $circleciTestFiles"
+selectByName=$(echo "$PARAM_SELECT_BY_NAME" | awk '{for(i=1;i<=NF;i++) printf "\x27%s\x27%s", $i, (i==NF ? "" : ", ")}')
+circleciTestFiles="{$selectByName}"
+echo "TESTFILES ARE:$circleciTestFiles"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = genscript('Test',\
