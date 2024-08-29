@@ -11,9 +11,8 @@ filters: &filters
 integration-tests: &integration-tests
   [
     orb-tools/pack,
-    #integration-test-install,
-    # integration-test-install-release,
-    #integration-test-install-release-macos-intel-on-arm,
+    integration-test-install,
+    integration-test-install-release,
     integration-test-run-command,
     integration-test-run-tests
   ]
@@ -23,10 +22,6 @@ executors:
     machine:
       image: ubuntu-2204:2024.01.1
   macos:
-    macos:
-      xcode: 15.1.0
-    resource_class: macos.x86.medium.gen2
-  macos-arm:
     macos:
       xcode: 15.3.0
     resource_class: macos.m1.medium.gen1
@@ -129,27 +124,209 @@ jobs:
       executor:
         type: executor
     executor: <<parameters.executor>>
-    parallelism: 2    
     steps:
-      - checkout
     # Setup for Integ tests for matlab/run-tests
       - matlab/install:
           products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
           no-output-timeout: 30m
-          
-      - matlab/run-tests:
-          select-by-folder: 'tests'
-          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1) "/*"}')
-          test-results-junit: results
-      
-      - store_test_results:
-           path: results
+      - run:
+          command: |
+            echo 'myvar = 123' > startup.m
+            mkdir src
+            echo 'function c=add(a,b);c=a+b;' > src/add.m
+            mkdir tests
+            echo "%% StartupTest" > tests/mytest.m
+            echo "evalin('base','assert(myvar==123)')" >> tests/mytest.m
+            echo "%% FirstTest" >> tests/mytest.m
+            echo "assert(add(1,2)==3)" >> tests/mytest.m
+            mkdir tests/filteredTest
+            echo "%% simpleTest" >> tests/filteredTest/filtertest.m
+            echo "assert(2==2)" >> tests/filteredTest/filtertest.m
+            printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
+            printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
+            printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
+          shell: bash
 
-      - store_artifacts:
-          path: results
-          destination: test-results/results 
-       
-       
+    # Integ tests for matlab/run-tests
+      - matlab/run-tests:
+          source-folder: src
+          startup-options: -logfile console.log
+      - matlab/run-tests:
+          test-results-junit: test-results/matlab/results.xml
+          code-coverage-cobertura: code-coverage/coverage.xml
+          source-folder: src
+      - matlab/run-tests:
+          test-results-html: test-results/matlab/html
+          code-coverage-html: code-coverage/html
+          source-folder: src
+      - matlab/run-tests:
+          test-results-junit: test-results/matlab/filterdtestresult.xml
+          select-by-folder: tests/filteredTest
+      - matlab/run-tests:
+          test-results-junit: test-results/matlab/filterdtagresult.xml
+          select-by-tag: FILTERED
+
+      - run:
+          name: Verify tests ran with startup options
+          command: |
+            set -e
+            grep mytest console.log
+            grep TaggedTest console.log
+            grep filtertest console.log
+            rm console.log
+          shell: bash
+      - run:
+          name: Verify test results file was created
+          command: |
+            set -e
+            grep -q FirstTest test-results/matlab/results.xml
+          shell: bash
+      - run:
+          name: Verify HTML test results report was created
+          command: |
+            set -e
+            grep -q FirstTest test-results/matlab/html/index.html
+          shell: bash
+      - run:
+          name: Verify code coverage file was created
+          command: |
+            set -e
+            grep -q add code-coverage/coverage.xml
+          shell: bash
+      - run:
+          name: Verify HTML code coverage report was created
+          command: |
+            set -e
+            grep -q CoverageSummary code-coverage/html/index.html
+          shell: bash
+      - run:
+          name: Verify filtered test results file was created
+          command: |
+            set -e
+            grep -q simpleTest test-results/matlab/filterdtestresult.xml
+            grep -v FirstTest test-results/matlab/filterdtestresult.xml
+          shell: bash
+      - run:
+          name: Verify filter by tag test results file was created
+          command: |
+            set -e
+            grep -q TaggedTest test-results/matlab/filterdtagresult.xml
+            grep -v FirstTest test-results/matlab/filterdtagresult.xml
+            grep -v simpleTest test-results/matlab/filterdtagresult.xml
+          shell: bash
+
+      - run:
+          name: Set up diary for logging
+          command: |
+            echo 'diary console.log' >> startup.m
+          shell: bash
+      - matlab/run-tests:
+          strict: true
+          source-folder: src
+      - run:
+          name: Verify tests ran with strict checks
+          command: |
+            set -e
+            grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
+            rm console.log
+          shell: bash
+      - matlab/run-tests:
+          use-parallel: true
+          source-folder: src
+      - run:
+          name: Verify tests ran in parallel
+          command: |
+            set -e
+            grep -q "parallel pool" console.log
+            rm console.log
+          shell: bash
+      - matlab/run-tests:
+          output-detail: Detailed
+          source-folder: src
+      - run:
+          name: Verify tests ran with detailed display level for event details
+          command: |
+            set -e
+            grep -q "TestRunner.withTextOutput('OutputDetail', 3)" console.log
+            rm console.log
+          shell: bash
+      - matlab/run-tests:
+          logging-level: Detailed
+          source-folder: src
+      - run:
+          name: Verify tests ran with detailed verbosity level for logged diagnostics
+          command: |
+            set -e
+            grep -q "TestRunner.withTextOutput('LoggingLevel', 3)" console.log
+            rm console.log
+          shell: bash
+
+    # Set up for model coverage artifact tests
+      - when:
+          condition:
+            equal: [*linux-executor, <<parameters.executor>>]
+          steps:
+            - run:
+                command: |
+                  mkdir simtests
+                  cat \<<'_EOF' >> "simtests/createModelAndTest.m"
+                  model = 'simple_model';
+                  evalin('base','bdclose all');
+                  if exist('simple_model.slx', 'file') == 0
+                      new_system(model);
+                      load_system(model);
+                      add_block('built-in/Constant', [model, '/Constant']);
+                      save_system(model);
+                      close_system(model);
+                      sltest.testmanager.clear;
+                      sltest.testmanager.clearResults;
+                      tf = sltest.testmanager.TestFile('test.mldatx');
+                      cs = tf.getCoverageSettings;
+                      cs.RecordCoverage = true;
+                      cs.MdlRefCoverage = true;
+                      cs.MetricSettings = 'd';
+                      ts = tf.getTestSuites;
+                      tc = ts.getTestCases;
+                      tc.setProperty('model', model);
+                      tf.saveToFile;
+                      tf.close;
+                      sltest.testmanager.close;
+                  end
+                  disp('Created Model and Simulink Test file to simulate the model.');
+                  _EOF
+                shell: bash
+            - matlab/run-command:
+                command: cd simtests;createModelAndTest;
+            - matlab/run-tests:
+                select-by-folder: simtests
+                model-coverage-cobertura: model-coverage/coverage.xml
+                model-coverage-html: model-coverage/html
+                test-results-pdf: test-results/matlab/pdfresults.pdf
+                test-results-simulink-test: test-results/matlab/simulinkTest.mldatx
+            - run:
+                name: Verify pdf test report file generation
+                command: |
+                  set -e
+                  test -f test-results/matlab/pdfresults.pdf
+                shell: bash
+            - run:
+                name: Verify Simulink Test result file generation
+                command: |
+                  set -e
+                  test -f test-results/matlab/simulinkTest.mldatx
+                shell: bash
+            - run:
+                name: Verify model coverage file was created
+                command: |
+                  set -e
+                  grep -q simple_model model-coverage/coverage.xml
+                shell: bash
+            - run:
+                name: Verify HTML model coverage report was created
+                command: |
+                  set -e
+                  grep -r "simple_model Coverage Report" --include="*.html" model-coverage/html
+                shell: bash
 
   integration-test-run-build:
     parameters:
@@ -281,33 +458,28 @@ workflows:
       - integration-test-install:
           matrix:
             parameters:
-              executor: [linux]
-
-      # - integration-test-install-release:
-      #     matrix:
-      #       parameters:
-      #         executor: [linux]
-      #         release: [R2023bU1]
+              executor: [linux, windows, macos]
 
       - integration-test-install-release:
-          name: integration-test-install-release-macos-intel-on-arm
-          executor: macos-arm
-          release: R2023aU1
+          matrix:
+            parameters:
+              executor: [linux, windows, macos]
+              release: [R2023bU1]
 
       - integration-test-run-command:
           matrix:
             parameters:
-              executor: [linux]
+              executor: [linux, windows, macos]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux]
+              executor: [linux, windows, macos]
 
       - integration-test-run-build:
           matrix:
             parameters:
-              executor: [linux]
+              executor: [linux, windows, macos]
 
       - orb-tools/pack:
           filters: *filters
