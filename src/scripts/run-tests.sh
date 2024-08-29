@@ -60,7 +60,7 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     binext=".exe" 
 fi
 
-selectByName=$(echo "$PARAM_SELECT_BY_NAME" | awk '{for(i=1;i<=NF;i++) printf "\x27%s\x27%s", $i, (i==NF ? "" : ", ")}')
+selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{for(i=1;i<=NF;i++) printf "\x27%s\x27%s", $i, (i==NF ? "" : ", ")}')
 circleciTestFiles="{$selectByName}"
 echo "TESTFILES ARE:$circleciTestFiles"
 
