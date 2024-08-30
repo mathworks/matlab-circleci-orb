@@ -1,6 +1,6 @@
 # Use MATLAB with CircleCI
 
-This orb provides tasks to build and test MATLAB and Simulink projects on CircleCI.
+This orb provides commands to build and test MATLAB and Simulink projects on CircleCI.
 
 ## Usage
 
@@ -165,7 +165,7 @@ steps:
 ```
 
 ## Commands
-You can access the orb tasks using the YAML pipeline editor in Azure DevOps. 
+You can access the orb commands using the YAML pipeline editor in Azure DevOps. 
 
 ![tasks](https://github.com/mathworks/matlab-azure-devops-extension/assets/48831250/d48ddb8b-a87f-4334-a301-64293b822647)
 
