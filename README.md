@@ -70,22 +70,30 @@ steps:
 Run your MATLAB and Simulink tests in parallel (requires Parallel Computing Toolbox&trade;) using the latest release of the required products on a cloud-hosted runner. To install the latest release of MATLAB, Simulink, Simulink Test&trade;, and Parallel Computing Toolbox on the runner, specify the `install` command with its `products` parameter in your pipeline. To run the tests in parallel, specify the `run-tests` command with its `use-parallel` parameter specified as `true`.
 
 ```YAML
-pool:
-  vmImage: ubuntu-latest
-steps:
-  - task: InstallMATLAB@1
-    inputs:
-      products: >
-        Simulink
-        Simulink_Test
-        Parallel_Computing_Toolbox
-  - task: RunMATLABTests@1
-    inputs:
-      useParallel: true
+version: 2.1
+orbs:
+  matlab: mathworks/matlab@1
+jobs:
+  my-job:    
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - matlab/install:
+          products: >
+            Simulink 
+            Simulink_Test 
+            Parallel_Computing_Toolbox
+      - matlab/run-tests:
+          use-parallel: true
+workflows:
+  build:
+    jobs:
+      - my-job
 ``` 
 
 ### Run MATLAB Script
-Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b on a cloud-hosted runner. To install the specified release of MATLAB on the runner, specify the `install` task with its `release` input in your pipeline. To run the script, specify the **Run MATLAB Command** task.
+Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b on a cloud-hosted runner. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
 
 ```YAML
 pool:
@@ -175,8 +183,8 @@ Parameter            | Description
 #### Licensing
 Product licensing for your pipeline depends on your project visibility as well as the type of products to install:
 
-- Public project — If your pipeline does not include transformation products, such as MATLAB Coder and MATLAB Compiler, then the action automatically licenses any products that you install. If your pipeline includes transformation products, you can request a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form.
-- Private project — The action does not automatically license any products for you. You can request a token by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form.
+- Public project — If your pipeline does not include transformation products, such as MATLAB Coder and MATLAB Compiler, then the orb automatically licenses any products that you install. If your pipeline includes transformation products, you can request a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form.
+- Private project — The orb does not automatically license any products for you. You can request a token by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form.
   
 To use a MATLAB batch licensing token, first set it as a [secret variable](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-secret-variables?view=azure-devops&tabs=yaml%2Cbash). Then, map the secret variable to an environment variable named `MLM_LICENSE_TOKEN` in your pipeline. For an example, see [Use MATLAB Batch Licensing Token](#use-matlab-batch-licensing-token). 
 
@@ -239,8 +247,8 @@ When you use this command, all of the required files must be on the MATLAB searc
 `command: addpath("myfolder"), myscript`
 
 ## Notes
-* By default, when you use the `run-build`, `run-tests`, or `run-command` command, the root of your repository serves as the MATLAB startup folder. To run your MATLAB code using a different folder, specify the `-sd` startup option or include the `cd` command when using the `run-command` command.
-* The `run-build` command uses the `-batch` option to invoke the [`buildtool`](https://www.mathworks.com/help/matlab/ref/buildtool.html) command. In addition, in MATLAB R2019a and later, the `run-tests` and `run-command` commands use  the `-batch` option to start MATLAB noninteractively. Preferences do not persist across different MATLAB sessions launched with the `-batch` option. To run code that requires the same preferences, use a single command.
+* By default, when you use the `run-build`, `run-tests`, or `run-command` command, the root of your repository serves as the MATLAB startup folder. To run your MATLAB code using a different folder, specify the `-sd` startup option or include the `cd` command when using `run-command`.
+* The `run-build` command uses the `-batch` option to invoke the MATLAB build tool. In addition, in MATLAB R2019a and later, the `run-tests` and `run-command` commands use  the `-batch` option to start MATLAB noninteractively. Preferences do not persist across different MATLAB sessions launched with the `-batch` option. To run code that requires the same preferences, use a single command.
 
 ## See Also
 - [Continuous Integration with MATLAB and Simulink](https://www.mathworks.com/solutions/continuous-integration.html)
