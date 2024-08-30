@@ -1,19 +1,11 @@
 # Use MATLAB with CircleCI
 
-This orb provides commands to build and test MATLAB and Simulink projects on CircleCI.
+The orb for MATLAB&reg; on the CircleCI&reg; [Orb Registry](https://circleci.com/orbs/registry/orb/mathworks/matlab) enables you to build and test your MATLAB project as part of your pipeline. For example, you can automatically identify any code issues in your project, run tests and generate test and coverage artifacts, and package your files into a toolbox.
 
-## Usage
+To perform continuous integration with MATLAB on CircleCI, opt-in to using third-party orbs in your organization security settings. To run MATLAB in your pipeline, import the orb for MATLAB into your CircleCI configuration file and author your pipeline using the commands that the orb provides. You can use the orb with cloud-hosted or self-hosted runners:
 
-Learn how to use this MATLAB orb on the [CircleCI Orb Registry](https://circleci.com/orbs/registry/orb/mathworks/matlab).
-
-
-
-This orb enables you to build and test your MATLAB&reg; project as part of your pipeline. For example, you can automatically identify any code issues in your project, run tests and generate test and coverage artifacts, and package your files into a toolbox.
-
-To run your pipeline using this orb, [install the extension](https://docs.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=azure-devops&tabs=browser) to your Azure&reg; DevOps organization. To install the extension, click the **Get it free** button at the top of this page. You can use the orb with self-hosted or cloud-hosted [runners](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser):
-
-- To use a self-hosted runner, you must set up a computer with MATLAB as your self-hosted runner and register the runner with Azure Pipelines. The runner uses the topmost MATLAB release on the system path to execute your pipeline.
-- To use a Microsoft-hosted agent, you must include the [`install`](#install) command in your pipeline to install your preferred MATLAB release on the agent.
+- To use a cloud-hosted runner, you must include the [`install`](#install) command in your pipeline to install your preferred MATLAB release on the runner.
+- To use a self-hosted runner, you must set up a computer with MATLAB as your self-hosted runner. The runner uses the topmost MATLAB release on the system path to execute your pipeline. For more information about self-hosted runners, see [CircleCI’s self-hosted runner overview](https://circleci.com/docs/runner-overview/).
 
 ## Examples
 When you author your pipeline in a file named `.circleci/config.yml` in the root of your repository, the orb provides you with four different commands:
