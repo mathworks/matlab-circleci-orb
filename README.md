@@ -120,8 +120,8 @@ On a cloud-hosted runner, you need a [MATLAB batch licensing token](https://gith
 
 To use a MATLAB batch licensing token:
 
-1. Set the token as a secret variable. For more information about secret variables, see [Set secret variables](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-secret-variables?view=azure-devops&tabs=yaml%2Cbash).
-2. Map the secret variable to an environment variable named `MLM_LICENSE_TOKEN` in each of the `run-build`, `run-tests`, and `run-command` commands of your pipeline. 
+1. Store the token as a context environment variable named `MLM_LICENSE_TOKEN`. For more information about contexts, see [Using contexts](https://circleci.com/docs/contexts/).
+2. Access the environment variable through the context in each of the `run-build`, `run-tests`, and `run-command` commands of your pipeline. 
 
 For example, use the latest release of MATLAB on a cloud-hosted runner to run the tests in your private project. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests, specify the `run-tests` command. In this example, `myToken` is the name of the secret variable that holds the batch licensing token.
 
@@ -157,7 +157,8 @@ steps:
 ```
 
 ## Commands
-You can access the orb commands using the YAML pipeline editor in Azure DevOps. 
+You can access the orb commands using the YAML pipeline editor in CircleCI. 
+You can access the MATLAB.gitlab-ci.yml template when you create a .gitlab-ci.yml file in the UI.
 
 ![tasks](https://github.com/mathworks/matlab-azure-devops-extension/assets/48831250/d48ddb8b-a87f-4334-a301-64293b822647)
 
@@ -178,7 +179,7 @@ Product licensing for your pipeline depends on your project visibility as well a
 - Public project — If your pipeline does not include transformation products, such as MATLAB Coder and MATLAB Compiler, then the orb automatically licenses any products that you install. If your pipeline includes transformation products, you can request a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form.
 - Private project — The orb does not automatically license any products for you. You can request a token by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form.
   
-To use a MATLAB batch licensing token, first set it as a [secret variable](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-secret-variables?view=azure-devops&tabs=yaml%2Cbash). Then, map the secret variable to an environment variable named `MLM_LICENSE_TOKEN` in your pipeline. For an example, see [Use MATLAB Batch Licensing Token](#use-matlab-batch-licensing-token). 
+To use a MATLAB batch licensing token, first store the token in a [context](https://circleci.com/docs/contexts/) environment variable named `MLM_LICENSE_TOKEN`. Then, access the environment variable through the context in your pipeline. For an example, see [Use MATLAB Batch Licensing Token](#use-matlab-batch-licensing-token). 
 
 >**Note:** The `install` command automatically includes the [MATLAB batch licensing executable](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md) (`matlab-batch`). To use a MATLAB batch licensing token in a pipeline that does not use this command, you must first download the executable and add it to the system path.
 
@@ -241,6 +242,8 @@ When you use this command, all of the required files must be on the MATLAB searc
 ## Notes
 * By default, when you use the `run-build`, `run-tests`, or `run-command` command, the root of your repository serves as the MATLAB startup folder. To run your MATLAB code using a different folder, specify the `-sd` startup option or include the `cd` command when using `run-command`.
 * The `run-build` command uses the `-batch` option to invoke the MATLAB build tool. In addition, in MATLAB R2019a and later, the `run-tests` and `run-command` commands use  the `-batch` option to start MATLAB noninteractively. Preferences do not persist across different MATLAB sessions launched with the `-batch` option. To run code that requires the same preferences, use a single command.
+* When you use the `install`, `run-build`, `run-tests`, and `run-command` commands, you execute third-party code that is licensed under separate terms.
+See Also
 
 ## See Also
 - [Continuous Integration with MATLAB and Simulink](https://www.mathworks.com/solutions/continuous-integration.html)
