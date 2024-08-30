@@ -131,7 +131,7 @@ To use a MATLAB batch licensing token:
 1. Set the token as a secret variable. For more information about secret variables, see [Set secret variables](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-secret-variables?view=azure-devops&tabs=yaml%2Cbash).
 2. Map the secret variable to an environment variable named `MLM_LICENSE_TOKEN` in each of the `run-build`, `run-tests`, and `run-command` commands of your pipeline. 
 
-For example, use the latest release of MATLAB on a cloud-hosted runner to run the tests in your private project. To install the latest release of MATLAB on the runner, specify the `Install MATLAB` command in your pipeline. To run the tests, specify the `Run MATLAB Tests` command. In this example, `myToken` is the name of the secret variable that holds the batch licensing token.
+For example, use the latest release of MATLAB on a cloud-hosted runner to run the tests in your private project. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests, specify the `run-tests` command. In this example, `myToken` is the name of the secret variable that holds the batch licensing token.
 
 ```YAML
 pool:
