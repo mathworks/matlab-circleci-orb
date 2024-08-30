@@ -16,8 +16,8 @@ To run your pipeline using this orb, [install the extension](https://docs.micros
 - To use a Microsoft-hosted agent, you must include the [`install`](#install) command in your pipeline to install your preferred MATLAB release on the agent.
 
 ## Examples
-When you author your pipeline in a file named `azure-pipelines.yml` in the root of your repository, the extension provides you with four different commands:
-- To install a specific release of MATLAB on a Microsoft-hosted agent, use the [`install`](#install) command.
+When you author your pipeline in a file named `.circleci/config.yml` in the root of your repository, the orb provides you with four different commands:
+- To install a specific release of MATLAB on a cloud-hosted runner, use the [`install`](#install) command.
 - To run a MATLAB build using the MATLAB build tool, use the [`run-build`](#run-build) command.
 - To run MATLAB and Simulink&reg; tests and generate artifacts, use the [`run-tests`](#run-tests) command.
 - To run MATLAB scripts, functions, and statements, use the [`run-command`](#run-command) command.
