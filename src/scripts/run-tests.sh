@@ -66,7 +66,7 @@ selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
         printf "\047%s\047%s", $i, (i==NF ? "" : ", "); 
     }
 }')
-selectByName="{$selectByName}"
+selectByName="{$selectByName}" 
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     addpath('${gendir}/scriptgen');\
