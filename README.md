@@ -2,7 +2,7 @@
 
 The [orb for MATLAB&reg;](https://circleci.com/developer/orbs/orb/mathworks/matlab) on the CircleCI&reg; [Orb Registry](https://circleci.com/developer/orbs) enables you to build and test your MATLAB project as part of your pipeline. For example, you can automatically identify any code issues in your project, run tests and generate test and coverage artifacts, and package your files into a toolbox.
 
-To use this orb, opt-in to using third-party orbs in your organization security settings. To run MATLAB in your pipeline, import the orb into your CircleCI configuration file and author your pipeline using the commands that the orb provides. You can use the orb in a variety of [execution environments](https://circleci.com/docs/executor-intro/):
+To use this orb, opt-in to using third-party orbs in your organization security settings. To run MATLAB in your pipeline, import the orb into your CircleCI configuration file and author your pipeline by adding the orb commands as steps in existing or new jobs. You can use the orb in a variety of [execution environments](https://circleci.com/docs/executor-intro/):
 
 - To use a cloud-hosted runner, based on execution environments offered by CircleCI, you must include the [`install`](#install) command in your pipeline to install your preferred MATLAB release on the runner.
 - To use a self-hosted runner, you must set up a computer with MATLAB as your runner. The runner uses the topmost MATLAB release on the system path to execute your pipeline. For more information about self-hosted runners, see [CircleCI’s self-hosted runner overview](https://circleci.com/docs/runner-overview/).
@@ -179,10 +179,9 @@ steps:
 ```
 
 ## Commands
-You can access the orb commands using the YAML pipeline editor in CircleCI. 
-You can access the MATLAB.gitlab-ci.yml template when you create a .gitlab-ci.yml file in the UI.
+You can access the orb commands in the [CircleCI configuration editor](https://circleci.com/docs/config-editor/). 
 
-![tasks](https://github.com/mathworks/matlab-azure-devops-extension/assets/48831250/d48ddb8b-a87f-4334-a301-64293b822647)
+![commands](https://github.com/user-attachments/assets/549f48f0-795c-4038-9b8c-8b73002d06fb)
 
 ### `install`
 Use the `install` command to install MATLAB and other MathWorks&reg; products on a cloud-hosted runner. When you specify this command as part of your pipeline, the command installs your preferred MATLAB release (R2021a or later) on a Linux, Windows, or macOS runner and prepends it to the `PATH` system environment variable. If you do not specify a release, the command installs the latest release of MATLAB.
