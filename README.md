@@ -158,7 +158,7 @@ steps:
 ```
 
 ### Build Across Multiple Platforms
-The `install` command supports the Linux&reg;, Windows&reg;, and macOS platforms. Use a `matrix` job strategy to run a build using the MATLAB build tool on all the supported platforms. This pipeline runs three jobs.
+The `install` command supports the Linux&reg;, Windows&reg;, and macOS platforms. Use a matrix job to run a build using the MATLAB build tool on all the supported platforms. This pipeline runs three jobs.
 
 ```YAML
 strategy:
