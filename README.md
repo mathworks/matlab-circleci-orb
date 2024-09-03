@@ -99,15 +99,23 @@ workflows:
 Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b on a cloud-hosted runner. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
 
 ```YAML
-pool:
-  vmImage: ubuntu-latest
-steps:
-  - task: InstallMATLAB@1
-    inputs:
-      release: R2023b
-  - task: RunMATLABCommand@1
-    inputs:
-      command: myscript
+version: 2.1
+orbs:
+  matlab: mathworks/matlab@1
+jobs:
+  my-job:    
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - matlab/install:
+          release: R2023b
+      - matlab/run-command:
+          command: myscript
+workflows:
+  build:
+    jobs:
+      - my-job
 ```
 
 ### Specify MATLAB Release on Self-Hosted Runner
