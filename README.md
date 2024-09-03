@@ -15,7 +15,7 @@ When you author your pipeline in a file named `.circleci/config.yml` in the root
 - To run MATLAB scripts, functions, and statements, use the [`run-command`](#run-command) command.
 
 ### Run a MATLAB Build
-On a cloud-hosted runner, run a MATLAB build task named `mytask`, specified in a build file named `buildfile.m` in the root of your repository, as well as all the tasks on which it depends. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline.  To run the MATLAB build, specify the `run-build` command. (The `run-build` command is supported in MATLAB R2022b and later.)
+Using the latest release of MATLAB on a cloud-hosted runner, run a MATLAB build task named `mytask`, specified in a build file named `buildfile.m` in the root of your repository, as well as all the tasks on which it depends. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline.  To run the MATLAB build, specify the `run-build` command. (The `run-build` command is supported in MATLAB R2022b and later.)
 
 ```YAML
 version: 2.1
@@ -37,7 +37,7 @@ workflows:
 ``` 
 
 ### Generate Test and Coverage Artifacts
-Using the latest release of MATLAB on a cloud-hosted agent, run the tests in your [MATLAB project](https://www.mathworks.com/help/matlab/projects.html) and generate test results in PDF and JUnit-style XML formats and code coverage results in Cobertura XML format. Publish the generated artifacts to Azure Pipelines once the test run is complete. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests and generate the artifacts, specify the `run-tests` command.
+Using the latest release of MATLAB on a cloud-hosted runner, run the tests in your [MATLAB project](https://www.mathworks.com/help/matlab/projects.html) and generate test results in PDF and JUnit-style XML formats and code coverage results in Cobertura XML format. Publish the generated artifacts to Azure Pipelines once the test run is complete. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests and generate the artifacts, specify the `run-tests` command.
 
 ```YAML
 pool:
