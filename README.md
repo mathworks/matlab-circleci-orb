@@ -15,14 +15,25 @@ When you author your pipeline in a file named `.circleci/config.yml` in the root
 - To run MATLAB scripts, functions, and statements, use the [`run-command`](#run-command) command.
 
 ### Run a MATLAB Build
-On a self-hosted runner, run a MATLAB build task named `mytask`, specified in a build file named `buildfile.m` in the root of your repository, as well as all the tasks on which it depends. To run the MATLAB build, specify the `run-build` command in your pipeline. (The `run-build` command is supported in MATLAB R2022b and later.)
+On a cloud-hosted runner, run a MATLAB build task named `mytask`, specified in a build file named `buildfile.m` in the root of your repository, as well as all the tasks on which it depends. To run the MATLAB build, specify the `run-build` command in your pipeline. (The `run-build` command is supported in MATLAB R2022b and later.)
 
 ```YAML
-pool: myPool
-steps:
-  - task: RunMATLABBuild@1
-    inputs:
-      tasks: mytask
+version: 2.1
+orbs:
+  matlab: mathworks/matlab@1
+jobs:
+  my-job:    
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - matlab/install
+      - matlab/run-build:
+          tasks: mytask
+workflows:
+  build:
+    jobs:
+      - my-job
 ``` 
 
 ### Generate Test and Coverage Artifacts
