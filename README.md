@@ -37,36 +37,39 @@ workflows:
 ``` 
 
 ### Generate Test and Coverage Artifacts
-Using the latest release of MATLAB on a cloud-hosted runner, run the tests in your [MATLAB project](https://www.mathworks.com/help/matlab/projects.html) and generate test results in PDF and JUnit-style XML formats and code coverage results in Cobertura XML format. Publish the generated artifacts to Azure Pipelines once the test run is complete. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests and generate the artifacts, specify the `run-tests` command.
+Using the latest release of MATLAB on a cloud-hosted runner, run the tests in your [MATLAB project](https://www.mathworks.com/help/matlab/projects.html) and generate test results in PDF and JUnit-style XML formats and code coverage results in HTML format. Upload the generated artifacts on CircleCI once the test run is complete. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests and generate the artifacts, specify the `run-tests` command.
 
 ```YAML
-pool:
-  vmImage: ubuntu-latest
-steps:
-  - task: InstallMATLAB@1
-  - task: RunMATLABTests@1
-    inputs:
-      testResultsPDF: test-results/results.pdf
-      testResultsJUnit: test-results/results.xml
-      codeCoverageCobertura: code-coverage/coverage.xml
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: test-results/results.pdf
-  - task: PublishTestResults@2
-    condition: succeededOrFailed()
-    inputs:
-      testResultsFiles: test-results/results.xml
-  - task: PublishCodeCoverageResults@2
-    inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: code-coverage/coverage.xml
+version: 2.1
+orbs:
+  matlab: mathworks/matlab@1
+jobs:
+  my-job:    
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - matlab/install
+      - matlab/run-tests:
+          test-results-pdf: test-results/results.pdf
+          test-results-junit: test-results/results.xml
+          code-coverage-html: code-coverage
+      - store_artifacts:
+          path: test-results/results.pdf
+      - store_test_results:
+          path: test-results/results.xml
+      - store_artifacts:
+          path: code-coverage
+workflows:
+  test:
+    jobs:
+      - my-job    
 ``` 
 
- You can access the artifacts in the pipeline summary window:
+ You can access the artifacts on the pipeline's **Job** page of the CircleCI web app:
 
-- To download the PDF test report, follow the **1 published** link. 
 - To view the test results in JUnit-style XML format, open the **Tests** tab.
-- To view the code coverage results in Cobertura XML format, open the **Code Coverage** tab.
+- To access the PDF test report and HTML code coverage report, open the **Artifacts** tab.
 
 
 ### Run Tests in Parallel
@@ -223,21 +226,21 @@ The `run-tests` command accepts optional parameters.
 
 Parameter                    | Description
 ---------------------------- | ---------------
-`source-folder`              | <p>(Optional) Location of the folder containing source code, specified as a path relative to the project root folder. The specified folder and its subfolders are added to the top of the MATLAB search path. If you specify `source-Folder` and then generate a coverage report, the command uses only the source code in the specified folder and its subfolders to generate the report. You can specify multiple folders using a colon-separated or semicolon-separated list.</p><p>**Example:** `source-folder: source`<br/>**Example:** `source-folder: source/folderA; source/folderB`</p>
-`select-by-folder`           | <p>(Optional) Location of the folder used to select test suite elements, specified as a path relative to the project root folder. To create a test suite, the command uses only the tests in the specified folder and its subfolders. You can specify multiple folders using a colon-separated or semicolon-separated list.</p><p>**Example:** `select-by-folder: test`<br/>**Example:** `select-by-folder: test/folderA; test/folderB`</p>
+`source-folder`              | <p>(Optional) Location of the folder containing source code, specified as a folder path relative to the project root folder. The specified folder and its subfolders are added to the top of the MATLAB search path. If you specify `source-Folder` and then generate a coverage report, the command uses only the source code in the specified folder and its subfolders to generate the report. You can specify multiple folders using a colon-separated or semicolon-separated list.</p><p>**Example:** `source-folder: source`<br/>**Example:** `source-folder: source/folderA; source/folderB`</p>
+`select-by-folder`           | <p>(Optional) Location of the folder used to select test suite elements, specified as a folder path relative to the project root folder. To create a test suite, the command uses only the tests in the specified folder and its subfolders. You can specify multiple folders using a colon-separated or semicolon-separated list.</p><p>**Example:** `select-by-folder: test`<br/>**Example:** `select-by-folder: test/folderA; test/folderB`</p>
 `select-by-tag`              | <p>(Optional) Test tag used to select test suite elements. To create a test suite, the command uses only the test elements with the specified tag.</p><p>**Example:** `select-by-tag: Unit`</p>
 `strict`                     | <p>(Optional) Option to apply strict checks when running tests, specified as `false` or `true`. By default, the value is `false`. If you specify a value of `true`, the command generates a qualification failure whenever a test issues a warning.</p><p>**Example:** `strict: true`</p>
 `use-parallel`               | <p>(Optional) Option to run tests in parallel, specified as `false` or `true`. By default, the value is `false` and tests run in serial. If the test runner configuration is suited for parallelization, you can specify a value of `true` to run tests in parallel. This parameter requires a Parallel Computing Toolbox license.</p><p>**Example:** `use-parallel: true`</p>
 `output-detail`              | <p>(Optional) Amount of event detail displayed for the test run, specified as `none`, `terse`, `concise`, `detailed`, or `verbose`. By default, the command displays failing and logged events at the `detailed` level and test run progress at the `concise` level.<p></p>**Example:** `output-detail: verbose`</p>
 `logging-level`              | <p>(Optional) Maximum verbosity level for logged diagnostics included for the test run, specified as `none`, `terse`, `concise`, `detailed`, or `verbose`. By default, the command includes diagnostics logged at the `terse` level.<p></p>**Example:** `logging-level: detailed`</p>
-`test-results-html`          | <p>(Optional) Location to write the test results in HTML format, specified as a path relative to the project root folder.</p><p>**Example:** `test-results-html: test-results/results.html`</p>
-`test-results-pdf`           | <p>(Optional) Location to write the test results in PDF format, specified as a path relative to the project root folder. On macOS platforms, this parameter is supported in MATLAB R2020b and later.</p><p>**Example:** `test-results-pdf: test-results/results.pdf`</p>
-`test-results-junit`         | <p>(Optional) Location to write the test results in JUnit-style XML format, specified as a path relative to the project root folder.</p><p>**Example:** `test-results-junit: test-results/results.xml`</p>
-`test-results-simulink-test` | <p>(Optional) Location to export Simulink Test Manager results in MLDATX format, specified as a path relative to the project root folder. This parameter requires a Simulink Test license and is supported in MATLAB R2019a and later.</p><p>**Example:** `test-results-simulink-test: test-results/results.mldatx`</p>
-`code-coverage-html`         | <p>(Optional) Location to write the code coverage results in HTML format, specified as a path relative to the project root folder.</p><p>**Example:** `code-coverage-html: code-coverage/coverage.html`</p>
-`code-coverage-coberura`     | <p>(Optional) Location to write the code coverage results in Cobertura XML format, specified as a path relative to the project root folder.</p><p>**Example:** `code-coverage-cobertura: code-coverage/coverage.xml`</p>
-`model-coverage-html`        | <p>(Optional) Location to write the model coverage results in HTML format, specified as a path relative to the project root folder. This parameter requires a Simulink Coverage&trade; license and is supported in MATLAB R2018b and later.</p><p>**Example:** `model-coverage-html: model-coverage/coverage.html`</p>
-`model-coverage-cobertura`   | <p>(Optional) Location to write the model coverage results in Cobertura XML format, specified as a path relative to the project root folder. This parameter requires a Simulink Coverage&trade; license and is supported in MATLAB R2018b and later.</p><p>**Example:** `model-coverage-cobertura: model-coverage/coverage.xml`</p>
+`test-results-html`          | <p>(Optional) Location to write the test results in HTML format, specified as a folder path relative to the project root folder.</p><p>**Example:** `test-results-html: test-results`</p>
+`test-results-pdf`           | <p>(Optional) Location to write the test results in PDF format, specified as a file path relative to the project root folder. On macOS platforms, this parameter is supported in MATLAB R2020b and later.</p><p>**Example:** `test-results-pdf: test-results/results.pdf`</p>
+`test-results-junit`         | <p>(Optional) Location to write the test results in JUnit-style XML format, specified as a file path relative to the project root folder.</p><p>**Example:** `test-results-junit: test-results/results.xml`</p>
+`test-results-simulink-test` | <p>(Optional) Location to export Simulink Test Manager results in MLDATX format, specified as a file path relative to the project root folder. This parameter requires a Simulink Test license and is supported in MATLAB R2019a and later.</p><p>**Example:** `test-results-simulink-test: test-results/results.mldatx`</p>
+`code-coverage-html`         | <p>(Optional) Location to write the code coverage results in HTML format, specified as a folder path relative to the project root folder.</p><p>**Example:** `code-coverage-html: code-coverage`</p>
+`code-coverage-coberura`     | <p>(Optional) Location to write the code coverage results in Cobertura XML format, specified as a file path relative to the project root folder.</p><p>**Example:** `code-coverage-cobertura: code-coverage/coverage.xml`</p>
+`model-coverage-html`        | <p>(Optional) Location to write the model coverage results in HTML format, specified as a folder path relative to the project root folder. This parameter requires a Simulink Coverage&trade; license and is supported in MATLAB R2018b and later.</p><p>**Example:** `model-coverage-html: model-coverage`</p>
+`model-coverage-cobertura`   | <p>(Optional) Location to write the model coverage results in Cobertura XML format, specified as a file path relative to the project root folder. This parameter requires a Simulink Coverage&trade; license and is supported in MATLAB R2018b and later.</p><p>**Example:** `model-coverage-cobertura: model-coverage/coverage.xml`</p>
 `startup-options`            | <p>(Optional) MATLAB startup options, specified as a list of options separated by spaces. For more information about startup options, see [Commonly Used Startup Options](https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html).</p><p>Using this parameter to specify the `-batch` or `-r` option is not supported.</p><p>**Example:** `startup-options: -nojvm`<br/>**Example:** `startup-options: -nojvm -logfile output.log`</p>
 `no-output-timeout`         | <p>(Optional) Elapsed time the command can run without output, specified as a numeric value suffixed with a time unit. By default, the no-output timeout is 10 minutes (10m). The maximum value is governed by the [maximum time a job is allowed to run](https://circleci.com/docs/configuration-reference/#jobs).</p><p>**Example:** `no-output-timeout: 30s`<br/>**Example:** `no-output-timeout: 5m`<br/>**Example:** `no-output-timeout: 0.5h`</p>
 
