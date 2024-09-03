@@ -142,7 +142,7 @@ To use a MATLAB batch licensing token:
 1. Store the token as a context environment variable named `MLM_LICENSE_TOKEN`. For more information about contexts, see [Using contexts](https://circleci.com/docs/contexts/).
 2. Access the environment variable through the context in each of the `run-build`, `run-tests`, and `run-command` commands of your pipeline. 
 
-For example, use the latest release of MATLAB on a cloud-hosted runner to run the tests in your private project. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests, specify the `run-tests` command. In this example, `myToken` is the name of the secret variable that holds the batch licensing token.
+For example, use the latest release of MATLAB on a cloud-hosted runner to run the tests in your private project. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests, specify the `run-tests` command. In this example, `my-context` is the name of the context that holds the batch licensing token.
 
 ```YAML
 pool:
