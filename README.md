@@ -2,7 +2,7 @@
 
 The [orb for MATLAB&reg;](https://circleci.com/developer/orbs/orb/mathworks/matlab) on the CircleCI&reg; [Orb Registry](https://circleci.com/developer/orbs) enables you to build and test your MATLAB project as part of your pipeline. For example, you can automatically identify any code issues in your project, run tests and generate test and coverage artifacts, and package your files into a toolbox.
 
-To use this orb, opt-in to using third-party orbs in your organization security settings. To run MATLAB in your pipeline, import the orb into your CircleCI configuration file and author your pipeline using the commands that the orb provides. You can use the orb in various [execution environments](https://circleci.com/docs/executor-intro/):
+To use this orb, opt-in to using third-party orbs in your organization security settings. To run MATLAB in your pipeline, import the orb into your CircleCI configuration file and author your pipeline using the commands that the orb provides. You can use the orb in a variety of [execution environments](https://circleci.com/docs/executor-intro/):
 
 - To use a cloud-hosted runner, based on execution environments offered by CircleCI, you must include the [`install`](#install) command in your pipeline to install your preferred MATLAB release on the runner.
 - To use a self-hosted runner, you must set up a computer with MATLAB as your runner. The runner uses the topmost MATLAB release on the system path to execute your pipeline. For more information about self-hosted runners, see [CircleCI’s self-hosted runner overview](https://circleci.com/docs/runner-overview/).
