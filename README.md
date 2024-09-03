@@ -1,6 +1,6 @@
 # Use MATLAB with CircleCI
 
-The [orb for MATLAB&reg;](https://circleci.com/developer/orbs/orb/mathworks/matlab) on the CircleCI&reg; [Orb Registry](https://circleci.com/orbs/registry/orb/mathworks/matlab) enables you to build and test your MATLAB project as part of your pipeline. For example, you can automatically identify any code issues in your project, run tests and generate test and coverage artifacts, and package your files into a toolbox.
+The [orb for MATLAB&reg;](https://circleci.com/developer/orbs/orb/mathworks/matlab) on the CircleCI&reg; [Orb Registry](https://circleci.com/developer/orbs) enables you to build and test your MATLAB project as part of your pipeline. For example, you can automatically identify any code issues in your project, run tests and generate test and coverage artifacts, and package your files into a toolbox.
 
 To use this orb, opt-in to using third-party orbs in your organization security settings. To run MATLAB in your pipeline, import the orb into your CircleCI configuration file and author your pipeline using the commands that the orb provides. You can use the orb in various [execution environments](https://circleci.com/docs/executor-intro/):
 
@@ -79,7 +79,7 @@ jobs:
       - matlab/run-tests:
           use-parallel: true
 workflows:
-  build:
+  test:
     jobs:
       - my-job
 ``` 
