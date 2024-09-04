@@ -66,7 +66,7 @@ workflows:
       - my-job    
 ``` 
 
- You can access the artifacts on the pipeline's **Job** page of the CircleCI web app:
+ You can access the artifacts on the pipeline's **Job** page of the [CircleCI web app](https://circleci.com/docs/introduction-to-the-circleci-web-app/):
 
 - To view the test results in JUnit-style XML format, open the **Tests** tab.
 - To access the PDF test report and HTML code coverage report, open the **Artifacts** tab.
