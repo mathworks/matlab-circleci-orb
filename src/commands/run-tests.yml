@@ -16,8 +16,7 @@ parameters:
     default: ''
   select-by-name:
     description: >
-      Name or pattern used to select test suite elements. To create a test suite, MATLAB uses only the test elements
-      that match the specified name or pattern.
+      Name of the test used to select test suite elements, specified as a path relative to the project root folder. To create a test suite, the command uses only the test elements that match the specified name. Use the wildcard character (*) to match any number of characters. Use the question mark character (?) to match a single character.
     type: string
     default: ''
   select-by-folder:
