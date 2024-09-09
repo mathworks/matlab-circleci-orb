@@ -170,9 +170,9 @@ jobs:
           select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1) "/*"}')
           source-folder: src
       - matlab/run-tests:
-          select-by-name: $(circleci tests glob 'tests/**/*.m' | awk -F'[/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print "\x27" $0 "\x27"}' | paste -sd, -)
-          test-results-junit: test-results/matlab/results.xml        
-
+          select-by-name: "mytest filtertest"
+          source-folder: src
+       
       - run:
           name: Verify tests ran with startup options
           command: |
