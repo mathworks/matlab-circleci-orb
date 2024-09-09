@@ -167,7 +167,7 @@ jobs:
           test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
       - matlab/run-tests:
-          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[/.]' '{print $(NF-1) "/*"}')
+          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\/]' '{print $(NF-1) "/*"}')
           source-folder: src
       - matlab/run-tests:
           select-by-name: "mytest/* filtertest/*"
