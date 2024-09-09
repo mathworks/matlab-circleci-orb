@@ -172,6 +172,9 @@ jobs:
       - matlab/run-tests:
           select-by-name: "mytest/* filtertest/*"
           source-folder: src
+      - matlab/run-tests:
+          select-by-name: $(circleci tests glob 'tests/**/*.m' | awk -F'[/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
+          test-results-junit: test-results/matlab/results.xml    
        
       - run:
           name: Verify tests ran with startup options
