@@ -170,7 +170,7 @@ jobs:
           select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
           source-folder: src
       - matlab/run-tests:
-          select-by-name: "mytest/* filtertest/*"
+          select-by-name: "filtertest/*"
           test-results-junit: test-results/matlab/filterednameresult.xml 
           source-folder: src    
       - run:
@@ -225,9 +225,8 @@ jobs:
           name: Verify filter by name test results file was created
           command: |
             set -e
-            grep -q mytest test-results/matlab/filterednameresult.xml
             grep -q filtertest test-results/matlab/filterednameresult.xml
-            ! grep -q simpleTest test-results/matlab/filterednameresult.xml
+            ! grep -q mytest test-results/matlab/filterednameresult.xml
           shell: bash
 
       - run:
