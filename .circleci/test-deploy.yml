@@ -125,8 +125,8 @@ jobs:
         type: executor
     executor: <<parameters.executor>>
     steps:
-      - checkout
     # Setup for Integ tests for matlab/run-tests
+      - checkout
       - matlab/install:
           products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
           no-output-timeout: 30m
@@ -171,17 +171,8 @@ jobs:
           source-folder: src
       - matlab/run-tests:
           select-by-name: "mytest/* filtertest/*"
-          source-folder: src
-      - matlab/run-tests:
-          select-by-name: $(circleci tests glob 'tests/**/*.m' | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
-          test-results-junit: test-results/matlab/results.xml   
-          source-folder: src
-      - matlab/run-tests:
-          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split --split-by=filesize | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
-          test-results-junit: test-results/matlab/results.xml   
-          source-folder: src 
-      
-       
+          test-results-junit: test-results/matlab/filterednameresult.xml 
+          source-folder: src    
       - run:
           name: Verify tests ran with startup options
           command: |
@@ -229,6 +220,13 @@ jobs:
             grep -q TaggedTest test-results/matlab/filterdtagresult.xml
             grep -v FirstTest test-results/matlab/filterdtagresult.xml
             grep -v simpleTest test-results/matlab/filterdtagresult.xml
+          shell: bash
+      - run:
+          name: Verify filter by name test results file was created
+          command: |
+            set -e
+            grep -q mytest test-results/matlab/filterednameresult.xml
+            grep -v filtertest test-results/matlab/filterednameresult.xml
           shell: bash
 
       - run:
