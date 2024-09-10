@@ -227,6 +227,7 @@ jobs:
             set -e
             grep -q mytest test-results/matlab/filterednameresult.xml
             grep -q filtertest test-results/matlab/filterednameresult.xml
+            ! grep -q simpleTest test-results/matlab/filterednameresult.xml
           shell: bash
 
       - run:
