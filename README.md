@@ -161,21 +161,41 @@ steps:
 The `install` command supports the Linux&reg;, Windows&reg;, and macOS platforms. Use a [matrix job](https://circleci.com/docs/using-matrix-jobs/) to run a build using the MATLAB build tool on all the supported platforms. This pipeline runs the specified job three times.
 
 ```YAML
-strategy:
-  matrix:
-    linux:
-      imageName: ubuntu-latest
-    windows:
-      imageName: windows-latest
-    mac:
-      imageName: macOS-latest
-pool:
-  vmImage: $(imageName)
-steps:
-- task: InstallMATLAB@1
-- task: RunMATLABBuild@1
-  inputs:
-    tasks: test
+version: 2.1
+orbs:
+  matlab: mathworks/matlab@1
+
+executors:
+  linux:
+    machine:
+      image: ubuntu-2204:current
+  windows:
+    resource_class: windows.medium
+    machine:
+      image: windows-server-2022-gui:current
+  macos:
+    macos:
+      xcode: 14.2.0
+
+jobs:
+  my-job:
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
+    steps:
+      - checkout
+      - matlab/install
+      - matlab/run-build:
+          tasks: mytask
+
+workflows:
+  build:
+    jobs:
+      - my-job:
+          matrix:
+            parameters:
+              os: [linux, windows, macos]
 ```
 
 ## Commands
