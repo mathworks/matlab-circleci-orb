@@ -148,13 +148,22 @@ To use a MATLAB batch licensing token:
 For example, use the latest release of MATLAB on a cloud-hosted runner to run the tests in your private project. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests, specify the `run-tests` command. In this example, `my-context` is the name of the context that holds the batch licensing token.
 
 ```YAML
-pool:
-  vmImage: ubuntu-latest
-steps:
-- task: InstallMATLAB@1
-- task: RunMATLABTests@1
-  env:
-    MLM_LICENSE_TOKEN: $(myToken)
+version: 2.1
+orbs:
+  matlab: mathworks/matlab@1
+jobs:
+  my-job:
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - matlab/install
+      - matlab/run-tests
+workflows:
+  test:
+    jobs:
+      - my-job:
+          context: my-context # Name of context that holds the MLM_LICENSE_TOKEN environment variable
 ```
 
 ### Build Across Multiple Platforms
