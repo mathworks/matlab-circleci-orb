@@ -121,22 +121,6 @@ workflows:
       - my-job
 ```
 
-### Specify MATLAB Release on Self-Hosted Runner
-When you use the `run-build`, `run-tests`, or `run-command` command in your pipeline, the runner uses the topmost MATLAB release on the system path. The command fails if the runner cannot find any release of MATLAB on the path.
-
-You can prepend your preferred release of MATLAB to the `PATH` system environment variable of the self-hosted runner. For example, prepend MATLAB R2020b to the path and use it to run a script. The step depends on your operating system and MATLAB root folder.
-
-```YAML
-pool: myPool
-steps:
-  - powershell: Write-Host '##vso[task.prependpath]C:\Program Files\MATLAB\R2020b\bin'  # Windows agent
-# - bash: echo '##vso[task.prependpath]/usr/local/MATLAB/R2020b/bin'  # Linux agent
-# - bash: echo '##vso[task.prependpath]/Applications/MATLAB_R2020b.app/bin'  # macOS agent
-  - task: RunMATLABCommand@1
-    inputs:
-      command: myscript
-```
-
 ### Use MATLAB Batch Licensing Token
 On a cloud-hosted runner, you need a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) if your project is private or if your pipeline includes transformation products, such as MATLAB Coder&trade; and MATLAB Compiler&trade;. Batch licensing tokens are strings that enable MATLAB to start in noninteractive environments. You can request a token by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form. 
 
