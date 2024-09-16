@@ -2,10 +2,7 @@
 
 The [orb for MATLAB&reg;](https://circleci.com/developer/orbs/orb/mathworks/matlab) on the CircleCI&reg; [Orb Registry](https://circleci.com/developer/orbs) enables you to build and test your MATLAB project as part of your pipeline. For example, you can automatically identify any code issues in your project, run tests and generate test and coverage artifacts, and package your files into a toolbox.
 
-To use this orb, opt-in to using third-party orbs in your organization security settings. To run MATLAB in your pipeline, import the orb into your CircleCI configuration file and author your pipeline by adding the orb commands as steps in existing or new jobs. You can use the orb in a variety of [execution environments](https://circleci.com/docs/executor-intro/):
-
-- To use a cloud-hosted runner, based on execution environments offered by CircleCI, you must include the [`install`](#install) command in your pipeline to install your preferred MATLAB release on the runner.
-- To use a self-hosted runner, you must set up a computer with MATLAB as your runner. The runner uses the topmost MATLAB release on the system path to execute your pipeline. For more information about self-hosted runners, see [CircleCI’s self-hosted runner overview](https://circleci.com/docs/runner-overview/).
+To use this orb, opt-in to using third-party orbs in your organization security settings. You can run MATLAB on a cloud-hosted runner by importing the orb into your CircleCI configuration file and authoring your pipeline using the orb commands as steps in jobs. You must include the [`install`](#install) command in your jobs to install your preferred MATLAB release on the runner. For more information about cloud-hosted runners, see [Execution environments overview](https://circleci.com/docs/executor-intro/).
 
 ## Examples
 When you author your pipeline in a file named `.circleci/config.yml` in the root of your repository, the orb provides you with four different commands:
@@ -15,7 +12,7 @@ When you author your pipeline in a file named `.circleci/config.yml` in the root
 - To run MATLAB scripts, functions, and statements, use the [`run-command`](#run-command) command.
 
 ### Run a MATLAB Build
-Using the latest release of MATLAB on a cloud-hosted runner, run a MATLAB build task named `mytask`, specified in a build file named `buildfile.m` in the root of your repository, as well as all the tasks on which it depends. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline.  To run the MATLAB build, specify the `run-build` command. (The `run-build` command is supported in MATLAB R2022b and later.)
+Using the latest release of MATLAB, run a MATLAB build task named `mytask`, specified in a build file named `buildfile.m` in the root of your repository, as well as all the tasks on which it depends. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline.  To run the MATLAB build, specify the `run-build` command. (The `run-build` command is supported in MATLAB R2022b and later.)
 
 ```YAML
 version: 2.1
@@ -37,7 +34,7 @@ workflows:
 ``` 
 
 ### Generate Test and Coverage Artifacts
-Using the latest release of MATLAB on a cloud-hosted runner, run the tests in your [MATLAB project](https://www.mathworks.com/help/matlab/projects.html) and generate test results in PDF and JUnit-style XML formats and code coverage results in HTML format. Upload the generated artifacts on CircleCI once the test run is complete. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests and generate the artifacts, specify the `run-tests` command.
+Using the latest release of MATLAB, run the tests in your [MATLAB project](https://www.mathworks.com/help/matlab/projects.html) and generate test results in PDF and JUnit-style XML formats and code coverage results in HTML format. Upload the generated artifacts on CircleCI once the test run is complete. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests and generate the artifacts, specify the `run-tests` command.
 
 ```YAML
 version: 2.1
@@ -73,7 +70,7 @@ workflows:
 
 
 ### Run Tests in Parallel
-Run your MATLAB and Simulink tests in parallel (requires Parallel Computing Toolbox&trade;) using the latest release of the required products on a cloud-hosted runner. To install the latest release of MATLAB, Simulink, Simulink Test&trade;, and Parallel Computing Toolbox on the runner, specify the `install` command with its `products` parameter in your pipeline. To run the tests in parallel, specify the `run-tests` command with its `use-parallel` parameter specified as `true`.
+Run your MATLAB and Simulink tests in parallel (requires Parallel Computing Toolbox&trade;) using the latest release of the required products. To install the latest release of MATLAB, Simulink, Simulink Test&trade;, and Parallel Computing Toolbox on the runner, specify the `install` command with its `products` parameter in your pipeline. To run the tests in parallel, specify the `run-tests` command with its `use-parallel` parameter specified as `true`.
 
 ```YAML
 version: 2.1
@@ -99,7 +96,7 @@ workflows:
 ``` 
 
 ### Run MATLAB Script
-Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b on a cloud-hosted runner. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
+Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
 
 ```YAML
 version: 2.1
@@ -122,14 +119,14 @@ workflows:
 ```
 
 ### Use MATLAB Batch Licensing Token
-On a cloud-hosted runner, you need a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) if your project is private or if your pipeline includes transformation products, such as MATLAB Coder&trade; and MATLAB Compiler&trade;. Batch licensing tokens are strings that enable MATLAB to start in noninteractive environments. You can request a token by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form. 
+You need a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) if your project is private or if your pipeline includes transformation products, such as MATLAB Coder&trade; and MATLAB Compiler&trade;. Batch licensing tokens are strings that enable MATLAB to start in noninteractive environments. You can request a token by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form. 
 
 To use a MATLAB batch licensing token:
 
 1. Create a context and add an environment variable with  `MLM_LICENSE_TOKEN` as its name and the batch licensing token as its value to the context. For more information about contexts, see [Using contexts](https://circleci.com/docs/contexts/).
 2. Using the context in the `workflows` section of your pipeline, give jobs that include the `run-build`, `run-tests`, and `run-command` commands access to the `MLM_LICENSE_TOKEN` environment variable. 
 
-For example, use the latest release of MATLAB on a cloud-hosted runner to run the tests in your private project. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests, specify the `run-tests` command. In this example, `my-context` is the name of the context that includes the `MLM_LICENSE_TOKEN` environment variable.
+For example, use the latest release of MATLAB to run the tests in your private project. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests, specify the `run-tests` command. In this example, `my-context` is the name of the context that includes the `MLM_LICENSE_TOKEN` environment variable.
 
 ```YAML
 version: 2.1
