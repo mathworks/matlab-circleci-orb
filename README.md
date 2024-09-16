@@ -188,6 +188,28 @@ workflows:
               os: [linux, windows, macos]
 ```
 
+### Split Tests Across Runners
+Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
+
+```YAML
+version: 2.1
+orbs:
+  matlab: mathworks/matlab@1
+jobs:
+  my-job:    
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - matlab/install
+      - matlab/run-tests:
+          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
+workflows:
+  test:
+    jobs:
+      - my-job
+```
+
 ## Commands
 You can access the orb commands in the [CircleCI configuration editor](https://circleci.com/docs/config-editor/). 
 
