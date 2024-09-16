@@ -19,7 +19,7 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@1
 jobs:
-  my-job:    
+  run-matlab-build:    
     machine:
       image: ubuntu-2204:current
     steps:
@@ -30,7 +30,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - my-job
+      - run-matlab-build
 ``` 
 
 ### Generate Test and Coverage Artifacts
@@ -41,7 +41,7 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@1
 jobs:
-  my-job:    
+  run-matlab-tests:    
     machine:
       image: ubuntu-2204:current
     steps:
@@ -60,7 +60,7 @@ jobs:
 workflows:
   test:
     jobs:
-      - my-job    
+      - run-matlab-tests  
 ``` 
 
  You can access the artifacts on the pipeline's **Job** page of the [CircleCI web app](https://circleci.com/docs/introduction-to-the-circleci-web-app/):
@@ -77,7 +77,7 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@1
 jobs:
-  my-job:    
+  run-matlab-and-simulink-tests:    
     machine:
       image: ubuntu-2204:current
     steps:
@@ -92,7 +92,7 @@ jobs:
 workflows:
   test:
     jobs:
-      - my-job
+      - run-matlab-and-simulink-tests
 ``` 
 
 ### Run MATLAB Script
@@ -103,7 +103,7 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@1
 jobs:
-  my-job:    
+  run-matlab-script:    
     machine:
       image: ubuntu-2204:current
     steps:
@@ -115,7 +115,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - my-job
+      - run-matlab-script
 ```
 
 ### Use MATLAB Batch Licensing Token
@@ -133,7 +133,7 @@ version: 2.1
 orbs:
   matlab: mathworks/matlab@1
 jobs:
-  my-job:
+  run-matlab-tests:
     machine:
       image: ubuntu-2204:current
     steps:
@@ -143,7 +143,7 @@ jobs:
 workflows:
   test:
     jobs:
-      - my-job:
+      - run-matlab-tests:
           context: my-context # Name of context that includes the MLM_LICENSE_TOKEN environment variable
 ```
 
@@ -168,7 +168,7 @@ executors:
       xcode: 14.2.0
 
 jobs:
-  my-job:
+  run-matlab-build:
     parameters:
       os:
         type: executor
@@ -182,23 +182,24 @@ jobs:
 workflows:
   build:
     jobs:
-      - my-job:
+      - run-matlab-build:
           matrix:
             parameters:
               os: [linux, windows, macos]
 ```
 
 ### Split Tests Across Runners
-Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
+The `run-tests` command is compatible with [CircleCI test splitting](https://circleci.com/docs/parallelism-faster-jobs/), which enables you to split your tests and run them across parallel execution environments. Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
 
 ```YAML
 version: 2.1
 orbs:
   matlab: mathworks/matlab@1
 jobs:
-  my-job:    
+  run-matlab-tests:    
     machine:
       image: ubuntu-2204:current
+    parallelism: 4
     steps:
       - checkout
       - matlab/install
@@ -207,7 +208,7 @@ jobs:
 workflows:
   test:
     jobs:
-      - my-job
+      - run-matlab-tests
 ```
 
 ## Commands
