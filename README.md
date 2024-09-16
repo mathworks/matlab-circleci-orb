@@ -189,7 +189,12 @@ workflows:
 ```
 
 ### Split Tests Across Runners
-The `run-tests` command is compatible with [CircleCI test splitting](https://circleci.com/docs/parallelism-faster-jobs/), which enables you to split your tests and run them across parallel execution environments. Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
+The `run-tests` command is compatible with [CircleCI test splitting](https://circleci.com/docs/parallelism-faster-jobs/), which enables you to split your tests by name, size, or timing data, and run them across parallel execution environments. To split your MATLAB tests across runners:
+
+1. Specify the number of runners across which to split your tests by including the `parallelism` key in the project configuration file.
+2. Specify the `select-by-name` parameter of the `run-tests` command using one of the options provided by the CircleCI CLI. For more information about the CLI, see [Use the CircleCI CLI to split tests](https://circleci.com/docs/use-the-circleci-cli-to-split-tests/).
+
+Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
 
 ```YAML
 version: 2.1
@@ -210,6 +215,12 @@ workflows:
     jobs:
       - run-matlab-tests
 ```
+
+To split the tests by file size, you can specify `select-by-name` like this:
+`select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split --split-by=filesize | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')`
+
+To split the tests using timing data, you can specify `select-by-name` like this:
+`select-by-name: $(circleci tests glob 'tests/**/*.m' | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')`
 
 ## Commands
 You can access the orb commands in the [CircleCI configuration editor](https://circleci.com/docs/config-editor/). 
