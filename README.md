@@ -189,7 +189,7 @@ workflows:
 ```
 
 ### Split Tests Across Runners
-The `run-tests` command is compatible with [CircleCI test splitting](https://circleci.com/docs/parallelism-faster-jobs/), which enables you to split your tests by name, size, or timing data, and run them across parallel execution environments. To split your MATLAB tests across runners:
+The `run-tests` command is compatible with [CircleCI test splitting](https://circleci.com/docs/parallelism-faster-jobs/), which enables you to split your tests by name, file size, or timing data, and run them across parallel execution environments. To split your MATLAB tests across runners:
 
 1. Specify the number of runners across which to split your tests by using the `parallelism` key.
 2. Specify the `select-by-name` parameter of the `run-tests` command using one of the options provided by the CircleCI CLI. For more information about the CLI, see [Use the CircleCI CLI to split tests](https://circleci.com/docs/use-the-circleci-cli-to-split-tests/).
@@ -216,13 +216,13 @@ workflows:
       - run-matlab-tests
 ```
 
-To split the tests by file size, you can specify `select-by-name` like this:
+To split the tests specified by the `"tests/**/*.m"` glob pattern using file size, you can specify `select-by-name` like this:
 
-`select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split --split-by=filesize | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')`
+`select-by-name: $(circleci tests glob "tests/**/*.m" | circleci tests split --split-by=filesize | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')`
 
-To split the tests using timing data, you can specify `select-by-name` like this:
+Timing-based test splitting relies on timing data collected from a previous test run. To use this strategy, you must produce test results in JUnit-style XML format (by specifying the `test-results-junit` parameter of the `run-tests` command) so that CircleCI can access the historic timing data from the test results. To split the tests specified by the `"tests/**/*.m"` glob pattern using timing data, you can specify `select-by-name` like this:
 
-`select-by-name: $(circleci tests glob 'tests/**/*.m' | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')`
+`select-by-name: $(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')`
 
 ## Commands
 You can access the orb commands in the [CircleCI configuration editor](https://circleci.com/docs/config-editor/). 
