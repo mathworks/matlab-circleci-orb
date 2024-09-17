@@ -265,7 +265,7 @@ jobs:
           source-folder: src
           startup-options: -logfile console.log
       - run:
-          name: Verify Tests Ran as Filtered by Name
+          name: Verify tests ran as filtered by name
           command: |
             set -e
             grep mytest console.log
