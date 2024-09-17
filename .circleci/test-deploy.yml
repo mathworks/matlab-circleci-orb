@@ -165,6 +165,7 @@ jobs:
       - matlab/run-tests:
           test-results-junit: test-results/matlab/filterdtagresult.xml
           select-by-tag: FILTERED
+
       - run:
           name: Verify tests ran with startup options
           command: |
@@ -213,6 +214,7 @@ jobs:
             grep -v FirstTest test-results/matlab/filterdtagresult.xml
             grep -v simpleTest test-results/matlab/filterdtagresult.xml
           shell: bash
+
       - run:
           name: Set up diary for logging
           command: |
