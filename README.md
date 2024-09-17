@@ -194,7 +194,7 @@ The `run-tests` command is compatible with [CircleCI test splitting](https://cir
 1. Specify the number of runners across which to split your tests by using the `parallelism` key.
 2. Specify the `select-by-name` parameter of the `run-tests` command using one of the options provided by the CircleCI CLI. For more information about the CLI, see [Use the CircleCI CLI to split tests](https://circleci.com/docs/use-the-circleci-cli-to-split-tests/).
 
-For example, suppose that your MATLAB test files exist in a folder named `tests`, located in the root of your repository, and its subfolders. In other words, suppose that the glob pattern `"tests/**/*.m"` represents all your test files. Split your tests by name and run them across four runners.
+For example, suppose that your MATLAB test files exist in a folder named `tests`, located in the root of your repository, and its subfolders. In other words, suppose that the glob pattern `"tests/**/*.m"` represents all your test files. Split the tests by name and run them across four runners.
 
 ```YAML
 version: 2.1
