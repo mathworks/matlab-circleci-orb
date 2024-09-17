@@ -191,10 +191,10 @@ workflows:
 ### Split Tests Across Runners
 The `run-tests` command is compatible with [CircleCI test splitting](https://circleci.com/docs/parallelism-faster-jobs/), which enables you to split your tests by name, size, or timing data, and run them across parallel execution environments. To split your MATLAB tests across runners:
 
-1. Specify the number of runners across which to split your tests by including the `parallelism` key in the project configuration file.
+1. Specify the number of runners across which to split your tests by using the `parallelism` key.
 2. Specify the `select-by-name` parameter of the `run-tests` command using one of the options provided by the CircleCI CLI. For more information about the CLI, see [Use the CircleCI CLI to split tests](https://circleci.com/docs/use-the-circleci-cli-to-split-tests/).
 
-For example, Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
+For example, suppose that your MATLAB test files exist in a folder named `tests`, located in the root of your repository, and its subfolders. In other words, suppose that the glob pattern `"tests/**/*.m"` represents all your test files. Split your tests by name and run them across four runners.
 
 ```YAML
 version: 2.1
@@ -209,7 +209,7 @@ jobs:
       - checkout
       - matlab/install
       - matlab/run-tests:
-          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
+          select-by-name: $(circleci tests glob "tests/**/*.m" | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
 workflows:
   test:
     jobs:
