@@ -123,7 +123,7 @@ You need a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/
 
 To use a MATLAB batch licensing token:
 
-1. Create a context and add an environment variable with  `MLM_LICENSE_TOKEN` as its name and the batch licensing token as its value to the context. For more information about contexts, see [Using contexts](https://circleci.com/docs/contexts/).
+1. Create a context and add an environment variable with `MLM_LICENSE_TOKEN` as its name and the batch licensing token as its value. For more information about contexts, see [Using contexts](https://circleci.com/docs/contexts/).
 2. Using the context in the `workflows` section of your pipeline, give jobs that include the `run-build`, `run-tests`, and `run-command` commands access to the `MLM_LICENSE_TOKEN` environment variable. 
 
 For example, use the latest release of MATLAB to run the tests in your private project. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests, specify the `run-tests` command. In this example, `my-context` is the name of the context that includes the `MLM_LICENSE_TOKEN` environment variable.
