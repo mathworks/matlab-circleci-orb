@@ -12,7 +12,7 @@ When you author your pipeline in a file named `.circleci/config.yml` in the root
 - To run MATLAB scripts, functions, and statements, use the [`run-command`](#run-command) command.
 
 ### Run a MATLAB Build
-Using the latest release of MATLAB, run a MATLAB build task named `mytask`, specified in a build file named `buildfile.m` in the root of your repository, as well as all the tasks on which it depends. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline.  To run the MATLAB build, specify the `run-build` command. (The `run-build` command is supported in MATLAB R2022b and later.)
+Using the latest release of MATLAB, run a MATLAB build task named `mytask` and each task it depends on. These tasks must be specified in a build file named `buildfile.m` in the root of your repository. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline.  To run the MATLAB build, specify the `run-build` command. (The `run-build` command is supported in MATLAB R2022b and later.)
 
 ```YAML
 version: 2.1
@@ -70,7 +70,7 @@ workflows:
 
 
 ### Run Tests in Parallel
-Run your MATLAB and Simulink tests in parallel (requires Parallel Computing Toolbox&trade;) using the latest release of the required products. To install the latest release of MATLAB, Simulink, Simulink Test&trade;, and Parallel Computing Toolbox on the runner, specify the `install` command with its `products` parameter in your pipeline. To run the tests in parallel, specify the `run-tests` command with its `use-parallel` parameter specified as `true`.
+Run your MATLAB and Simulink tests in parallel (requires Parallel Computing Toolbox&trade;) using the latest release of the required products. To install the latest release of MATLAB, Simulink, Simulink Test&trade;, and Parallel Computing Toolbox on the runner, specify the `products` parameter of the `install` command in your pipeline. To run the tests in parallel, specify the `run-tests` command with its `use-parallel` parameter specified as `true`.
 
 ```YAML
 version: 2.1
