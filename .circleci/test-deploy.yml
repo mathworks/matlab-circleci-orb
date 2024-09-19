@@ -148,11 +148,6 @@ jobs:
           shell: bash
       - matlab/run-tests:
           select-by-name: $(circleci tests glob "tests/**/*.m" | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
-workflows:
-  test:
-    jobs:
-      - run-matlab-tests
-
     # Set up for model coverage artifact tests
       - when:
           condition:
