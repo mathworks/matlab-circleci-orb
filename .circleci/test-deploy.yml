@@ -124,7 +124,7 @@ jobs:
       executor:
         type: executor
     executor: <<parameters.executor>>
-    parallelism: 3  
+    parallelism: 4  
     steps:
     # Setup for Integ tests for matlab/run-tests
       - checkout
