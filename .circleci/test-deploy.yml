@@ -124,13 +124,13 @@ jobs:
       executor:
         type: executor
     executor: <<parameters.executor>>
-    parallelism: 4  
+    parallelism: 2  
     steps:
     # Setup for Integ tests for matlab/run-tests
       - checkout
       - matlab/install
       - matlab/run-tests:
-          select-by-name: $(circleci tests glob "tests/**/*.m" | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
+          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split --split-by=filesize | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
           source-folder: src
 
   integration-test-run-build:
