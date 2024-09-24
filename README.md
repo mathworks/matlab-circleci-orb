@@ -96,7 +96,7 @@ workflows:
 ``` 
 
 ### Run MATLAB Script
-Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `release` parameter of the `install` command. To run the script, specify the `run-command` command.
+Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `release` parameter of the `install` command in your pipeline. To run the script, specify the `run-command` command.
 
 ```YAML
 version: 2.1
@@ -263,9 +263,7 @@ Parameter                | Description
 `no-output-timeout`      | <p>(Optional) Amount of time the command can run without producing output, specified as a numeric value suffixed with a time unit. By default, the no-output timeout is 10 minutes (`10m`). The maximum value is governed by the [maximum time a job is allowed to run](https://circleci.com/docs/configuration-reference/#jobs).</p><p>**Example:** `no-output-timeout: 30s`<br/>**Example:** `no-output-timeout: 5m`<br/>**Example:** `no-output-timeout: 0.5h`</p>
 
 ### `run-tests`
-Use the `run-tests` command to run tests authored using the MATLAB unit testing framework or Simulink Test and generate test and coverage artifacts.
-
-By default, the command includes any files in your project that have a `Test` label. If your pipeline does not use a MATLAB project, or if it uses a MATLAB release before R2019a, then the command includes all tests in the root of your repository and in any of its subfolders. The command fails if any of the included tests fail. 
+Use the `run-tests` command to run tests authored using the MATLAB unit testing framework or Simulink Test and generate test and coverage artifacts. By default, the command includes any files in your project that have a `Test` label. If your pipeline does not use a MATLAB project, or if it uses a MATLAB release before R2019a, then the command includes all tests in the root of your repository and in any of its subfolders. The command fails if any of the included tests fail. 
 
 The `run-tests` command accepts optional parameters.
 
