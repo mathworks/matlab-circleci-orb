@@ -12,7 +12,7 @@ When you author your pipeline in a file named `.circleci/config.yml` in the root
 - [`run-command`](#run-command) command — Run MATLAB scripts, functions, and statements.
 
 ### Run a MATLAB Build
-Using the latest release of MATLAB, run a MATLAB build task named `mytask` and each task it depends on. These tasks must be specified in a build file named `buildfile.m` in the root of your repository. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline.  To run the MATLAB build, specify the `run-build` command. (The `run-build` command is supported in MATLAB R2022b and later.)
+Using the latest release of MATLAB, run a MATLAB build task named `mytask` and each task it depends on. These tasks must be specified in a build file named `buildfile.m` in the root of your repository. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline.  To run the MATLAB build task `mytask`, specify the `tasks` parameter of the `run-build` command. (The `run-build` command is supported in MATLAB R2022b and later.)
 
 ```YAML
 version: 2.1
@@ -70,7 +70,7 @@ workflows:
 
 
 ### Run Tests in Parallel
-Run your MATLAB and Simulink tests in parallel (requires Parallel Computing Toolbox&trade;) using the latest release of the required products. To install the latest release of MATLAB, Simulink, Simulink Test&trade;, and Parallel Computing Toolbox on the runner, specify the `products` parameter of the `install` command in your pipeline. To run the tests in parallel, specify the `run-tests` command with its `use-parallel` parameter specified as `true`.
+Run your MATLAB and Simulink tests in parallel (requires Parallel Computing Toolbox&trade;) using the latest release of the required products. To install the latest release of MATLAB, Simulink, Simulink Test&trade;, and Parallel Computing Toolbox on the runner, specify the `products` parameter of the `install` command in your pipeline. To run the tests in parallel, specify the  `use-parallel` parameter of the `run-tests` command.
 
 ```YAML
 version: 2.1
@@ -96,7 +96,7 @@ workflows:
 ``` 
 
 ### Run MATLAB Script
-Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `install` command with its `release` parameter in your pipeline. To run the script, specify the `run-command` command.
+Run the commands in a file named `myscript.m` in the root of your repository using MATLAB R2023b. To install the specified release of MATLAB on the runner, specify the `release` parameter of the `install` command. To run the script, specify the `run-command` command.
 
 ```YAML
 version: 2.1
@@ -227,7 +227,7 @@ Timing-based test splitting relies on timing data collected from a previous test
 ## Commands
 You can access the orb commands in the [CircleCI configuration editor](https://circleci.com/docs/config-editor/). 
 
-![commands](https://github.com/user-attachments/assets/549f48f0-795c-4038-9b8c-8b73002d06fb)
+![CircleCI configuration editor, showing lines of CircleCI code on the left and a panel with the four commands in the orb for MATLAB on the right](https://github.com/user-attachments/assets/549f48f0-795c-4038-9b8c-8b73002d06fb)
 
 ### `install`
 Use the `install` command to install MATLAB and other MathWorks&reg; products on a cloud-hosted runner. When you specify this command as part of your pipeline, the command installs your preferred MATLAB release (R2021a or later) on a Linux, Windows, or macOS runner and prepends it to the `PATH` system environment variable. If you do not specify a release, the command installs the latest release of MATLAB.
