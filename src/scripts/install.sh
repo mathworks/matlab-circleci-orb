@@ -35,7 +35,7 @@ download() {
     if command -v wget >/dev/null 2>&1; then
         wget --retry-connrefused --waitretry=5 -qO "$filename" "$url" 2>&1
     elif command -v curl >/dev/null 2>&1; then
-        curl --retry 5 --retry-connrefused --retry-delay 5 -sSLo "$filename" "$url"
+        curl --retry 5 --retry-all-errors --retry-delay 5 -sSLo "$filename" "$url"
     else
         echo "Could not find wget or curl command" >&2
         return 1
