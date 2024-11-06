@@ -19,14 +19,12 @@ sudoIfAvailable() {
 
 stream() {
     local url="$1"
-    local status
+    local status=0
 
     if command -v wget >/dev/null 2>&1; then
-        wget --retry-connrefused --waitretry=5 -qO- "$url"
-        status=$?
+        wget --retry-connrefused --waitretry=5 -qO- "$url" || status=$?
     elif command -v curl >/dev/null 2>&1; then
-        curl --retry 5 --retry-connrefused --retry-delay 5 -sSL "$url"
-        status=$?
+        curl --retry 5 --retry-connrefused --retry-delay 5 -sSL "$url" || status=$?
     else
         echo "Could not find wget or curl command" >&2
         return 1
@@ -34,21 +32,20 @@ stream() {
 
     if [ $status -ne 0 ]; then
         echo "Error streaming file from $url" >&2
-        return $status
     fi
+
+    return $status
 }
 
 download() {
     local url="$1"
     local filename="$2"
-    local status
+    local status=0
     
     if command -v wget >/dev/null 2>&1; then
-        wget --retry-connrefused --waitretry=5 -qO "$filename" "$url" 2>&1
-        status=$?
+        wget --retry-connrefused --waitretry=5 -qO "$filename" "$url" 2>&1 || status=$?
     elif command -v curl >/dev/null 2>&1; then
-        curl --retry 5 --retry-all-errors --retry-delay 5 -sSLo "$filename" "$url"
-        status=$?
+        curl --retry 5 --retry-all-errors --retry-delay 5 -sSLo "$filename" "$url" || status=$?
     else
         echo "Could not find wget or curl command" >&2
         return 1
@@ -56,8 +53,9 @@ download() {
 
     if [ $status -ne 0 ]; then
         echo "Error downloading file from $url to $filename" >&2
-        return $status
     fi
+    
+    return $status
 }
 
 tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
