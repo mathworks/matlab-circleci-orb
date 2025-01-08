@@ -188,42 +188,6 @@ workflows:
               os: [linux, windows, macos]
 ```
 
-### Split Tests Across Runners
-The `run-tests` command is compatible with [CircleCI test splitting](https://circleci.com/docs/parallelism-faster-jobs/), which enables you to split your tests by name, file size, or timing data, and run them across parallel execution environments. To split your MATLAB tests across runners:
-
-1. Specify the number of runners across which to split your tests by using the `parallelism` key.
-2. Specify the `select-by-name` parameter of the `run-tests` command using one of the options provided by the CircleCI CLI. For more information about the CLI, see [Use the CircleCI CLI to split tests](https://circleci.com/docs/use-the-circleci-cli-to-split-tests/).
-
-For example, suppose that your MATLAB test files are located in a folder named `tests` in the root of your repository as well as in its subfolders. In other words, suppose that the glob pattern `"tests/**/*.m"` represents all your test files. Split the tests by name and run them across four runners.
-
-```YAML
-version: 2.1
-orbs:
-  matlab: mathworks/matlab@1
-jobs:
-  run-matlab-tests:    
-    machine:
-      image: ubuntu-2204:current
-    parallelism: 4
-    steps:
-      - checkout
-      - matlab/install
-      - matlab/run-tests:
-          select-by-name: $(circleci tests glob "tests/**/*.m" | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
-workflows:
-  test:
-    jobs:
-      - run-matlab-tests
-```
-
-To split the tests specified by the `"tests/**/*.m"` glob pattern using file size, you can specify `select-by-name` like this:
-
-`select-by-name: $(circleci tests glob "tests/**/*.m" | circleci tests split --split-by=filesize | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')`
-
-Timing-based test splitting relies on timing data collected from a previous test run. To use this strategy, you must produce test results in JUnit-style XML format (by specifying the `test-results-junit` parameter of the `run-tests` command) so that CircleCI can access the historic timing data from the test results. To split the tests specified by the `"tests/**/*.m"` glob pattern using timing data, you can specify `select-by-name` like this:
-
-`select-by-name: $(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')`
-
 ## Commands
 You can access the orb commands in the [CircleCI configuration editor](https://circleci.com/docs/config-editor/). 
 
@@ -271,7 +235,6 @@ Parameter                    | Description
 ---------------------------- | ---------------
 `source-folder`              | <p>(Optional) Location of the folder containing source code, specified as a path relative to the project root folder. The specified folder and its subfolders are added to the top of the MATLAB search path. If you specify `source-folder` and then generate a coverage report, the command uses only the source code in the specified folder and its subfolders to generate the report. You can specify multiple folders using a colon-separated or semicolon-separated list.</p><p>**Example:** `source-folder: source`<br/>**Example:** `source-folder: source/folderA; source/folderB`</p>
 `select-by-folder`           | <p>(Optional) Location of the folder containing the tests to run, specified as a path relative to the project root folder. If you specify this parameter, the command runs only the tests in the specified folder and its subfolders. You can specify multiple folders using a colon-separated or semicolon-separated list.</p><p>**Example:** `select-by-folder: test`<br/>**Example:** `select-by-folder: test/folderA; test/folderB`</p>
-`select-by-name`             | <p>(Optional) Names of the tests to run, specified as a list of test names separated by spaces. If you specify this parameter, the command runs only the tests with the specified names. You can use the wildcard character (`*`) to match any number of characters and the question mark character (`?`) to match a single character. For example, specify `select-by-name: ExampleTest/*` to select all the tests whose name starts with `ExampleTest/`.</p><p>For a given test file, the name of a test uniquely identifies the smallest runnable portion of the test content. The test name includes the namespace name, filename (excluding the extension), procedure name, and information about parameterization.</p><p>**Example:** `select-by-name: ExampleTest/testA`<br/>**Example:** `select-by-name: ExampleTest/testA ExampleTest/testB(array=3x3_double)`</p>
 `select-by-tag`              | <p>(Optional) Tag of the tests to run, specified as a string scalar. If you specify this parameter, the command runs only the tests with the specified tag. For more information about test tags, see [Tag Unit Tests](https://www.mathworks.com/help/matlab/matlab_prog/tag-unit-tests.html).</p><p>**Example:** `select-by-tag: Unit`</p>
 `strict`                     | <p>(Optional) Option to apply strict checks when running tests, specified as `false` or `true`. By default, the value is `false`. If you specify a value of `true`, the command generates a qualification failure whenever a test issues a warning.</p><p>**Example:** `strict: true`</p>
 `use-parallel`               | <p>(Optional) Option to run tests in parallel, specified as `false` or `true`. By default, the value is `false` and tests run in serial. If the test runner configuration is suited for parallelization, you can specify a value of `true` to run tests in parallel. This parameter requires a Parallel Computing Toolbox license.</p><p>**Example:** `use-parallel: true`</p>
