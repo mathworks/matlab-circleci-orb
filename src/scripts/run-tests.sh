@@ -76,6 +76,14 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     binext=".exe"
 fi
 
+selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
+    for(i=1; i<=NF; i++) {
+        gsub(/\047/, "\047\047", $i);  
+        printf "\047%s\047%s", $i, (i==NF ? "" : ", "); 
+    }
+}')
+selectByName="{$selectByName}" 
+
 "${tmpdir}/bin/run-matlab-command$binext" "\
     addpath('${gendir}/scriptgen');\
     testScript = genscript('Test',\
@@ -92,6 +100,7 @@ fi
     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
     'Strict',${PARAM_STRICT},\
     'UseParallel',${PARAM_USE_PARALLEL},\
+    'SelectByName', $selectByName,\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
     disp('Running MATLAB script with contents:');\
