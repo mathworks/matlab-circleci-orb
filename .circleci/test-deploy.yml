@@ -52,6 +52,19 @@ jobs:
       - matlab/run-command:
           command: version
 
+  integration-test-install-latest-including-prerelease:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
+    steps:
+      - checkout
+      - matlab/install:
+          release: latest-including-prerelease
+          no-output-timeout: 30m
+      - matlab/run-command:
+          command: version
+
   integration-test-install-release:
     parameters:
       executor:
@@ -457,6 +470,11 @@ workflows:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       - integration-test-install:
+          matrix:
+            parameters:
+              executor: [linux, windows, macos]
+
+      - integration-test-install-latest-including-prerelease:
           matrix:
             parameters:
               executor: [linux, windows, macos]
