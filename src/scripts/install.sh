@@ -67,11 +67,15 @@ batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
+releasestatus=""
 
 # resolve release
 parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
 if [[ "$parsedrelease" = "latest" ]]; then
     mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
+elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
+    mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
+    releasestatus="--release-status=Prerelease"
 else
     mpmrelease="$parsedrelease"
 fi
@@ -139,6 +143,7 @@ chmod +x "$batchdir/matlab-batch$binext"
 "$mpmdir/mpm$binext" install \
     --release="$mpmrelease" \
     --destination="$rootdir" \
+    ${releasestatus} \
     --products ${PARAM_PRODUCTS} MATLAB
 
 # add MATLAB and matlab-batch to path
