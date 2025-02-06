@@ -465,7 +465,7 @@ workflows:
           matrix:
             parameters:
               executor: [linux, windows, macos]
-              release: [R2023bU1]
+              release: [R2023bU1, latest-including-prerelease]
 
       - integration-test-run-command:
           matrix:

@@ -72,6 +72,8 @@ mpmbaseurl="https://www.mathworks.com/mpm"
 parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
 if [[ "$parsedrelease" = "latest" ]]; then
     mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
+elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
+    mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
 else
     mpmrelease="$parsedrelease"
 fi
