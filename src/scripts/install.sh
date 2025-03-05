@@ -146,5 +146,5 @@ chmod +x "$batchdir/matlab-batch$binext"
     ${releasestatus} \
     --products ${PARAM_PRODUCTS} MATLAB
 
-# add MATLAB and matlab-batch to path
-echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
+# add MATLAB, MATLAB Runtime and matlab-batch to path
+echo 'export PATH="'$rootdir'/bin:'$rootdir'/runtime/'$mwarch':'$batchdir':$PATH"' >> $BASH_ENV
