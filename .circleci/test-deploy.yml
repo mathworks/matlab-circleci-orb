@@ -49,6 +49,17 @@ jobs:
               mex -h
             fi
           shell: bash
+      - run:
+          name: Verify MATLAB runtime in PATH
+          command: |
+            set -e
+            if [[ "${PATH}" == *"runtime"* ]]; then
+              echo "MATLAB Runtime is correctly set in PATH."
+            else
+              echo "MATLAB Runtime is NOT set in PATH."
+              exit 1
+            fi
+          shell: bash
       - matlab/run-command:
           command: version
 
