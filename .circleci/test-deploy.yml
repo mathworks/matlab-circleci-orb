@@ -50,13 +50,19 @@ jobs:
             fi
           shell: bash
       - run:
-          name: Verify MATLAB runtime in PATH
+          name: Verify MATLAB Runtime libraries in PATH
           command: |
-            set -e
-            if [[ "${PATH}" == *"runtime"* ]]; then
-              echo "MATLAB Runtime is correctly set in PATH."
+            os=$(uname)
+            if [[ $os == CYGWIN* || $os == MINGW* || $os == MSYS* ]]; then
+              found_dll=$(where mclmcrrt*.dll 2>/dev/null)
             else
-              echo "MATLAB Runtime is NOT set in PATH."
+              found_dll=$(find ${PATH//:/ } -name "mclmcrrt*.dll" 2>/dev/null)
+            fi
+
+            if [ -n "$found_dll" ]; then
+              echo "MATLAB Runtime is correctly set in PATH. Found mclmcrrt DLL: $found_dll"
+            else
+              echo "No mclmcrrt DLL found in PATH. Verify MATLAB Runtime is added to PATH."
               exit 1
             fi
           shell: bash
