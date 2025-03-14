@@ -49,6 +49,20 @@ jobs:
               mex -h
             fi
           shell: bash
+      - run:
+          name: Verify MATLAB runtime in windows system path
+          command: |
+            set -e
+            os=$(uname)
+            if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+              if [[ "${PATH}" == *"runtime"* ]]; then
+                echo "MATLAB Runtime is correctly set in PATH."
+              else
+                echo "MATLAB Runtime is NOT set in windows PATH."
+                exit 1
+              fi
+            fi
+          shell: bash
       - matlab/run-command:
           command: version
 

@@ -115,6 +115,8 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     rootdir=$(cygpath "$rootdir")
     mpmdir=$(cygpath "$mpmdir")
     batchdir=$(cygpath "$batchdir")
+    # add MATLAB Runtime to path for windows
+    echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
 elif [[ "$os" = "Darwin" ]]; then
     if [[ "$arch" = "arm64" && ! "$mpmrelease" < "r2023b" ]]; then
          mwarch="maca64"
