@@ -54,7 +54,7 @@ jobs:
             equal: [ "windows", <<parameters.executor>> ]
           steps:
             - run:
-                name: Verify MATLAB runtime windows system path
+                name: Verify MATLAB Runtime is available in windows system path
                 command: |
                   set -e
                   if [[ "${PATH}" == *"runtime"* ]]; then
