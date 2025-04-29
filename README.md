@@ -119,7 +119,7 @@ workflows:
 ```
 
 ### Use MATLAB Batch Licensing Token
-You need a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) if your project is private or if your pipeline includes transformation products, such as MATLAB Coder&trade; and MATLAB Compiler&trade;. Batch licensing tokens are strings that enable MATLAB to start in noninteractive environments. You can request a token by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form. 
+You need a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) if your project is private or if your pipeline uses transformation products, such as MATLAB Coder&trade; and MATLAB Compiler&trade;. Batch licensing tokens are strings that enable MATLAB to start in noninteractive environments. You can request a token by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form. 
 
 To use a MATLAB batch licensing token:
 
@@ -205,10 +205,12 @@ Parameter            | Description
 `no-output-timeout` | <p>(Optional) Amount of time the command can run without producing output, specified as a numeric value suffixed with a time unit. By default, the no-output timeout is 10 minutes (`10m`). The maximum value is governed by the [maximum time a job is allowed to run](https://circleci.com/docs/configuration-reference/#jobs).</p><p>**Example:** `no-output-timeout: 30s`<br/>**Example:** `no-output-timeout: 5m`<br/>**Example:** `no-output-timeout: 0.5h`</p>
 
 #### Licensing
-Product licensing for your pipeline depends on your project visibility as well as the type of products to install:
+Product licensing for your pipeline depends on your project visibility as well as the types of products the pipeline uses:
 
-- Public project — If your pipeline does not include transformation products, such as MATLAB Coder and MATLAB Compiler, then the orb automatically licenses any products that you install. If your pipeline includes transformation products, you can request a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form.
-- Private project — The orb does not automatically license any products for you. You can request a token by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form.
+- Public project — The orb automatically licenses all products for you, except for transformation products, such as MATLAB Coder and MATLAB Compiler.
+- Private project — The orb does not automatically license any products for you. 
+
+To license products that are not automatically licensed, you can request a [MATLAB batch licensing token](https://github.com/mathworks-ref-arch/matlab-dockerfile/blob/main/alternates/non-interactive/MATLAB-BATCH.md#matlab-batch-licensing-token) by submitting the [MATLAB Batch Licensing Pilot](https://www.mathworks.com/support/batch-tokens.html) form. Batch licensing tokens are strings that enable MATLAB to start in noninteractive environments.
   
 To use a MATLAB batch licensing token, first store the token in a [context](https://circleci.com/docs/contexts/) environment variable named `MLM_LICENSE_TOKEN`. Then, using the context in the `workflows` section of your pipeline, give jobs that include the `run-build`, `run-tests`, and `run-command` commands access to the environment variable. For an example, see [Use MATLAB Batch Licensing Token](#use-matlab-batch-licensing-token). 
 
