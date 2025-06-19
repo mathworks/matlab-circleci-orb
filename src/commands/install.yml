@@ -29,16 +29,14 @@ parameters:
     default: 10m
   cache:
     description: >
-      Improve the description.
-      Whether to enable caching for MATLAB, MATLAB BATCH and MPM.
-      If set to true, CircleCI will attempt to cache these files.
+      Improve the description later. Whether to enable caching for MATLAB, MATLAB BATCH and MPM. If set to true, CircleCI will attempt to cache these files.
     type: boolean
     default: false
 
 steps:
   - restore_cache:
       name: Restore MATLAB Cache
-      keys: 
+      keys:
         - matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>-{{ checksum "scripts/install.sh" }}
   - run:
       name: Install MATLAB
