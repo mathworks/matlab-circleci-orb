@@ -61,7 +61,9 @@ download() {
 os=$(uname)
 arch=$(uname -m)
 binext=""
-tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
+# tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
+tmpdir="install"
+mkdir -p "$tmpdir"
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
@@ -125,6 +127,16 @@ elif [[ "$os" = "Darwin" ]]; then
     sudoIfAvailable -c "launchctl limit maxfiles 65536 200000" # g3185941
 else
     mwarch="glnxa64"
+fi
+
+# Short-circuit if everything already exists
+if [[ -x "$mpmdir/mpm$binext" && -x "$batchdir/matlab-batch$binext" && -x "$rootdir/bin/matlab" ]]; then
+    echo "MATLAB, matlab-batch, and mpm already exist. Skipping installation."
+    echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
+    if [[ "$mwarch" = "win64" ]]; then
+        echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
+    fi
+    exit 0
 fi
 
 mkdir -p "$rootdir"

@@ -27,13 +27,32 @@ parameters:
       maximum time a job is allowed to run.
     type: string
     default: 10m
+  cache:
+    description: >
+      Improve the description.
+      Whether to enable caching for MATLAB, MATLAB BATCH and MPM.
+      If set to true, CircleCI will attempt to cache these files.
+    type: boolean
+    default: false
 
 steps:
+  - restore_cache:
+      name: Restore MATLAB Cache
+      keys: 
+        - matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>-{{ checksum "scripts/install.sh" }}
   - run:
       name: Install MATLAB
       environment:
         PARAM_RELEASE: <<parameters.release>>
         PARAM_PRODUCTS: <<parameters.products>>
+        CACHE_ENABLED: <<parameters.cache>>
       command: <<include(scripts/install.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
+  - save_cache:
+      name: Cache MATLAB
+      key: matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>-{{ checksum "scripts/install.sh" }}
+      paths:
+        - install/matlab_root
+        - install/matlab-batch
+        - install/mpm
