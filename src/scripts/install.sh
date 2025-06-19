@@ -129,15 +129,15 @@ else
     mwarch="glnxa64"
 fi
 
-# Short-circuit if everything already  and CACHE_ENABLED is true
-if [[ "${CACHE_ENABLED:-false}" == "true" && -x "$mpmdir/mpm$binext" && -x "$batchdir/matlab-batch$binext" && -x "$rootdir/bin/matlab" ]]; then
-    echo "CACHE_ENABLED is true and MATLAB, matlab-batch, and mpm already exist. Skipping installation."
-    echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
-    if [[ "$mwarch" = "win64" ]]; then
-        echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
-    fi
-    exit 0
-fi
+# # Short-circuit if everything already  and CACHE_ENABLED is true
+# if [[ "${CACHE_ENABLED:-false}" == "true" && -x "$mpmdir/mpm$binext" && -x "$batchdir/matlab-batch$binext" && -x "$rootdir/bin/matlab" ]]; then
+#     echo "CACHE_ENABLED is true and MATLAB, matlab-batch, and mpm already exist. Skipping installation."
+#     echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
+#     if [[ "$mwarch" = "win64" ]]; then
+#         echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
+#     fi
+#     exit 0
+# fi
 
 mkdir -p "$rootdir"
 mkdir -p "$batchdir"

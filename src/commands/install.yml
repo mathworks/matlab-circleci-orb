@@ -34,20 +34,20 @@ parameters:
     default: false
 
 steps:
-  - run:
-      name: Debug the files and directories at root
-      command: |
-        pwd
-        ls -lR
-  - restore_cache:
-      name: Restore MATLAB Cache
-      keys:
-        - matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>-{{ checksum "scripts/install.sh" }}
-  - run:
-      name: Debug the files and directories at root after cache restore
-      command: |
-        pwd
-        ls -lR
+  # - run:
+  #     name: Debug the files and directories at root
+  #     command: |
+  #       pwd
+  #       ls -lR
+  # - restore_cache:
+  #     name: Restore MATLAB Cache
+  #     keys:
+  #       - matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>
+  # - run:
+  #     name: Debug the files and directories at root after cache restore
+  #     command: |
+  #       pwd
+  #       ls -lR
   - run:
       name: Install MATLAB
       environment:
@@ -57,15 +57,19 @@ steps:
       command: <<include(scripts/install.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
-  - save_cache:
-      name: Cache MATLAB
-      key: matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>-{{ checksum "scripts/install.sh" }}
-      paths:
-        - install/matlab_root
-        - install/matlab-batch
-        - install/mpm
+  # - save_cache:
+  #     name: Cache MATLAB
+  #     key: matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>
+  #     paths:
+  #       - install/matlab_root
+  #       - install/matlab-batch
+  #       - install/mpm
+  # - run:
+  #     name: Debug the files and directories at root
+  #     command: |
+  #       pwd
+  #       ls -lR
   - run:
-      name: Debug the files and directories at root
-      command: |
-        pwd
-        ls -lR
+    name: Print PATH
+    command: echo "$PATH"
+
