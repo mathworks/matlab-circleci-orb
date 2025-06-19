@@ -70,6 +70,5 @@ steps:
   #       pwd
   #       ls -lR
   - run:
-    name: Print PATH
-    command: echo "$PATH"
-
+      name: Print PATH
+      command: echo "$PATH"
