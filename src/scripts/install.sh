@@ -61,9 +61,9 @@ download() {
 os=$(uname)
 arch=$(uname -m)
 binext=""
-# tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
-tmpdir="install"
-mkdir -p "$tmpdir"
+tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
+# tmpdir="install"
+# mkdir -p "$tmpdir"
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
