@@ -63,6 +63,8 @@ arch=$(uname -m)
 binext=""
 # tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
 tmpdir="$(pwd)/install"
+# Ensure install/ is owned by the current user to avoid permission issues in later steps like run-tests
+sudoIfAvailable -c "chown -R $(id -u):$(id -g) '$tmpdir'" || true
 mkdir -p "$tmpdir"
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
