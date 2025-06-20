@@ -137,7 +137,7 @@ if [[ "${CACHE_ENABLED:-false}" == "true" && -x "$mpmdir/mpm$binext" && -x "$bat
         echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
     fi
     # Ensure install/ is owned by the current user to avoid permission issues in later steps like run-tests
-    sudoIfAvailable -c "chown -R $(id -u):$(id -g) '$tmpdir'" || true
+    sudoIfAvailable -c "chown -R $(id -u):$(id -g) '$tmpdir' && chmod -R u+rX '$tmpdir'" || true
     exit 0
 fi
 
@@ -169,4 +169,4 @@ if [[ "$mwarch" = "win64" ]]; then
 fi
 
 # Ensure install/ is owned by the current user to avoid permission issues in later steps like run-tests
-sudoIfAvailable -c "chown -R $(id -u):$(id -g) '$tmpdir'" || true
+sudoIfAvailable -c "chown -R $(id -u):$(id -g) '$tmpdir' && chmod -R u+rX '$tmpdir'" || true
