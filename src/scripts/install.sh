@@ -129,6 +129,15 @@ else
     mwarch="glnxa64"
 fi
 
+chmod +x "$mpmdir/mpm$binext" || true
+chmod +x "$batchdir/matlab-batch$binext" || true
+chmod +x "$rootdir/bin/matlab" || true
+
+echo "Checking for cached MATLAB..."
+ls -l "$mpmdir/mpm$binext" || true
+ls -l "$batchdir/matlab-batch$binext" || true
+ls -l "$rootdir/bin/matlab" || true
+
 # Short-circuit if everything already exists and CACHE_ENABLED is true
 if [[ "${CACHE_ENABLED:-false}" == "true" && -x "$mpmdir/mpm$binext" && -x "$batchdir/matlab-batch$binext" && -x "$rootdir/bin/matlab" ]]; then
     echo "CACHE_ENABLED is true and MATLAB, matlab-batch, and mpm already exist. Skipping installation."
