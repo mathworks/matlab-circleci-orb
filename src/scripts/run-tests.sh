@@ -58,7 +58,9 @@ download() {
     return $status
 }
 
-tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
+# tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'run-tests')
+tmpdir="$(pwd)/run-tests"
+mkdir -p "$tmpdir"
 
 # install run-matlab-command
 stream https://ssd.mathworks.com/supportfiles/ci/run-matlab-command/v2/install.sh | sudoIfAvailable -s -- "${tmpdir}/bin"
