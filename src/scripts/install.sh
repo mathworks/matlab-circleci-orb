@@ -61,12 +61,14 @@ download() {
 os=$(uname)
 arch=$(uname -m)
 binext=""
-# tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
-tmpdir="$(pwd)/install"
-mkdir -p "$tmpdir"
+tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
+matlab_cache="matlab_cache"
+cached_root="$matlab_cache/matlab_root"
+cached_batch="$matlab_cache/matlab-batch"
+cached_mpm="$matlab_cache/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
@@ -129,18 +131,36 @@ else
     mwarch="glnxa64"
 fi
 
-chmod +x "$mpmdir/mpm$binext" || true
-chmod +x "$batchdir/matlab-batch$binext" || true
-chmod +x "$rootdir/bin/matlab" || true
-
-echo "Checking for cached MATLAB..."
-ls -l "$mpmdir/mpm$binext" || true
-ls -l "$batchdir/matlab-batch$binext" || true
-ls -l "$rootdir/bin/matlab" || true
+if [[ "${CACHE_ENABLED:-false}" == "true" ]]; then
+    echo "[DEBUG] CACHE_ENABLED is true"
+    echo "[DEBUG] Checking cached directories..."
+    for d in "$cached_root" "$cached_batch" "$cached_mpm"; do
+        if [[ -d "$d" ]]; then
+            echo "[DEBUG] Directory $d exists. Contents:"
+            ls -al "$d"
+        else
+            echo "[DEBUG] Directory $d does NOT exist."
+        fi
+    done
+fi
 
 # Short-circuit if everything already exists and CACHE_ENABLED is true
-if [[ "${CACHE_ENABLED:-false}" == "true" && -x "$mpmdir/mpm$binext" && -x "$batchdir/matlab-batch$binext" && -x "$rootdir/bin/matlab" ]]; then
-    echo "CACHE_ENABLED is true and MATLAB, matlab-batch, and mpm already exist. Skipping installation."
+if [[ "${CACHE_ENABLED:-false}" == "true" && -x "$cached_mpm/mpm$binext" && -x "$cached_batch/matlab-batch$binext" && -x "$cached_root/bin/matlab" ]]; then
+    echo "CACHE_ENABLED is true and MATLAB, matlab-batch, and mpm already exist. Skipping installation/restoring from Cache..."
+
+    mkdir -p "$rootdir" "$batchdir" "$mpmdir"
+
+    echo "[DEBUG] Copying from cache to temporary directories..."
+    
+    cp -a "$cached_root/." "$rootdir"
+    echo "[DEBUG] Copied matlab_root"
+
+    cp -a "$cached_batch/." "$batchdir"
+    echo "[DEBUG] Copied matlab-batch"
+
+    cp -a "$cached_mpm/." "$mpmdir"
+    echo "[DEBUG] Copied mpm"
+
     echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
     if [[ "$mwarch" = "win64" ]]; then
         echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
@@ -175,6 +195,14 @@ echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
 # add MATLAB Runtime to path for windows
 if [[ "$mwarch" = "win64" ]]; then
     echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
+fi
+
+if [[ "${CACHE_ENABLED:-false}" == "true" ]]; then
+    echo "Saving installation to matlab_cache..."
+    mkdir -p "$cached_root" "$cached_batch" "$cached_mpm"
+    cp -a "$rootdir/." "$cached_root"
+    cp -a "$batchdir/." "$cached_batch"
+    cp -a "$mpmdir/." "$cached_mpm"
 fi
 
 # # Ensure install/ is owned by the current user to avoid permission issues in later steps like run-tests

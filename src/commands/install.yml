@@ -59,6 +59,6 @@ steps:
             name: Cache MATLAB
             key: matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>
             paths:
-              - install/matlab_root
-              - install/matlab-batch
-              - install/mpm
+              - matlab_cache/matlab_root
+              - matlab_cache/matlab-batch
+              - matlab_cache/mpm
