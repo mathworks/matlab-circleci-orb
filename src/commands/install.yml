@@ -46,7 +46,7 @@ steps:
         - restore_cache:
             name: Restore MATLAB Cache
             keys:
-              - matlab-cache-{{ arch }}-<< parameters.release >>-{{ checksum "sorted-products.txt" }}-v2
+              - matlab-cache-{{ arch }}-<< parameters.release >>-{{ checksum "sorted-products.txt" }}-v3
   - run:
       name: Install MATLAB
       environment:
@@ -62,7 +62,7 @@ steps:
       steps:
         - save_cache:
             name: Cache MATLAB
-            key: matlab-cache-{{ arch }}-<< parameters.release >>-{{ checksum "sorted-products.txt" }}-v2
+            key: matlab-cache-{{ arch }}-<< parameters.release >>-{{ checksum "sorted-products.txt" }}-v3
             paths:
               - matlab_cache/matlab_root
               - matlab_cache/matlab-batch
