@@ -38,10 +38,15 @@ steps:
       condition:
         equal: [ << parameters.cache >>, true ]
       steps:
+        - run:
+          name: Sort product list and write to file
+          command: |
+            echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs > sorted-products.txt
+            cat sorted-products.txt
         - restore_cache:
             name: Restore MATLAB Cache
             keys:
-              - matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>
+              - matlab-cache-{{ arch }}-<< parameters.release >>-{{ checksum "sorted-products.txt" }}
   - run:
       name: Install MATLAB
       environment:
@@ -57,7 +62,7 @@ steps:
       steps:
         - save_cache:
             name: Cache MATLAB
-            key: matlab-cache-{{ arch }}-<< parameters.release >>-<< parameters.products >>
+            key: matlab-cache-{{ arch }}-<< parameters.release >>-{{ checksum "sorted-products.txt" }}
             paths:
               - matlab_cache/matlab_root
               - matlab_cache/matlab-batch
