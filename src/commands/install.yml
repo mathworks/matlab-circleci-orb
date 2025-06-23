@@ -39,10 +39,10 @@ steps:
         equal: [ << parameters.cache >>, true ]
       steps:
         - run:
-          name: Sort product list and write to file
-          command: |
-            echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs > sorted-products.txt
-            cat sorted-products.txt
+            name: Sort product list and write to file
+            command: |
+              echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs > sorted-products.txt
+              cat sorted-products.txt
         - restore_cache:
             name: Restore MATLAB Cache
             keys:
