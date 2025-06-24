@@ -64,6 +64,6 @@ steps:
             name: Cache MATLAB
             key: matlab-cache-{{ arch }}-<< parameters.release >>-{{ checksum "sorted-products.txt" }}-v3
             paths:
-              - matlab_cache/matlab_root
-              - matlab_cache/matlab-batch
-              - matlab_cache/mpm
+              - ~/.cache/matlab_ci/matlab_root
+              - ~/.cache/matlab_ci/matlab-batch
+              - ~/.cache/matlab_ci/mpm

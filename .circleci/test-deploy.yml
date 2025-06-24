@@ -95,6 +95,44 @@ jobs:
       - matlab/run-command:
           command: "exp='<<parameters.release>>'; assert(strcmp(version('-release'),exp(2:6)))"
 
+  integration-test-install-with-cache:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
+    steps:
+      - checkout
+      - run:
+          name: Clean ~/.cache/matlab_ci before first install
+          command: rm -rf $HOME/.cache/matlab_ci
+          shell: bash
+      - matlab/install:
+          no-output-timeout: 30m
+          cache: true
+      - run:
+          name: Verify files exist in cache
+          command: |
+            set -e
+            ls -al "$HOME/.cache/matlab_ci/matlab_root/bin/matlab" || {
+            echo "Missing MATLAB binary at expected cache path!"
+            exit 1
+            }
+
+            ls -al "$HOME/.cache/matlab_ci/mpm/mpm"* || {
+              echo "MPM not found in cache!"
+              exit 1
+            }
+
+            ls -al "$HOME/.cache/matlab_ci/matlab-batch/matlab-batch"* || {
+              echo "MATLAB Batch not found in cache!"
+              exit 1
+            }
+
+            echo "All expected files found in cache."
+          shell: bash
+      - matlab/run-command:
+          command: version  
+
   integration-test-run-command:
     parameters:
       executor:
@@ -499,6 +537,11 @@ workflows:
             parameters:
               executor: [linux, windows, macos]
               release: [R2023bU1]
+
+      - integration-test-install-with-cache:
+          matrix:
+            parameters:
+              executor: [linux, windows, macos]
 
       - integration-test-run-command:
           matrix:

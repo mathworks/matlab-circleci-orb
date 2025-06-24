@@ -65,7 +65,7 @@ tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
-matlab_cache="matlab_cache"
+matlab_cache="$HOME/.cache/matlab_ci"
 cached_root="$matlab_cache/matlab_root"
 cached_batch="$matlab_cache/matlab-batch"
 cached_mpm="$matlab_cache/mpm"
@@ -165,8 +165,6 @@ if [[ "$PARAM_CACHE" == "1" && -x "$cached_mpm/mpm$binext" && -x "$cached_batch/
     if [[ "$mwarch" = "win64" ]]; then
         echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
     fi
-    # # Ensure install/ is owned by the current user to avoid permission issues in later steps like run-tests
-    # sudoIfAvailable -c "chown -R $(id -u):$(id -g) '$tmpdir' && chmod -R u+rX '$tmpdir'" || true
     exit 0
 fi
 
@@ -204,6 +202,3 @@ if [[ "$PARAM_CACHE" == "1" ]]; then
     cp -a "$batchdir/." "$cached_batch"
     cp -a "$mpmdir/." "$cached_mpm"
 fi
-
-# # Ensure install/ is owned by the current user to avoid permission issues in later steps like run-tests
-# sudoIfAvailable -c "chown -R $(id -u):$(id -g) '$tmpdir' && chmod -R u+rX '$tmpdir'" || true
