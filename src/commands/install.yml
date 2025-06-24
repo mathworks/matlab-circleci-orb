@@ -40,6 +40,8 @@ steps:
       steps:
         - run:
             name: Sort product list and write to file
+            environment:
+              PARAM_RELEASE: <<parameters.release>>
             command: |
               source scripts/resolve-release.sh
               echo "$mpmrelease" > release.txt

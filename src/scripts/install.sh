@@ -17,8 +17,6 @@ sudoIfAvailable() {
     fi
 }
 
-source "$(dirname "$0")/resolve-release.sh"
-
 # stream() {
 #     local url="$1"
 #     local status=0
@@ -74,6 +72,9 @@ cached_mpm="$matlab_cache/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
+
+# shellcheck source=./resolve-release.sh
+source "$(dirname "$0")/resolve-release.sh"
 
 # # resolve release
 # parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
