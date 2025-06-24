@@ -75,7 +75,7 @@ releasestatus=""
 
 # shellcheck source=./resolve-release.sh
 # shellcheck disable=SC1091
-source "$(dirname "$0")/resolve-release.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/resolve-release.sh"
 
 # # resolve release
 # parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')

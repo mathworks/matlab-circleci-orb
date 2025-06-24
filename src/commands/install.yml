@@ -43,7 +43,7 @@ steps:
             environment:
               PARAM_RELEASE: <<parameters.release>>
             command: |
-              source scripts/resolve-release.sh
+              source src/scripts/resolve-release.sh
               echo "$mpmrelease" > release.txt
               echo "[DEBUG] Resolved release: $mpmrelease"
               echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs > sorted-products.txt
