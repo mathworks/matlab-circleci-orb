@@ -41,12 +41,15 @@ steps:
         - run:
             name: Sort product list and write to file
             command: |
+              source scripts/resolve-release.sh
+              echo "$mpmrelease" > release.txt
+              echo "[DEBUG] Resolved release: $mpmrelease"
               echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs > sorted-products.txt
               cat sorted-products.txt
         - restore_cache:
             name: Restore MATLAB Cache
             keys:
-              - matlab-cache-{{ arch }}-<< parameters.release >>-{{ checksum "sorted-products.txt" }}-v3
+              - matlab-cache-{{ arch }}-{{ checksum "release.txt" }}-{{ checksum "sorted-products.txt" }}-v3
   - run:
       name: Install MATLAB
       environment:
@@ -62,7 +65,7 @@ steps:
       steps:
         - save_cache:
             name: Cache MATLAB
-            key: matlab-cache-{{ arch }}-<< parameters.release >>-{{ checksum "sorted-products.txt" }}-v3
+            key: matlab-cache-{{ arch }}-{{ checksum "release.txt" }}-{{ checksum "sorted-products.txt" }}-v3
             paths:
               - ~/.cache/matlab_ci/matlab_root
               - ~/.cache/matlab_ci/matlab-batch

@@ -17,25 +17,27 @@ sudoIfAvailable() {
     fi
 }
 
-stream() {
-    local url="$1"
-    local status=0
+source "$(dirname "$0")/resolve-release.sh"
 
-    if command -v wget >/dev/null 2>&1; then
-        wget --retry-connrefused --waitretry=5 -qO- "$url" || status=$?
-    elif command -v curl >/dev/null 2>&1; then
-        curl --retry 5 --retry-connrefused --retry-delay 5 -sSL "$url" || status=$?
-    else
-        echo "Could not find wget or curl command" >&2
-        return 1
-    fi
+# stream() {
+#     local url="$1"
+#     local status=0
 
-    if [ $status -ne 0 ]; then
-        echo "Error streaming file from $url" >&2
-    fi
+#     if command -v wget >/dev/null 2>&1; then
+#         wget --retry-connrefused --waitretry=5 -qO- "$url" || status=$?
+#     elif command -v curl >/dev/null 2>&1; then
+#         curl --retry 5 --retry-connrefused --retry-delay 5 -sSL "$url" || status=$?
+#     else
+#         echo "Could not find wget or curl command" >&2
+#         return 1
+#     fi
 
-    return $status
-}
+#     if [ $status -ne 0 ]; then
+#         echo "Error streaming file from $url" >&2
+#     fi
+
+#     return $status
+# }
 
 download() {
     local url="$1"
@@ -73,22 +75,22 @@ batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
 
-# resolve release
-parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
-if [[ "$parsedrelease" = "latest" ]]; then
-    mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
-elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
-    mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
-    releasestatus="--release-status=Prerelease"
-else
-    mpmrelease="$parsedrelease"
-fi
+# # resolve release
+# parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
+# if [[ "$parsedrelease" = "latest" ]]; then
+#     mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
+# elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
+#     mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
+#     releasestatus="--release-status=Prerelease"
+# else
+#     mpmrelease="$parsedrelease"
+# fi
 
-# validate release is supported
-if [[ "$mpmrelease" < "r2020b" ]]; then
-    echo "Release '${mpmrelease}' is not supported. Use 'R2020b' or a later release.">&2
-    exit 1
-fi
+# # validate release is supported
+# if [[ "$mpmrelease" < "r2020b" ]]; then
+#     echo "Release '${mpmrelease}' is not supported. Use 'R2020b' or a later release.">&2
+#     exit 1
+# fi
 
 # install system dependencies
 if [[ "$os" = "Linux" ]]; then
