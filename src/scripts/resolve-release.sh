@@ -25,6 +25,7 @@ if [[ "$parsedrelease" = "latest" ]]; then
     mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
 elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
     mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
+    # shellcheck disable=SC2034
     releasestatus="--release-status=Prerelease"
 else
     mpmrelease="$parsedrelease"

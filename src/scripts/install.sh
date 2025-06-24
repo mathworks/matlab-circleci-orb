@@ -74,6 +74,7 @@ mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
 
 # shellcheck source=./resolve-release.sh
+# shellcheck disable=SC1091
 source "$(dirname "$0")/resolve-release.sh"
 
 # # resolve release
@@ -96,6 +97,7 @@ source "$(dirname "$0")/resolve-release.sh"
 # install system dependencies
 if [[ "$os" = "Linux" ]]; then
     # install MATLAB dependencies
+    # shellcheck disable=SC2154
     release=$(echo "${mpmrelease}" | grep -ioE "(r[0-9]{4}[a-b])")
     stream https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh | sudoIfAvailable -s -- "$release"
     # install mpm depencencies
