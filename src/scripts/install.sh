@@ -73,9 +73,9 @@ batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
 
-# shellcheck source=./resolve-release.sh
+# shellcheck source=src/scripts/resolve-release.sh
 # shellcheck disable=SC1091
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/resolve-release.sh"
+source src/scripts/resolve-release.sh
 
 # # resolve release
 # parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
