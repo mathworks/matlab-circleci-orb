@@ -42,8 +42,9 @@ steps:
             name: Sort product list and write to file
             environment:
               PARAM_RELEASE: <<parameters.release>>
+              RESOLVE_RELEASE_SH: <<include(scripts/resolve-release.sh)>>
             command: |
-              <<include(scripts/resolve-release.sh)>>
+              eval "$RESOLVE_RELEASE_SH"
               echo "$mpmrelease" > release.txt
               echo "[DEBUG] Resolved release: $mpmrelease"
               echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs > sorted-products.txt
