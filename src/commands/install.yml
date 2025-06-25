@@ -43,7 +43,7 @@ steps:
             environment:
               PARAM_RELEASE: <<parameters.release>>
             command: |
-              source src/scripts/resolve-release.sh
+              <<include(scripts/resolve-release.sh)>>
               echo "$mpmrelease" > release.txt
               echo "[DEBUG] Resolved release: $mpmrelease"
               echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs > sorted-products.txt
@@ -58,6 +58,7 @@ steps:
         PARAM_RELEASE: <<parameters.release>>
         PARAM_PRODUCTS: <<parameters.products>>
         PARAM_CACHE: <<parameters.cache>>
+        RESOLVE_RELEASE_SH: <<include(scripts/resolve-release.sh)>>
       command: <<include(scripts/install.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
