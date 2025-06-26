@@ -97,23 +97,13 @@ else
     mwarch="glnxa64"
 fi
 
-# Short-circuit if everything already exists and PARAM_CACHE is true
+# Short-circuit if MATLAB, matlab-batch, and MPM already exist and PARAM_CACHE is true
 if [[ "$PARAM_CACHE" == "1" && -x "$cached_mpm/mpm$binext" && -x "$cached_batch/matlab-batch$binext" && -x "$cached_root/bin/matlab" ]]; then
-    echo "PARAM_CACHE is true and MATLAB, matlab-batch, and mpm already exist. Skipping installation/restoring from Cache..."
-
+    echo "Skipping fresh installation and restoring from Cache."
     mkdir -p "$rootdir" "$batchdir" "$mpmdir"
-
-    echo "[DEBUG] Copying from cache to temporary directories..."
-    
     cp -a "$cached_root/." "$rootdir"
-    echo "[DEBUG] Copied matlab_root"
-
     cp -a "$cached_batch/." "$batchdir"
-    echo "[DEBUG] Copied matlab-batch"
-
     cp -a "$cached_mpm/." "$mpmdir"
-    echo "[DEBUG] Copied mpm"
-
     echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
     if [[ "$mwarch" = "win64" ]]; then
         echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
@@ -149,7 +139,7 @@ if [[ "$mwarch" = "win64" ]]; then
 fi
 
 if [[ "$PARAM_CACHE" == "1" ]]; then
-    echo "Saving installation to matlab_cache..."
+    echo "Saving fresh installation to cache directories."
     mkdir -p "$cached_root" "$cached_batch" "$cached_mpm"
     cp -a "$rootdir/." "$cached_root"
     cp -a "$batchdir/." "$cached_batch"

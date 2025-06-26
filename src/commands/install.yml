@@ -29,7 +29,7 @@ parameters:
     default: 10m
   cache:
     description: >
-      Improve the description later. Whether to enable caching for MATLAB, MATLAB BATCH and MPM. If set to true, CircleCI will attempt to cache these files.
+      Option to enable caching, specified as false or true. By default, the value is false and the command does not store MATLAB and the specified products in a cache for future use.
     type: boolean
     default: false
 
@@ -39,21 +39,19 @@ steps:
         equal: [ << parameters.cache >>, true ]
       steps:
         - run:
-            name: Sort product list and write to file
+            name: Prepare cache metadata
             environment:
               PARAM_RELEASE: <<parameters.release>>
               RESOLVE_RELEASE_SH: <<include(scripts/resolve-release.sh)>>
             command: |
               eval "$RESOLVE_RELEASE_SH"
-              echo "[DEBUG] Resolved release: $mpmrelease"
               echo "$mpmrelease" > install-metadata.txt
               echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs >> install-metadata.txt
-              cat install-metadata.txt
             shell: bash
         - restore_cache:
-            name: Restore MATLAB Cache
+            name: Restore Cache
             keys:
-              - matlab-cache-{{ arch }}-{{ checksum "install-metadata.txt" }}-v1
+              - matlab-cache-{{ arch }}-{{ checksum "install-metadata.txt" }}
   - run:
       name: Install MATLAB
       environment:
@@ -69,8 +67,8 @@ steps:
         equal: [ << parameters.cache >>, true ]
       steps:
         - save_cache:
-            name: Cache MATLAB
-            key: matlab-cache-{{ arch }}-{{ checksum "install-metadata.txt" }}-v1
+            name: Save Cache
+            key: matlab-cache-{{ arch }}-{{ checksum "install-metadata.txt" }}
             paths:
               - ~/.cache/matlab_ci/matlab_root
               - ~/.cache/matlab_ci/matlab-batch
