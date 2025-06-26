@@ -58,6 +58,7 @@ eval "$RESOLVE_RELEASE_SH"
 # install system dependencies
 if [[ "$os" = "Linux" ]]; then
     # install MATLAB dependencies
+    # shellcheck disable=SC2154
     release=$(echo "${mpmrelease}" | grep -ioE "(r[0-9]{4}[a-b])")
     stream https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh | sudoIfAvailable -s -- "$release"
     # install mpm depencencies
