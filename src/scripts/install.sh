@@ -17,26 +17,6 @@ sudoIfAvailable() {
     fi
 }
 
-# stream() {
-#     local url="$1"
-#     local status=0
-
-#     if command -v wget >/dev/null 2>&1; then
-#         wget --retry-connrefused --waitretry=5 -qO- "$url" || status=$?
-#     elif command -v curl >/dev/null 2>&1; then
-#         curl --retry 5 --retry-connrefused --retry-delay 5 -sSL "$url" || status=$?
-#     else
-#         echo "Could not find wget or curl command" >&2
-#         return 1
-#     fi
-
-#     if [ $status -ne 0 ]; then
-#         echo "Error streaming file from $url" >&2
-#     fi
-
-#     return $status
-# }
-
 download() {
     local url="$1"
     local filename="$2"
@@ -73,33 +53,11 @@ batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
 
-# shellcheck source=src/scripts/resolve-release.sh
-# shellcheck disable=SC1091
-# echo "$RESOLVE_RELEASE_SH" > /tmp/resolve-release.sh
-# source /tmp/resolve-release.sh
 eval "$RESOLVE_RELEASE_SH"
-
-# # resolve release
-# parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
-# if [[ "$parsedrelease" = "latest" ]]; then
-#     mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
-# elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
-#     mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
-#     releasestatus="--release-status=Prerelease"
-# else
-#     mpmrelease="$parsedrelease"
-# fi
-
-# # validate release is supported
-# if [[ "$mpmrelease" < "r2020b" ]]; then
-#     echo "Release '${mpmrelease}' is not supported. Use 'R2020b' or a later release.">&2
-#     exit 1
-# fi
 
 # install system dependencies
 if [[ "$os" = "Linux" ]]; then
     # install MATLAB dependencies
-    # shellcheck disable=SC2154
     release=$(echo "${mpmrelease}" | grep -ioE "(r[0-9]{4}[a-b])")
     stream https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh | sudoIfAvailable -s -- "$release"
     # install mpm depencencies
@@ -136,19 +94,6 @@ elif [[ "$os" = "Darwin" ]]; then
     sudoIfAvailable -c "launchctl limit maxfiles 65536 200000" # g3185941
 else
     mwarch="glnxa64"
-fi
-
-if [[ "$PARAM_CACHE" == "1" ]]; then
-    echo "[DEBUG] PARAM_CACHE is true"
-    echo "[DEBUG] Checking cached directories..."
-    for d in "$cached_root" "$cached_batch" "$cached_mpm"; do
-        if [[ -d "$d" ]]; then
-            echo "[DEBUG] Directory $d exists. Contents:"
-            ls -al "$d"
-        else
-            echo "[DEBUG] Directory $d does NOT exist."
-        fi
-    done
 fi
 
 # Short-circuit if everything already exists and PARAM_CACHE is true

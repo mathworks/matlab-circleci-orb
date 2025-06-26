@@ -45,14 +45,15 @@ steps:
               RESOLVE_RELEASE_SH: <<include(scripts/resolve-release.sh)>>
             command: |
               eval "$RESOLVE_RELEASE_SH"
-              echo "$mpmrelease" > release.txt
               echo "[DEBUG] Resolved release: $mpmrelease"
-              echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs > sorted-products.txt
-              cat sorted-products.txt
+              echo "$mpmrelease" > install-metadata.txt
+              echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs >> install-metadata.txt
+              cat install-metadata.txt
+            shell: bash
         - restore_cache:
             name: Restore MATLAB Cache
             keys:
-              - matlab-cache-{{ arch }}-{{ checksum "release.txt" }}-{{ checksum "sorted-products.txt" }}-v3
+              - matlab-cache-{{ arch }}-{{ checksum "install-metadata.txt" }}-v1
   - run:
       name: Install MATLAB
       environment:
@@ -69,7 +70,7 @@ steps:
       steps:
         - save_cache:
             name: Cache MATLAB
-            key: matlab-cache-{{ arch }}-{{ checksum "release.txt" }}-{{ checksum "sorted-products.txt" }}-v3
+            key: matlab-cache-{{ arch }}-{{ checksum "install-metadata.txt" }}-v1
             paths:
               - ~/.cache/matlab_ci/matlab_root
               - ~/.cache/matlab_ci/matlab-batch
