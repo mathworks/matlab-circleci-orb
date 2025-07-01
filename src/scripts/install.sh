@@ -41,13 +41,19 @@ download() {
 os=$(uname)
 arch=$(uname -m)
 binext=""
-tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
+# tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
+# rootdir="$tmpdir/matlab_root"
+# batchdir="$tmpdir/matlab-batch"
+# mpmdir="$tmpdir/mpm"
+
+tmpdir = $(mkdir -p "$HOME/.cache/matlab_ci")
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
-matlab_cache="$HOME/.cache/matlab_ci"
-cached_root="$matlab_cache/matlab_root"
-cached_batch="$matlab_cache/matlab-batch"
+
+# matlab_cache="$HOME/.cache/matlab_ci"
+# cached_root="$matlab_cache/matlab_root"
+# cached_batch="$matlab_cache/matlab-batch"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
@@ -97,11 +103,11 @@ else
 fi
 
 # Short-circuit if MATLAB & matlab-batch already exist and PARAM_CACHE is true
-if [[ "$PARAM_CACHE" == "1" && -x "$cached_batch/matlab-batch$binext" && -x "$cached_root/bin/matlab" ]]; then
+if [[ "$PARAM_CACHE" == "1" && -x "$batchdir/matlab-batch$binext" && -x "$rootdir/bin/matlab" ]]; then
     echo "Skipping fresh installation and restoring from Cache."
-    echo 'export PATH="'$cached_root'/bin:'$cached_batch':$PATH"' >> $BASH_ENV
+    echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
     if [[ "$mwarch" = "win64" ]]; then
-        echo 'export PATH="'$cached_root'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
+        echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
     fi
     exit 0
 fi
@@ -131,11 +137,4 @@ echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
 # add MATLAB Runtime to path for windows
 if [[ "$mwarch" = "win64" ]]; then
     echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
-fi
-
-if [[ "$PARAM_CACHE" == "1" ]]; then
-    echo "Saving MATLAB and matlab-batch to cache directories."
-    mkdir -p "$cached_root" "$cached_batch"
-    cp -a "$rootdir/." "$cached_root"
-    cp -a "$batchdir/." "$cached_batch"
 fi
