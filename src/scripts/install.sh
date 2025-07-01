@@ -46,7 +46,7 @@ binext=""
 # batchdir="$tmpdir/matlab-batch"
 # mpmdir="$tmpdir/mpm"
 
-tmpdir = $(mkdir -p "$HOME/.cache/matlab_ci")
+tmpdir=$(mkdir -p "$HOME/.cache/matlab_ci")
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
