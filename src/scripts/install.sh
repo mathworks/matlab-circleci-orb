@@ -41,19 +41,11 @@ download() {
 os=$(uname)
 arch=$(uname -m)
 binext=""
-# tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
-# rootdir="$tmpdir/matlab_root"
-# batchdir="$tmpdir/matlab-batch"
-# mpmdir="$tmpdir/mpm"
-
-tmpdir=$(mkdir -p "$HOME/.cache/matlab_ci")
+tmpdir="$HOME/.cache/matlab_ci"
+mkdir -p "$tmpdir"
 rootdir="$tmpdir/matlab_root"
 batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
-
-# matlab_cache="$HOME/.cache/matlab_ci"
-# cached_root="$matlab_cache/matlab_root"
-# cached_batch="$matlab_cache/matlab-batch"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
@@ -102,34 +94,29 @@ else
     mwarch="glnxa64"
 fi
 
-# Short-circuit if MATLAB & matlab-batch already exist and PARAM_CACHE is true
-if [[ "$PARAM_CACHE" == "1" && -x "$batchdir/matlab-batch$binext" && -x "$rootdir/bin/matlab" ]]; then
-    echo "Skipping fresh installation and restoring from Cache."
-    echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
-    if [[ "$mwarch" = "win64" ]]; then
-        echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
-    fi
-    exit 0
-fi
-
 mkdir -p "$rootdir"
 mkdir -p "$batchdir"
 mkdir -p "$mpmdir"
 
-# install mpm
-download "$mpmbaseurl/$mwarch/mpm" "$mpmdir/mpm$binext"
-chmod +x "$mpmdir/mpm$binext"
+# Short-circuit if MATLAB & matlab-batch already exist and PARAM_CACHE is true
+if [[ "$PARAM_CACHE" == "1" && -x "$batchdir/matlab-batch$binext" && -x "$rootdir/bin/matlab" ]]; then
+    echo "Skipping fresh installation and restoring from Cache."
+else
+    # install mpm
+    download "$mpmbaseurl/$mwarch/mpm" "$mpmdir/mpm$binext"
+    chmod +x "$mpmdir/mpm$binext"
 
-# install matlab-batch
-download "$batchbaseurl/$mwarch/matlab-batch$binext" "$batchdir/matlab-batch$binext"
-chmod +x "$batchdir/matlab-batch$binext"
+    # install matlab-batch
+    download "$batchbaseurl/$mwarch/matlab-batch$binext" "$batchdir/matlab-batch$binext"
+    chmod +x "$batchdir/matlab-batch$binext"
 
-# install matlab
-"$mpmdir/mpm$binext" install \
-    --release="$mpmrelease" \
-    --destination="$rootdir" \
-    ${releasestatus} \
-    --products ${PARAM_PRODUCTS} MATLAB
+    # install matlab
+    "$mpmdir/mpm$binext" install \
+        --release="$mpmrelease" \
+        --destination="$rootdir" \
+        ${releasestatus} \
+        --products ${PARAM_PRODUCTS} MATLAB
+fi
 
 # add MATLAB and matlab-batch to path
 echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
