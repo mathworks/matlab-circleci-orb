@@ -48,7 +48,6 @@ mpmdir="$tmpdir/mpm"
 matlab_cache="$HOME/.cache/matlab_ci"
 cached_root="$matlab_cache/matlab_root"
 cached_batch="$matlab_cache/matlab-batch"
-cached_mpm="$matlab_cache/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
@@ -97,16 +96,12 @@ else
     mwarch="glnxa64"
 fi
 
-# Short-circuit if MATLAB, matlab-batch, and MPM already exist and PARAM_CACHE is true
-if [[ "$PARAM_CACHE" == "1" && -x "$cached_mpm/mpm$binext" && -x "$cached_batch/matlab-batch$binext" && -x "$cached_root/bin/matlab" ]]; then
+# Short-circuit if MATLAB & matlab-batch already exist and PARAM_CACHE is true
+if [[ "$PARAM_CACHE" == "1" && -x "$cached_batch/matlab-batch$binext" && -x "$cached_root/bin/matlab" ]]; then
     echo "Skipping fresh installation and restoring from Cache."
-    mkdir -p "$rootdir" "$batchdir" "$mpmdir"
-    cp -a "$cached_root/." "$rootdir"
-    cp -a "$cached_batch/." "$batchdir"
-    cp -a "$cached_mpm/." "$mpmdir"
-    echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
+    echo 'export PATH="'$cached_root'/bin:'$cached_batch':$PATH"' >> $BASH_ENV
     if [[ "$mwarch" = "win64" ]]; then
-        echo 'export PATH="'$rootdir'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
+        echo 'export PATH="'$cached_root'/runtime/'$mwarch':$PATH"' >> $BASH_ENV
     fi
     exit 0
 fi
@@ -139,9 +134,8 @@ if [[ "$mwarch" = "win64" ]]; then
 fi
 
 if [[ "$PARAM_CACHE" == "1" ]]; then
-    echo "Saving fresh installation to cache directories."
-    mkdir -p "$cached_root" "$cached_batch" "$cached_mpm"
+    echo "Saving MATLAB and matlab-batch to cache directories."
+    mkdir -p "$cached_root" "$cached_batch"
     cp -a "$rootdir/." "$cached_root"
     cp -a "$batchdir/." "$cached_batch"
-    cp -a "$mpmdir/." "$cached_mpm"
 fi

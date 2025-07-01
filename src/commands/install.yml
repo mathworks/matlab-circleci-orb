@@ -72,4 +72,3 @@ steps:
             paths:
               - ~/.cache/matlab_ci/matlab_root
               - ~/.cache/matlab_ci/matlab-batch
-              - ~/.cache/matlab_ci/mpm

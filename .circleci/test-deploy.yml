@@ -117,10 +117,6 @@ jobs:
               echo "Missing MATLAB binary at expected cache path!"
               exit 1
             }
-            ls -al "$HOME/.cache/matlab_ci/mpm/mpm"* || {
-              echo "MPM not found in cache!"
-              exit 1
-            }
             ls -al "$HOME/.cache/matlab_ci/matlab-batch/matlab-batch"* || {
               echo "MATLAB Batch not found in cache!"
               exit 1
