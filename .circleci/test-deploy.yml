@@ -108,6 +108,7 @@ jobs:
           shell: bash
       - matlab/install:
           no-output-timeout: 30m
+          products: Simulink
           cache: true
       - run:
           name: Verify files exist in cache
