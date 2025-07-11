@@ -70,5 +70,5 @@ steps:
             name: Save Cache
             key: matlab-cache-{{ arch }}-{{ checksum "install-metadata.txt" }}
             paths:
-              - ~/.cache/matlab_ci/matlab_root
-              - ~/.cache/matlab_ci/matlab-batch
+              - ~/matlab_ci/matlab_root
+              - ~/matlab_ci/matlab-batch

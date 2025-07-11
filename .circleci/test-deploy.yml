@@ -104,7 +104,7 @@ jobs:
       - checkout
       - run:
           name: Clean cache directory before first install
-          command: rm -rf $HOME/.cache/matlab_ci
+          command: rm -rf $HOME/matlab_ci
           shell: bash
       - matlab/install:
           no-output-timeout: 30m
@@ -113,11 +113,11 @@ jobs:
           name: Verify files exist in cache
           command: |
             set -e
-            ls -al "$HOME/.cache/matlab_ci/matlab_root/bin/matlab" || {
+            ls -al "$HOME/matlab_ci/matlab_root/bin/matlab" || {
               echo "Missing MATLAB binary at expected cache path!"
               exit 1
             }
-            ls -al "$HOME/.cache/matlab_ci/matlab-batch/matlab-batch"* || {
+            ls -al "$HOME/matlab_ci/matlab-batch/matlab-batch"* || {
               echo "MATLAB Batch not found in cache!"
               exit 1
             }

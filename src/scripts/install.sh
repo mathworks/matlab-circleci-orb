@@ -41,11 +41,11 @@ download() {
 os=$(uname)
 arch=$(uname -m)
 binext=""
-tmpdir="$HOME/.cache/matlab_ci"
-mkdir -p "$tmpdir"
-rootdir="$tmpdir/matlab_root"
-batchdir="$tmpdir/matlab-batch"
-mpmdir="$tmpdir/mpm"
+matlabcidir="$HOME/matlab_ci"
+mkdir -p "$matlabcidir"
+rootdir="$matlabcidir/matlab_root"
+batchdir="$matlabcidir/matlab-batch"
+mpmdir="$matlabcidir/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
@@ -69,7 +69,7 @@ elif [[ "$os" = "Darwin" && "$arch" = "arm64" ]]; then
         sudoIfAvailable -c "softwareupdate --install-rosetta --agree-to-license"
     else
         # install Java runtime
-        jdkpkg="$tmpdir/jdk.pkg"
+        jdkpkg="$matlabcidir/jdk.pkg"
         download https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg "$jdkpkg"
         sudoIfAvailable -c "installer -pkg '$jdkpkg' -target /"
     fi
