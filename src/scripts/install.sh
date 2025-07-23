@@ -74,8 +74,13 @@ parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
 if [[ "$parsedrelease" = "latest" ]]; then
     mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
 elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
-    mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
-    releasestatus="--release-status=Prerelease"
+    fetched=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
+    if [[ "$fetched" == *prerelease ]]; then
+        mpmrelease="${fetched%prerelease}"
+        releasestatus="--release-status=Prerelease"
+    else
+        mpmrelease="$fetched"
+    fi
 else
     mpmrelease="$parsedrelease"
 fi
