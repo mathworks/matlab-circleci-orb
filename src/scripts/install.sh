@@ -76,7 +76,7 @@ if [[ "$parsedrelease" = "latest" ]]; then
 elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
     fetched=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
     if [[ "$fetched" == *prerelease ]]; then
-        mpmrelease="${fetched%prerelease}"   # Remove 'prerelease' suffix
+        mpmrelease="${fetched%prerelease}"
         releasestatus="--release-status=Prerelease"
     else
         mpmrelease="$fetched"
