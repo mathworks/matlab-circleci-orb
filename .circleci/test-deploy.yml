@@ -95,6 +95,38 @@ jobs:
       - matlab/run-command:
           command: "exp='<<parameters.release>>'; assert(strcmp(version('-release'),exp(2:6)))"
 
+  integration-test-install-with-cache:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
+    steps:
+      - checkout
+      - run:
+          name: Clean cache directory before first install
+          command: rm -rf $HOME/matlab_ci
+          shell: bash
+      - matlab/install:
+          no-output-timeout: 30m
+          products: Simulink
+          cache: true
+      - run:
+          name: Verify MATLAB exists in cache
+          command: |
+            set -e
+            matlabroot="$HOME/matlab_ci/matlab_root"
+            if [[ "$(uname)" == "Darwin" ]]; then
+              matlabroot="$matlabroot/MATLAB.app"
+            fi
+            test -x "$matlabroot/bin/matlab" || {
+              echo "MATLAB not found in cache."
+              exit 1
+            }
+            echo "MATLAB found in cache."
+          shell: bash
+      - matlab/run-command:
+          command: version
+
   integration-test-run-command:
     parameters:
       executor:
@@ -499,6 +531,11 @@ workflows:
             parameters:
               executor: [linux, windows, macos]
               release: [R2023bU1]
+
+      - integration-test-install-with-cache:
+          matrix:
+            parameters:
+              executor: [linux, windows, macos]
 
       - integration-test-run-command:
           matrix:
