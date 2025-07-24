@@ -111,22 +111,18 @@ jobs:
           products: Simulink
           cache: true
       - run:
-          name: Verify files exist in cache
+          name: Verify MATLAB exists in cache
           command: |
             set -e
-            matlab_binary="$HOME/matlab_ci/matlab_root"
+            matlabroot="$HOME/matlab_ci/matlab_root"
             if [[ "$(uname)" == "Darwin" ]]; then
-              matlab_binary="$matlab_binary/MATLAB.app"
+              matlabroot="$matlabroot/MATLAB.app"
             fi
-            test -x "$matlab_binary/bin/matlab" || {
-              echo "Missing MATLAB binary at expected cache path!"
+            test -x "$matlabroot/bin/matlab" || {
+              echo "MATLAB not found in cache."
               exit 1
             }
-            test -x "$HOME/matlab_ci/matlab-batch/matlab-batch"* || {
-              echo "MATLAB Batch not found in cache!"
-              exit 1
-            }
-            echo "All expected files found in cache."
+            echo "MATLAB found in cache."
           shell: bash
       - matlab/run-command:
           command: version

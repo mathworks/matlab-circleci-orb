@@ -98,17 +98,17 @@ mkdir -p "$rootdir"
 mkdir -p "$batchdir"
 mkdir -p "$mpmdir"
 
-# Short-circuit if MATLAB & matlab-batch already exist and PARAM_CACHE is true
-if [[ "$PARAM_CACHE" == "1" && -x "$batchdir/matlab-batch$binext" && -x "$rootdir/bin/matlab" ]]; then
+# install matlab-batch
+download "$batchbaseurl/$mwarch/matlab-batch$binext" "$batchdir/matlab-batch$binext"
+chmod +x "$batchdir/matlab-batch$binext"
+
+# Short-circuit if MATLAB already exists and PARAM_CACHE is true
+if [[ "$PARAM_CACHE" == "1" && -x "$rootdir/bin/matlab" ]]; then
     echo "Skipping fresh installation and restoring from Cache."
 else
     # install mpm
     download "$mpmbaseurl/$mwarch/mpm" "$mpmdir/mpm$binext"
     chmod +x "$mpmdir/mpm$binext"
-
-    # install matlab-batch
-    download "$batchbaseurl/$mwarch/matlab-batch$binext" "$batchdir/matlab-batch$binext"
-    chmod +x "$batchdir/matlab-batch$binext"
 
     # install matlab
     "$mpmdir/mpm$binext" install \
