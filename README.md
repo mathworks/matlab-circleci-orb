@@ -272,7 +272,7 @@ When you use this orb command, all of the required files must be on the MATLAB s
 
 ## Notes
 * By default, when you use the `run-build`, `run-tests`, or `run-command` command, the root of your repository serves as the MATLAB startup folder. To run your MATLAB code using a different folder, specify the `-sd` startup option or include the `cd` command when using `run-command`.
-* The `run-build` command uses the `-batch` option to invoke the MATLAB build tool. In addition, in MATLAB R2019a and later, the `run-tests` and `run-command` commands use  the `-batch` option to start MATLAB noninteractively. Preferences do not persist across different MATLAB sessions launched with the `-batch` option. To run code that requires the same preferences, use a single command.
+* The `run-build` command uses the `-batch` option to invoke the MATLAB build tool. In addition, in MATLAB R2019a and later, the `run-tests` and `run-command` commands use  the `-batch` option to start MATLAB noninteractively. MATLAB settings do not persist across different MATLAB sessions launched with the `-batch` option. To run code that requires the same settings, use a single command.
 * When you use the `install`, `run-build`, `run-tests`, and `run-command` commands, you execute third-party code that is licensed under separate terms.
 
 ## See Also
