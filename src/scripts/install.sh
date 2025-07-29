@@ -17,26 +17,6 @@ sudoIfAvailable() {
     fi
 }
 
-stream() {
-    local url="$1"
-    local status=0
-
-    if command -v wget >/dev/null 2>&1; then
-        wget --retry-connrefused --waitretry=5 -qO- "$url" || status=$?
-    elif command -v curl >/dev/null 2>&1; then
-        curl --retry 5 --retry-connrefused --retry-delay 5 -sSL "$url" || status=$?
-    else
-        echo "Could not find wget or curl command" >&2
-        return 1
-    fi
-
-    if [ $status -ne 0 ]; then
-        echo "Error streaming file from $url" >&2
-    fi
-
-    return $status
-}
-
 download() {
     local url="$1"
     local filename="$2"
@@ -61,39 +41,21 @@ download() {
 os=$(uname)
 arch=$(uname -m)
 binext=""
-tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
-rootdir="$tmpdir/matlab_root"
-batchdir="$tmpdir/matlab-batch"
-mpmdir="$tmpdir/mpm"
+matlabcidir="$HOME/matlab_ci"
+mkdir -p "$matlabcidir"
+rootdir="$matlabcidir/matlab_root/$PARAM_RELEASE"
+batchdir="$matlabcidir/matlab-batch"
+mpmdir="$matlabcidir/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
 releasestatus=""
 
-# resolve release
-parsedrelease=$(echo "$PARAM_RELEASE" | tr '[:upper:]' '[:lower:]')
-if [[ "$parsedrelease" = "latest" ]]; then
-    mpmrelease=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest)
-elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
-    fetched=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
-    if [[ "$fetched" == *prerelease ]]; then
-        mpmrelease="${fetched%prerelease}"
-        releasestatus="--release-status=Prerelease"
-    else
-        mpmrelease="$fetched"
-    fi
-else
-    mpmrelease="$parsedrelease"
-fi
-
-# validate release is supported
-if [[ "$mpmrelease" < "r2020b" ]]; then
-    echo "Release '${mpmrelease}' is not supported. Use 'R2020b' or a later release.">&2
-    exit 1
-fi
+eval "$RESOLVE_RELEASE_SH"
 
 # install system dependencies
 if [[ "$os" = "Linux" ]]; then
     # install MATLAB dependencies
+    # shellcheck disable=SC2154
     release=$(echo "${mpmrelease}" | grep -ioE "(r[0-9]{4}[a-b])")
     stream https://ssd.mathworks.com/supportfiles/ci/matlab-deps/v0/install.sh | sudoIfAvailable -s -- "$release"
     # install mpm depencencies
@@ -107,7 +69,7 @@ elif [[ "$os" = "Darwin" && "$arch" = "arm64" ]]; then
         sudoIfAvailable -c "softwareupdate --install-rosetta --agree-to-license"
     else
         # install Java runtime
-        jdkpkg="$tmpdir/jdk.pkg"
+        jdkpkg="$matlabcidir/jdk.pkg"
         download https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg "$jdkpkg"
         sudoIfAvailable -c "installer -pkg '$jdkpkg' -target /"
     fi
@@ -136,20 +98,25 @@ mkdir -p "$rootdir"
 mkdir -p "$batchdir"
 mkdir -p "$mpmdir"
 
-# install mpm
-download "$mpmbaseurl/$mwarch/mpm" "$mpmdir/mpm$binext"
-chmod +x "$mpmdir/mpm$binext"
-
 # install matlab-batch
 download "$batchbaseurl/$mwarch/matlab-batch$binext" "$batchdir/matlab-batch$binext"
 chmod +x "$batchdir/matlab-batch$binext"
 
-# install matlab
-"$mpmdir/mpm$binext" install \
-    --release="$mpmrelease" \
-    --destination="$rootdir" \
-    ${releasestatus} \
-    --products ${PARAM_PRODUCTS} MATLAB
+# Short-circuit if MATLAB already exists and PARAM_CACHE is true
+if [[ "$PARAM_CACHE" == "1" && -x "$rootdir/bin/matlab" ]]; then
+    echo "Skipping fresh installation and restoring from Cache."
+else
+    # install mpm
+    download "$mpmbaseurl/$mwarch/mpm" "$mpmdir/mpm$binext"
+    chmod +x "$mpmdir/mpm$binext"
+
+    # install matlab
+    "$mpmdir/mpm$binext" install \
+        --release="$mpmrelease" \
+        --destination="$rootdir" \
+        ${releasestatus} \
+        --products ${PARAM_PRODUCTS} MATLAB
+fi
 
 # add MATLAB and matlab-batch to path
 echo 'export PATH="'$rootdir'/bin:'$batchdir':$PATH"' >> $BASH_ENV
