@@ -71,4 +71,8 @@ steps:
             name: Save Cache
             key: matlab-cache-{{ arch }}-{{ checksum "~/.matlab-circleci-orb/install-metadata.txt" }}
             paths:
-              - ~/matlab_ci/matlab_root
+              - ~/matlab_ci/matlab_root/<<parameters.release>>
+        - run:
+            name: Cleanup metadata
+            command: rm -rf ~/.matlab-circleci-orb
+            shell: bash

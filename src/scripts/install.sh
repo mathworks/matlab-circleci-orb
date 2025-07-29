@@ -43,7 +43,7 @@ arch=$(uname -m)
 binext=""
 matlabcidir="$HOME/matlab_ci"
 mkdir -p "$matlabcidir"
-rootdir="$matlabcidir/matlab_root"
+rootdir="$matlabcidir/matlab_root/$PARAM_RELEASE"
 batchdir="$matlabcidir/matlab-batch"
 mpmdir="$matlabcidir/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"

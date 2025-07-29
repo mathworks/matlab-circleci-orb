@@ -109,12 +109,13 @@ jobs:
       - matlab/install:
           no-output-timeout: 30m
           products: Simulink
+          release: R2024a
           cache: true
       - run:
           name: Verify MATLAB exists in cache
           command: |
             set -e
-            matlabroot="$HOME/matlab_ci/matlab_root"
+            matlabroot="$HOME/matlab_ci/matlab_root/R2024a"
             if [[ "$(uname)" == "Darwin" ]]; then
               matlabroot="$matlabroot/MATLAB.app"
             fi
