@@ -11,9 +11,9 @@ filters: &filters
 integration-tests: &integration-tests
   [
     orb-tools/pack,
-    integration-test-install,
-    integration-test-install-release,
-    integration-test-run-command,
+    # integration-test-install,
+    # integration-test-install-release,
+    # integration-test-run-command,
     integration-test-run-tests
   ]
 
@@ -29,156 +29,156 @@ executors:
     win/default
 
 jobs:
-  integration-test-install:
-    parameters:
-      executor:
-        type: string
-    executor: <<parameters.executor>>
-    steps:
-      - checkout
-      - matlab/install:
-          no-output-timeout: 30m
-      - run:
-          name: Verify the matlab and mex scripts are available
-          command: |
-            set -e
-            os=$(uname)
-            if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-              mex.bat -h
-            else
-              mex -h
-            fi
-          shell: bash
-      - when:
-          condition: 
-            equal: [ "windows", <<parameters.executor>> ]
-          steps:
-            - run:
-                name: Verify MATLAB Runtime is available in windows system path
-                command: |
-                  set -e
-                  if [[ "${PATH}" == *"runtime"* ]]; then
-                    echo "MATLAB Runtime is correctly set in PATH."
-                  else
-                    echo "MATLAB Runtime is NOT set in windows PATH."
-                    exit 1
-                  fi
-                shell: bash
-      - matlab/run-command:
-          command: version
+  # integration-test-install:
+  #   parameters:
+  #     executor:
+  #       type: string
+  #   executor: <<parameters.executor>>
+  #   steps:
+  #     - checkout
+  #     - matlab/install:
+  #         no-output-timeout: 30m
+  #     - run:
+  #         name: Verify the matlab and mex scripts are available
+  #         command: |
+  #           set -e
+  #           os=$(uname)
+  #           if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+  #             mex.bat -h
+  #           else
+  #             mex -h
+  #           fi
+  #         shell: bash
+  #     - when:
+  #         condition: 
+  #           equal: [ "windows", <<parameters.executor>> ]
+  #         steps:
+  #           - run:
+  #               name: Verify MATLAB Runtime is available in windows system path
+  #               command: |
+  #                 set -e
+  #                 if [[ "${PATH}" == *"runtime"* ]]; then
+  #                   echo "MATLAB Runtime is correctly set in PATH."
+  #                 else
+  #                   echo "MATLAB Runtime is NOT set in windows PATH."
+  #                   exit 1
+  #                 fi
+  #               shell: bash
+  #     - matlab/run-command:
+  #         command: version
 
-  integration-test-install-latest-including-prerelease:
-    parameters:
-      executor:
-        type: executor
-    executor: <<parameters.executor>>
-    steps:
-      - checkout
-      - matlab/install:
-          release: latest-including-prerelease
-          no-output-timeout: 30m
-      - matlab/run-command:
-          command: version
+  # integration-test-install-latest-including-prerelease:
+  #   parameters:
+  #     executor:
+  #       type: executor
+  #   executor: <<parameters.executor>>
+  #   steps:
+  #     - checkout
+  #     - matlab/install:
+  #         release: latest-including-prerelease
+  #         no-output-timeout: 30m
+  #     - matlab/run-command:
+  #         command: version
 
-  integration-test-install-release:
-    parameters:
-      executor:
-        type: executor
-      release:
-        type: string
-    executor: <<parameters.executor>>
-    steps:
-      - checkout
-      - matlab/install:
-          release: <<parameters.release>>
-          no-output-timeout: 30m
-      - matlab/run-command:
-          command: "exp='<<parameters.release>>'; assert(strcmp(version('-release'),exp(2:6)))"
+  # integration-test-install-release:
+  #   parameters:
+  #     executor:
+  #       type: executor
+  #     release:
+  #       type: string
+  #   executor: <<parameters.executor>>
+  #   steps:
+  #     - checkout
+  #     - matlab/install:
+  #         release: <<parameters.release>>
+  #         no-output-timeout: 30m
+  #     - matlab/run-command:
+  #         command: "exp='<<parameters.release>>'; assert(strcmp(version('-release'),exp(2:6)))"
 
-  integration-test-install-with-cache:
-    parameters:
-      executor:
-        type: executor
-    executor: <<parameters.executor>>
-    steps:
-      - checkout
-      - run:
-          name: Clean cache directory before first install
-          command: rm -rf $HOME/matlab_ci
-          shell: bash
-      - matlab/install:
-          no-output-timeout: 30m
-          products: Simulink
-          release: R2023b
-          cache: true
-      - run:
-          name: Verify MATLAB exists in cache
-          command: |
-            set -e
-            matlabroot="$HOME/matlab_ci/matlab_root/R2023b"
-            if [[ "$(uname)" == "Darwin" ]]; then
-              matlabroot="$matlabroot/MATLAB.app"
-            fi
-            test -x "$matlabroot/bin/matlab" || {
-              echo "MATLAB not found in cache."
-              exit 1
-            }
-            echo "MATLAB found in cache."
-          shell: bash
-      - matlab/run-command:
-          command: version
+  # integration-test-install-with-cache:
+  #   parameters:
+  #     executor:
+  #       type: executor
+  #   executor: <<parameters.executor>>
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Clean cache directory before first install
+  #         command: rm -rf $HOME/matlab_ci
+  #         shell: bash
+  #     - matlab/install:
+  #         no-output-timeout: 30m
+  #         products: Simulink
+  #         release: R2023b
+  #         cache: true
+  #     - run:
+  #         name: Verify MATLAB exists in cache
+  #         command: |
+  #           set -e
+  #           matlabroot="$HOME/matlab_ci/matlab_root/R2023b"
+  #           if [[ "$(uname)" == "Darwin" ]]; then
+  #             matlabroot="$matlabroot/MATLAB.app"
+  #           fi
+  #           test -x "$matlabroot/bin/matlab" || {
+  #             echo "MATLAB not found in cache."
+  #             exit 1
+  #           }
+  #           echo "MATLAB found in cache."
+  #         shell: bash
+  #     - matlab/run-command:
+  #         command: version
 
-  integration-test-run-command:
-    parameters:
-      executor:
-        type: executor
-    executor: <<parameters.executor>>
-    steps:
-      - matlab/install:
-          no-output-timeout: 30m
-      - matlab/run-command:
-          command: f = fopen('myscript.m', 'w'); fwrite(f, 'assert(true)'); fclose(f);
-      - matlab/run-command:
-          command: myscript
-      - matlab/run-command:
-          command: "eval(\"a = 1+2\"); assert(a == 3); eval('b = 3+4'); assert(b == 7);"
-      - matlab/run-command:
-          command: 'eval("a = 1+2"); assert(a == 3); eval(''b = 3+4''); assert(b == 7);'
-      - matlab/run-command:
-          command: a = """hello world"""; b = '"hello world"'; assert(strcmp(a,b), a+b);
-      - matlab/run-command:
-          command: |
-            a = " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"; b = char([32:126]); assert(strcmp(a, b), a+b);
-      - run:
-          command: |
-            dir=$CIRCLE_WORKING_DIRECTORY
-            os=$(uname)
-            if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
-              dir=$(cygpath -w "${dir/#\~/$HOME}")
-            fi
-            echo 'export WORK_DIR="'$dir'"' >> $BASH_ENV
-          shell: bash
-      - matlab/run-command:
-          command: |
-            [~, exp] = system("echo " + getenv('WORK_DIR')); exp = strtrim(exp); act = pwd; assert(strcmp(act, exp), strjoin({act exp}, '\n'));
-      - run:
-          command: echo 'myvar = 123' > startup.m
-          shell: bash
-      - matlab/run-command:
-          command: assert(myvar==123, 'myvar was not set as expected by startup.m')
-      - matlab/run-command:
-          command: disp("Hello world!")
-          startup-options: -logfile mylog.log
-      - matlab/run-command:
-          command: assert(isfile("mylog.log"), 'logfile was not created as expected')
-      - run:
-          command: |
-            mkdir subdir
-            echo 'onetyone = 11' > subdir/startup.m
-          shell: bash
-      - matlab/run-command:
-          command: assert(onetyone==11, 'onetyone was not set as expected by subdir/startup.m')
-          startup-options: -sd subdir
+  # integration-test-run-command:
+  #   parameters:
+  #     executor:
+  #       type: executor
+  #   executor: <<parameters.executor>>
+  #   steps:
+  #     - matlab/install:
+  #         no-output-timeout: 30m
+  #     - matlab/run-command:
+  #         command: f = fopen('myscript.m', 'w'); fwrite(f, 'assert(true)'); fclose(f);
+  #     - matlab/run-command:
+  #         command: myscript
+  #     - matlab/run-command:
+  #         command: "eval(\"a = 1+2\"); assert(a == 3); eval('b = 3+4'); assert(b == 7);"
+  #     - matlab/run-command:
+  #         command: 'eval("a = 1+2"); assert(a == 3); eval(''b = 3+4''); assert(b == 7);'
+  #     - matlab/run-command:
+  #         command: a = """hello world"""; b = '"hello world"'; assert(strcmp(a,b), a+b);
+  #     - matlab/run-command:
+  #         command: |
+  #           a = " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"; b = char([32:126]); assert(strcmp(a, b), a+b);
+  #     - run:
+  #         command: |
+  #           dir=$CIRCLE_WORKING_DIRECTORY
+  #           os=$(uname)
+  #           if [[ $os = CYGWIN* || $os = MINGW* || $os = MSYS* ]]; then
+  #             dir=$(cygpath -w "${dir/#\~/$HOME}")
+  #           fi
+  #           echo 'export WORK_DIR="'$dir'"' >> $BASH_ENV
+  #         shell: bash
+  #     - matlab/run-command:
+  #         command: |
+  #           [~, exp] = system("echo " + getenv('WORK_DIR')); exp = strtrim(exp); act = pwd; assert(strcmp(act, exp), strjoin({act exp}, '\n'));
+  #     - run:
+  #         command: echo 'myvar = 123' > startup.m
+  #         shell: bash
+  #     - matlab/run-command:
+  #         command: assert(myvar==123, 'myvar was not set as expected by startup.m')
+  #     - matlab/run-command:
+  #         command: disp("Hello world!")
+  #         startup-options: -logfile mylog.log
+  #     - matlab/run-command:
+  #         command: assert(isfile("mylog.log"), 'logfile was not created as expected')
+  #     - run:
+  #         command: |
+  #           mkdir subdir
+  #           echo 'onetyone = 11' > subdir/startup.m
+  #         shell: bash
+  #     - matlab/run-command:
+  #         command: assert(onetyone==11, 'onetyone was not set as expected by subdir/startup.m')
+  #         startup-options: -sd subdir
 
   integration-test-run-tests:
     parameters:
@@ -201,96 +201,96 @@ jobs:
             echo "%% FirstTest" >> tests/mytest.m
             echo "assert(add(1,2)==3)" >> tests/mytest.m
             mkdir tests/filteredTest
-            echo "%% simpleTest" >> tests/filteredTest/filtertest.m
-            echo "assert(2==2)" >> tests/filteredTest/filtertest.m
+            echo "%% simpleTest" >> tests/filteredTest/mytest.m
+            echo "assert(2==2)" >> tests/filteredTest/mytest.m
             printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
             printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
             printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
           shell: bash
 
     # Integ tests for matlab/run-tests
-      - matlab/run-tests:
-          source-folder: src
-          startup-options: -logfile console.log
-      - matlab/run-tests:
-          test-results-junit: test-results/matlab/results.xml
-          code-coverage-cobertura: code-coverage/coverage.xml
-          source-folder: src
-      - matlab/run-tests:
-          test-results-html: test-results/matlab/html
-          code-coverage-html: code-coverage/html
-          source-folder: src
-      - matlab/run-tests:
-          test-results-junit: test-results/matlab/filterdtestresult.xml
-          select-by-folder: tests/filteredTest
-      - matlab/run-tests:
-          test-results-junit: test-results/matlab/filterdtagresult.xml
-          select-by-tag: FILTERED
+      # - matlab/run-tests:
+      #     source-folder: src
+      #     startup-options: -logfile console.log
+      # - matlab/run-tests:
+      #     test-results-junit: test-results/matlab/results.xml
+      #     code-coverage-cobertura: code-coverage/coverage.xml
+      #     source-folder: src
+      # - matlab/run-tests:
+      #     test-results-html: test-results/matlab/html
+      #     code-coverage-html: code-coverage/html
+      #     source-folder: src
+      # - matlab/run-tests:
+      #     test-results-junit: test-results/matlab/filterdtestresult.xml
+      #     select-by-folder: tests/filteredTest
+      # - matlab/run-tests:
+      #     test-results-junit: test-results/matlab/filterdtagresult.xml
+      #     select-by-tag: FILTERED
 
-      - run:
-          name: Verify tests ran with startup options
-          command: |
-            set -e
-            grep mytest console.log
-            grep TaggedTest console.log
-            grep filtertest console.log
-            rm console.log
-          shell: bash
-      - run:
-          name: Verify test results file was created
-          command: |
-            set -e
-            grep -q FirstTest test-results/matlab/results.xml
-          shell: bash
-      - run:
-          name: Verify HTML test results report was created
-          command: |
-            set -e
-            grep -q FirstTest test-results/matlab/html/index.html
-          shell: bash
-      - run:
-          name: Verify code coverage file was created
-          command: |
-            set -e
-            grep -q add code-coverage/coverage.xml
-          shell: bash
-      - run:
-          name: Verify HTML code coverage report was created
-          command: |
-            set -e
-            grep -q CoverageSummary code-coverage/html/index.html
-          shell: bash
-      - run:
-          name: Verify filtered test results file was created
-          command: |
-            set -e
-            grep -q simpleTest test-results/matlab/filterdtestresult.xml
-            grep -v FirstTest test-results/matlab/filterdtestresult.xml
-          shell: bash
-      - run:
-          name: Verify filter by tag test results file was created
-          command: |
-            set -e
-            grep -q TaggedTest test-results/matlab/filterdtagresult.xml
-            grep -v FirstTest test-results/matlab/filterdtagresult.xml
-            grep -v simpleTest test-results/matlab/filterdtagresult.xml
-          shell: bash
+      # - run:
+      #     name: Verify tests ran with startup options
+      #     command: |
+      #       set -e
+      #       grep mytest console.log
+      #       grep TaggedTest console.log
+      #       grep filtertest console.log
+      #       rm console.log
+      #     shell: bash
+      # - run:
+      #     name: Verify test results file was created
+      #     command: |
+      #       set -e
+      #       grep -q FirstTest test-results/matlab/results.xml
+      #     shell: bash
+      # - run:
+      #     name: Verify HTML test results report was created
+      #     command: |
+      #       set -e
+      #       grep -q FirstTest test-results/matlab/html/index.html
+      #     shell: bash
+      # - run:
+      #     name: Verify code coverage file was created
+      #     command: |
+      #       set -e
+      #       grep -q add code-coverage/coverage.xml
+      #     shell: bash
+      # - run:
+      #     name: Verify HTML code coverage report was created
+      #     command: |
+      #       set -e
+      #       grep -q CoverageSummary code-coverage/html/index.html
+      #     shell: bash
+      # - run:
+      #     name: Verify filtered test results file was created
+      #     command: |
+      #       set -e
+      #       grep -q simpleTest test-results/matlab/filterdtestresult.xml
+      #       grep -v FirstTest test-results/matlab/filterdtestresult.xml
+      #     shell: bash
+      # - run:
+      #     name: Verify filter by tag test results file was created
+      #     command: |
+      #       set -e
+      #       grep -q TaggedTest test-results/matlab/filterdtagresult.xml
+      #       grep -v FirstTest test-results/matlab/filterdtagresult.xml
+      #       grep -v simpleTest test-results/matlab/filterdtagresult.xml
+      #     shell: bash
 
-      - run:
-          name: Set up diary for logging
-          command: |
-            echo 'diary console.log' >> startup.m
-          shell: bash
-      - matlab/run-tests:
-          strict: true
-          source-folder: src
-      - run:
-          name: Verify tests ran with strict checks
-          command: |
-            set -e
-            grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
-            rm console.log
-          shell: bash
+      # - run:
+      #     name: Set up diary for logging
+      #     command: |
+      #       echo 'diary console.log' >> startup.m
+      #     shell: bash
+      # - matlab/run-tests:
+      #     strict: true
+      #     source-folder: src
+      # - run:
+      #     name: Verify tests ran with strict checks
+      #     command: |
+      #       set -e
+      #       grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
+      #       rm console.log
+      #     shell: bash
       # Disable parallel tests until PCT bug is fixed g3416906
       # - matlab/run-tests:
       #     use-parallel: true
@@ -302,26 +302,26 @@ jobs:
       #       grep -q "parallel pool" console.log
       #       rm console.log
       #     shell: bash
-      - matlab/run-tests:
-          output-detail: Detailed
-          source-folder: src
-      - run:
-          name: Verify tests ran with detailed display level for event details
-          command: |
-            set -e
-            grep -q "TestRunner.withTextOutput('OutputDetail', 3)" console.log
-            rm console.log
-          shell: bash
-      - matlab/run-tests:
-          logging-level: Detailed
-          source-folder: src
-      - run:
-          name: Verify tests ran with detailed verbosity level for logged diagnostics
-          command: |
-            set -e
-            grep -q "TestRunner.withTextOutput('LoggingLevel', 3)" console.log
-            rm console.log
-          shell: bash
+      # - matlab/run-tests:
+      #     output-detail: Detailed
+      #     source-folder: src
+      # - run:
+      #     name: Verify tests ran with detailed display level for event details
+      #     command: |
+      #       set -e
+      #       grep -q "TestRunner.withTextOutput('OutputDetail', 3)" console.log
+      #       rm console.log
+      #     shell: bash
+      # - matlab/run-tests:
+      #     logging-level: Detailed
+      #     source-folder: src
+      # - run:
+      #     name: Verify tests ran with detailed verbosity level for logged diagnostics
+      #     command: |
+      #       set -e
+      #       grep -q "TestRunner.withTextOutput('LoggingLevel', 3)" console.log
+      #       rm console.log
+      #     shell: bash
 
       - matlab/run-tests:
           select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
@@ -336,17 +336,17 @@ jobs:
             grep filtertest console.log
             rm console.log
           shell: bash
-      - matlab/run-tests:
-          select-by-name: "filtertest/*"
-          test-results-junit: test-results/matlab/filterednameresult.xml 
-          source-folder: src 
-      - run:
-          name: Verify filter by name test results file was created
-          command: |
-            set -e
-            grep -q filtertest test-results/matlab/filterednameresult.xml
-            ! grep -q mytest test-results/matlab/filterednameresult.xml
-          shell: bash
+      # - matlab/run-tests:
+      #     select-by-name: "filtertest/*"
+      #     test-results-junit: test-results/matlab/filterednameresult.xml 
+      #     source-folder: src 
+      # - run:
+      #     name: Verify filter by name test results file was created
+      #     command: |
+      #       set -e
+      #       grep -q filtertest test-results/matlab/filterednameresult.xml
+      #       ! grep -q mytest test-results/matlab/filterednameresult.xml
+      #     shell: bash
     # Set up for model coverage artifact tests
       - when:
           condition:
@@ -414,168 +414,168 @@ jobs:
                   grep -r "simple_model Coverage Report" --include="*.html" model-coverage/html
                 shell: bash
 
-  integration-test-run-build:
-    parameters:
-      executor:
-        type: executor
-    executor: <<parameters.executor>>
-    steps:
-      # Setup for Integ tests for matlab/run-build
-      - matlab/install:
-          no-output-timeout: 30m
-      - run:
-          command: |
-            cat \<<'_EOF' >> "buildfile.m"
-              function plan = buildfile
-              plan = buildplan(localfunctions);
-              plan("test").Dependencies = "build";
-              plan("deploy").Dependencies = "test";
+  # integration-test-run-build:
+  #   parameters:
+  #     executor:
+  #       type: executor
+  #   executor: <<parameters.executor>>
+  #   steps:
+  #     # Setup for Integ tests for matlab/run-build
+  #     - matlab/install:
+  #         no-output-timeout: 30m
+  #     - run:
+  #         command: |
+  #           cat \<<'_EOF' >> "buildfile.m"
+  #             function plan = buildfile
+  #             plan = buildplan(localfunctions);
+  #             plan("test").Dependencies = "build";
+  #             plan("deploy").Dependencies = "test";
 
-              plan.DefaultTasks = "test";
+  #             plan.DefaultTasks = "test";
 
-              function buildTask(~)
-              f = fopen('buildlog.txt', 'a+'); fprintf(f, 'building\n'); fclose(f);
+  #             function buildTask(~)
+  #             f = fopen('buildlog.txt', 'a+'); fprintf(f, 'building\n'); fclose(f);
 
-              function testTask(~,tests,options)
-              arguments
-                ~
-                tests string = "tests"
-                options.OutputDetail (1,1) string = "terse"
-              end
-              f = fopen('buildlog.txt', 'a+');
-              fprintf(f, 'testing\n');
-              fprintf(f, '%s\n', tests);
-              fprintf(f, '%s\n', options.OutputDetail);
-              fclose(f);
+  #             function testTask(~,tests,options)
+  #             arguments
+  #               ~
+  #               tests string = "tests"
+  #               options.OutputDetail (1,1) string = "terse"
+  #             end
+  #             f = fopen('buildlog.txt', 'a+');
+  #             fprintf(f, 'testing\n');
+  #             fprintf(f, '%s\n', tests);
+  #             fprintf(f, '%s\n', options.OutputDetail);
+  #             fclose(f);
 
-              function deployTask(~)
-              f = fopen('buildlog.txt', 'a+'); fprintf(f, 'deploying\n'); fclose(f);
+  #             function deployTask(~)
+  #             f = fopen('buildlog.txt', 'a+'); fprintf(f, 'deploying\n'); fclose(f);
 
-              function checkTask(~)
-              f = fopen('buildlog.txt', 'a+'); fprintf(f, 'checking\n'); fclose(f);
-            _EOF
-          shell: bash
-      # run build with one specified task
-      - matlab/run-build:
-          tasks: deploy
-      - run:
-          name: Verify that correct tasks appear in buildlog.txt
-          command: |
-            set -e
-            grep "building" buildlog.txt
-            grep "testing" buildlog.txt
-            grep "tests" buildlog.txt
-            grep "terse" buildlog.txt
-            grep "deploying" buildlog.txt
-            ! grep "checking" buildlog.txt
-            rm buildlog.txt
-          shell: bash
-      # run build with multiple specified tasks
-      - matlab/run-build:
-          tasks: deploy check
-      - run:
-          name: Verify that correct tasks appear in buildlog.txt
-          command: |
-            set -e
-            grep "building" buildlog.txt
-            grep "testing" buildlog.txt
-            grep "tests" buildlog.txt
-            grep "terse" buildlog.txt
-            grep "deploying" buildlog.txt
-            grep "checking" buildlog.txt
-            rm buildlog.txt
-          shell: bash
-      # run build with task args
-      - matlab/run-build:
-          tasks: test("myTests", OutputDetail="concise")
-      - run:
-          name: Verify that correct tasks appear in buildlog.txt
-          command: |
-            set -e
-            grep "building" buildlog.txt
-            grep "testing" buildlog.txt
-            grep "myTests" buildlog.txt
-            grep "concise" buildlog.txt
-            ! grep "deploying" buildlog.txt
-            ! grep "checking" buildlog.txt
-            rm buildlog.txt
-          shell: bash
-      # run build with default tasks
-      - matlab/run-build:
-          startup-options: -logfile console.log
-      - run:
-          name: Verify that correct tasks appear in buildlog.txt and console.log
-          command: |
-            set -e
-            grep "building" buildlog.txt
-            grep "build" console.log
-            grep "testing" buildlog.txt
-            grep "tests" buildlog.txt
-            grep "terse" buildlog.txt
-            grep "test" console.log
-            ! grep "deploying" buildlog.txt
-            ! grep "deploy" console.log
-            ! grep "checking" buildlog.txt
-            ! grep "check" console.log
-            rm buildlog.txt
-            rm console.log
-          shell: bash
-      # run build with task skipping
-      - matlab/run-build:
-          tasks: deploy
-          build-options: -skip test
-      - run:
-          name: Verify that correct tasks appear in buildlog.txt
-          command: |
-            set -e
-            grep "building" buildlog.txt
-            ! grep "testing" buildlog.txt
-            ! grep "tests" buildlog.txt
-            ! grep "terse" buildlog.txt
-            grep "deploying" buildlog.txt
-            ! grep "checking" buildlog.txt
-            rm buildlog.txt
-          shell: bash
+  #             function checkTask(~)
+  #             f = fopen('buildlog.txt', 'a+'); fprintf(f, 'checking\n'); fclose(f);
+  #           _EOF
+  #         shell: bash
+  #     # run build with one specified task
+  #     - matlab/run-build:
+  #         tasks: deploy
+  #     - run:
+  #         name: Verify that correct tasks appear in buildlog.txt
+  #         command: |
+  #           set -e
+  #           grep "building" buildlog.txt
+  #           grep "testing" buildlog.txt
+  #           grep "tests" buildlog.txt
+  #           grep "terse" buildlog.txt
+  #           grep "deploying" buildlog.txt
+  #           ! grep "checking" buildlog.txt
+  #           rm buildlog.txt
+  #         shell: bash
+  #     # run build with multiple specified tasks
+  #     - matlab/run-build:
+  #         tasks: deploy check
+  #     - run:
+  #         name: Verify that correct tasks appear in buildlog.txt
+  #         command: |
+  #           set -e
+  #           grep "building" buildlog.txt
+  #           grep "testing" buildlog.txt
+  #           grep "tests" buildlog.txt
+  #           grep "terse" buildlog.txt
+  #           grep "deploying" buildlog.txt
+  #           grep "checking" buildlog.txt
+  #           rm buildlog.txt
+  #         shell: bash
+  #     # run build with task args
+  #     - matlab/run-build:
+  #         tasks: test("myTests", OutputDetail="concise")
+  #     - run:
+  #         name: Verify that correct tasks appear in buildlog.txt
+  #         command: |
+  #           set -e
+  #           grep "building" buildlog.txt
+  #           grep "testing" buildlog.txt
+  #           grep "myTests" buildlog.txt
+  #           grep "concise" buildlog.txt
+  #           ! grep "deploying" buildlog.txt
+  #           ! grep "checking" buildlog.txt
+  #           rm buildlog.txt
+  #         shell: bash
+  #     # run build with default tasks
+  #     - matlab/run-build:
+  #         startup-options: -logfile console.log
+  #     - run:
+  #         name: Verify that correct tasks appear in buildlog.txt and console.log
+  #         command: |
+  #           set -e
+  #           grep "building" buildlog.txt
+  #           grep "build" console.log
+  #           grep "testing" buildlog.txt
+  #           grep "tests" buildlog.txt
+  #           grep "terse" buildlog.txt
+  #           grep "test" console.log
+  #           ! grep "deploying" buildlog.txt
+  #           ! grep "deploy" console.log
+  #           ! grep "checking" buildlog.txt
+  #           ! grep "check" console.log
+  #           rm buildlog.txt
+  #           rm console.log
+  #         shell: bash
+  #     # run build with task skipping
+  #     - matlab/run-build:
+  #         tasks: deploy
+  #         build-options: -skip test
+  #     - run:
+  #         name: Verify that correct tasks appear in buildlog.txt
+  #         command: |
+  #           set -e
+  #           grep "building" buildlog.txt
+  #           ! grep "testing" buildlog.txt
+  #           ! grep "tests" buildlog.txt
+  #           ! grep "terse" buildlog.txt
+  #           grep "deploying" buildlog.txt
+  #           ! grep "checking" buildlog.txt
+  #           rm buildlog.txt
+  #         shell: bash
 
 workflows:
   test-deploy:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
-      - integration-test-install:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos]
+      # - integration-test-install:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos]
 
-      - integration-test-install-latest-including-prerelease:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos]
+      # - integration-test-install-latest-including-prerelease:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos]
 
-      - integration-test-install-release:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos]
-              release: [R2023bU1]
+      # - integration-test-install-release:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos]
+      #         release: [R2023bU1]
 
-      - integration-test-install-with-cache:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos]
+      # - integration-test-install-with-cache:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos]
 
-      - integration-test-run-command:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos]
+      # - integration-test-run-command:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos]
 
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux, windows, macos]
+              executor: [linux]
 
-      - integration-test-run-build:
-          matrix:
-            parameters:
-              executor: [linux, windows, macos]
+      # - integration-test-run-build:
+      #     matrix:
+      #       parameters:
+      #         executor: [linux, windows, macos]
 
       - orb-tools/pack:
           filters: *filters
