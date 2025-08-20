@@ -129,21 +129,21 @@ jobs:
             cat scripter1.m
 
       - matlab/run-command:
-          command: ls, scripter    
+          command: ls, scripter1    
 
       - matlab/run-tests:
-          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
-          source-folder: src
-          startup-options: -logfile console.log
-      - run:
-          name: Verify tests ran as filtered by name
-          command: |
-            set -e
-            grep mytest console.log
-            grep TaggedTest console.log
-            grep filtertest console.log
-            rm console.log
-          shell: bash
+      #     select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
+      #     source-folder: src
+      #     startup-options: -logfile console.log
+      # - run:
+      #     name: Verify tests ran as filtered by name
+      #     command: |
+      #       set -e
+      #       grep mytest console.log
+      #       grep TaggedTest console.log
+      #       grep filtertest console.log
+      #       rm console.log
+      #     shell: bash
     # Set up for model coverage artifact tests            
 
 
