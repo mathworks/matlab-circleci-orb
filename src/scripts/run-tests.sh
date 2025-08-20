@@ -89,16 +89,18 @@ selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
 selectByName="{$selectByName}" 
 
 # Generate a MATLAB Script to create the suite
-echo 'import matlab.unittest.TestRunner;' > scripter.m
-echo "suite = testsuite('../..', 'IncludeSubfolders', true);" >> scripter.m
-printf "suite = suite.selectIf('Name', %s );\n" "$selectByName" >> scripter.m
-echo "{suite.Name}" >> scripter.m 
+{
+  echo 'import matlab.unittest.TestRunner;'
+  echo "suite = testsuite('../..', 'IncludeSubfolders', true);"
+  printf "suite = suite.selectIf('Name', %s );\n" "$selectByName"
+  echo "{suite.Name}"
+} > scripter.m
 
 cat scripter.m
 
 curl -L -o matlab-batch https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1/glnxa64/matlab-batch
 chmod +x matlab-batch
-matlab-batch "scripter.m"
+matlab-batch scripter.m
 
 # Show the transformed selectByName
 echo "=== selectByName (after awk and braces) ==="
