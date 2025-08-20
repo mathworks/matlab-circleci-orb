@@ -323,6 +323,30 @@ jobs:
             rm console.log
           shell: bash
 
+      - matlab/run-tests:
+          select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
+          source-folder: src
+          startup-options: -logfile console.log
+      - run:
+          name: Verify tests ran as filtered by name
+          command: |
+            set -e
+            grep mytest console.log
+            grep TaggedTest console.log
+            grep filtertest console.log
+            rm console.log
+          shell: bash
+      - matlab/run-tests:
+          select-by-name: "filtertest/*"
+          test-results-junit: test-results/matlab/filterednameresult.xml 
+          source-folder: src 
+      - run:
+          name: Verify filter by name test results file was created
+          command: |
+            set -e
+            grep -q filtertest test-results/matlab/filterednameresult.xml
+            ! grep -q mytest test-results/matlab/filterednameresult.xml
+          shell: bash
     # Set up for model coverage artifact tests
       - when:
           condition:
