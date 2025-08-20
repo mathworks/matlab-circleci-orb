@@ -60,6 +60,10 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
     binext=".exe"
 fi
 
+echo "=== PARAM_SELECT_BY_NAME ==="
+echo "$PARAM_SELECT_BY_NAME"
+echo
+
 selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
     for(i=1; i<=NF; i++) {
         gsub(/\047/, "\047\047", $i);  
@@ -67,6 +71,11 @@ selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
     }
 }')
 selectByName="{$selectByName}" 
+
+# Show the transformed selectByName
+echo "=== selectByName (after awk and braces) ==="
+echo "$selectByName"
+echo
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     testScript = genscript('Test',\
