@@ -189,7 +189,6 @@ jobs:
     steps:
     # Setup for Integ tests for matlab/run-tests
       - matlab/install:
-          products: Simulink Simulink_Test Simulink_Coverage Parallel_Computing_Toolbox
           no-output-timeout: 30m
       - run:
           command: |
@@ -325,6 +324,49 @@ jobs:
       #       grep -q "TestRunner.withTextOutput('LoggingLevel', 3)" console.log
       #       rm console.log
       #     shell: bash
+
+      - run:
+          name: Run the circleci comamnds
+          command: |
+            # Capture test selection into PARAM_SELECT_BY_NAME
+            PARAM_SELECT_BY_NAME=$(circleci tests glob 'tests/**/*.m' \
+              | circleci tests split \
+              | awk -F'[\\/.]' '{print $(NF-1) "/*"}')
+
+            echo "=== PARAM_SELECT_BY_NAME ==="
+            echo "$PARAM_SELECT_BY_NAME"
+            echo
+
+            # Transform into MATLAB cell array format
+            selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
+                for(i=1; i<=NF; i++) {
+                    gsub(/\047/, "\047\047", $i);
+                    printf "\047%s\047%s", $i, (i==NF ? "" : ", ");
+                }
+            }')
+            selectByName="{$selectByName}"
+
+            # Generate MATLAB script
+            {
+              echo 'import matlab.unittest.TestRunner;'
+              echo "suite = testsuite('../..', 'IncludeSubfolders', true);"
+              printf "suite = suite.selectIf('Name', %s );\n" "$selectByName"
+              echo "{suite.Name}"
+            } > scripter.m
+
+            cat scripter.m
+
+      - matlab/run-command:
+          command:    scripter   
+
+
+      - run:
+          name: Run the processing from run-tests
+          comamnd: 
+      
+      - run:
+          name: Create the MATLAB Script
+          command: 
 
       - matlab/run-tests:
           select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')

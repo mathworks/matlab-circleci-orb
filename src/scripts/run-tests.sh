@@ -98,9 +98,9 @@ selectByName="{$selectByName}"
 
 cat scripter.m
 
-curl -L -o matlab-batch https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1/glnxa64/matlab-batch
-chmod +x matlab-batch
-matlab-batch scripter.m
+# curl -L -o matlab-batch https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1/glnxa64/matlab-batch
+# chmod +x matlab-batch
+# matlab-batch scripter.m
 
 # Show the transformed selectByName
 echo "=== selectByName (after awk and braces) ==="
