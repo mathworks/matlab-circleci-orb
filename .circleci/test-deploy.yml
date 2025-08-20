@@ -83,7 +83,7 @@ jobs:
             # Generate MATLAB script
             {
               echo 'import matlab.unittest.TestRunner;'
-              echo "suite = testsuite('../..', 'IncludeSubfolders', true);"
+              echo "suite = testsuite(pwd, 'IncludeSubfolders', true);"
               printf "suite = suite.selectIf('Name', %s );\n" "$selectByName"
               echo "{suite.Name}"
             } > scripter.m
