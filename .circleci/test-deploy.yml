@@ -37,8 +37,8 @@ jobs:
     executor: <<parameters.executor>>
     steps:
     # Setup for Integ tests for matlab/run-tests
-      # - matlab/install:
-      #     no-output-timeout: 30m
+      - matlab/install:
+          no-output-timeout: 30m
       - run:
           command: |
             echo 'myvar = 123' > startup.m
@@ -59,12 +59,23 @@ jobs:
             # printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
           shell: bash
 
-      # - run:
-      #    command: cat test-results/results.xml
+      - run:
+         command: ls
+
+      - run:
+         command: cat test-results/results.xml
       
       - run:
           name: Run the circleci comamnds
           command: |
+           # Capture test selection into PARAM_SELECT_BY_NAME
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}')
+
+            echo "=== PARAM_SELECT_BY_NAME ==="
+            echo "$PARAM_SELECT_BY_NAME"
+            echo
+
+            
             # Capture test selection into PARAM_SELECT_BY_NAME
             PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
 
@@ -136,6 +147,10 @@ jobs:
       #     select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
           source-folder: src
           test-results-junit: test-results/results.xml
+      
+      - run:
+         command: cat test-results/results.xml
+         
       - store_test_results:
           path: test-results/results.xml
       
