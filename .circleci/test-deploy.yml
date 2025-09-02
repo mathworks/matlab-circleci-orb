@@ -67,7 +67,7 @@ jobs:
       #    command: cat test-results/results.xml
       
       - run:
-          name: Run the circleci comamnds
+          name: Run the circleci comamnds for timing
           command: |
            # Capture test selection into PARAM_SELECT_BY_NAME
             PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}'  )
@@ -103,16 +103,109 @@ jobs:
               printf "suite = suite.selectIf('Name', %s );\n" "$selectByName"
               echo "disp('After SelectIf')"
               echo "{suite.Name}"
-            } > scripter.m
+            } > scripter1.m
 
-            cat scripter.m
+            cat scripter1.m
 
+      - run:
+          name: Run the circleci comamnds for size
+          command: |
+           # Capture test selection into PARAM_SELECT_BY_NAME
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}'  )
+
+            echo "=== PARAM_SELECT_BY_NAME ==="
+            echo "$PARAM_SELECT_BY_NAME"
+            echo
+
+            
+            # Capture test selection into PARAM_SELECT_BY_NAME
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | circleci tests split -split-by=filesize | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
+            
+
+            echo "=== PARAM_SELECT_BY_NAME BY NAME ==="
+            echo "$PARAM_SELECT_BY_NAME"
+            echo
+
+            # Transform into MATLAB cell array format
+            selectByName=$( echo "$PARAM_SELECT_BY_NAME" | awk '{
+                for(i=1; i<=NF; i++) {
+                    gsub(/\047/, "\047\047", $i);
+                    printf "\047%s\047%s", $i, (i==NF ? "" : ", ");
+                }
+            }')
+            selectByName="{$selectByName}"
+
+            # Generate MATLAB script
+            {
+              echo 'import matlab.unittest.TestRunner;'
+              echo "disp('Int scripter.m file')"
+              echo "suite = testsuite(pwd, 'IncludeSubfolders', true);"
+              echo "disp('Before SelectIf')"
+              echo "{suite.Name}"
+              printf "suite = suite.selectIf('Name', %s );\n" "$selectByName"
+              echo "disp('After SelectIf')"
+              echo "{suite.Name}"
+            } > scripter2.m
+
+            cat scripter2.m
+      
+      
+      - run:
+          name: Run the circleci comamnds for name default
+          command: |
+           # Capture test selection into PARAM_SELECT_BY_NAME
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}'  )
+
+            echo "=== PARAM_SELECT_BY_NAME ==="
+            echo "$PARAM_SELECT_BY_NAME"
+            echo
+
+            
+            # Capture test selection into PARAM_SELECT_BY_NAME
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | circleci tests split  | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
+            
+
+            echo "=== PARAM_SELECT_BY_NAME BY NAME ==="
+            echo "$PARAM_SELECT_BY_NAME"
+            echo
+
+            # Transform into MATLAB cell array format
+            selectByName=$( echo "$PARAM_SELECT_BY_NAME" | awk '{
+                for(i=1; i<=NF; i++) {
+                    gsub(/\047/, "\047\047", $i);
+                    printf "\047%s\047%s", $i, (i==NF ? "" : ", ");
+                }
+            }')
+            selectByName="{$selectByName}"
+
+            # Generate MATLAB script
+            {
+              echo 'import matlab.unittest.TestRunner;'
+              echo "disp('Int scripter.m file')"
+              echo "suite = testsuite(pwd, 'IncludeSubfolders', true);"
+              echo "disp('Before SelectIf')"
+              echo "{suite.Name}"
+              printf "suite = suite.selectIf('Name', %s );\n" "$selectByName"
+              echo "disp('After SelectIf')"
+              echo "{suite.Name}"
+            } > scripter3.m
+
+            cat scripter3.m
+      
       - matlab/install:
           no-output-timeout: 30m
           
       - matlab/run-command:
-          command: ls, scripter  
+          name: Run by timings
+          command: ls, scripter1  
 
+      - matlab/run-command:
+          name: Run by filesize
+          command: ls, scripter2  
+      
+      - matlab/run-command:
+          name: Run by name
+          command: ls, scripter3 
       # - run:
       #     name: Run UPDATED the circleci comamnds
       #     command: |
