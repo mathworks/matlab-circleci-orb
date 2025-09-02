@@ -59,8 +59,8 @@ jobs:
             printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/+filteredTest/TaggedTest.m
           shell: bash
 
-      - run:
-         command: cd tests && ls && cd filteredTest && ls
+      # - run:
+      #    command: cd tests && ls && cd filteredTest && ls
 
       # - run:
       #    command: cat test-results/results.xml
