@@ -136,7 +136,7 @@ jobs:
           source-folder: src
           test-results-junit: test-results/results.xml
       - store_test_results:
-          path: ~/test-results/results.xml
+          path: test-results/results.xml
       
       #     startup-options: -logfile console.log
       # - run:
