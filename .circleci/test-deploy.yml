@@ -53,9 +53,9 @@ jobs:
             echo "%% simpleTest" >> tests/filteredTest/mytest.m
             echo "disp('In tests/filteredTest/mytest.m')" >> tests/filteredTest/mytest.m
             echo "assert(2==2)" >> tests/filteredTest/mytest.m 
-            # printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
-            # printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
-            # printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
+            printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
+            printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
+            printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
           shell: bash
 
       - run:
