@@ -43,6 +43,7 @@ jobs:
             echo 'myvar = 123' > startup.m
             mkdir src
             echo 'function c=add(a,b);c=a+b;' > src/add.m
+            mkdir tests
             mkdir tests/+basic
             echo "%% StartupTest" > tests/+basic/mytest.m
             echo "disp('in tests/+basic/mytest.m')" > tests/+basic/mytest.m
