@@ -146,7 +146,7 @@ jobs:
           command: ls, scripter1    
 
       - matlab/run-tests:
-      #     select-by-name: $(circleci tests glob 'tests/**/*.m' | circleci tests split | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
+          select-by-name: $(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
           source-folder: src
           test-results-junit: test-results/results.xml
       
