@@ -119,7 +119,7 @@ jobs:
 
             
             # Capture test selection into PARAM_SELECT_BY_NAME
-            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | circleci tests split -split-by=filesize | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | circleci tests split --split-by=filesize | awk -F'[\\\\/.]' '{print $(NF-1) "/*"}')
             
 
             echo "=== PARAM_SELECT_BY_NAME BY NAME ==="
