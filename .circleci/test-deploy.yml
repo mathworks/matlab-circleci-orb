@@ -104,20 +104,20 @@ jobs:
       - checkout
       - run:
           name: Clean cache directory before first install
-          command: rm -rf $HOME/matlab_ci
+          command: rm -rf $HOME/MATLAB
           shell: bash
       - matlab/install:
           no-output-timeout: 30m
           products: Simulink
-          release: R2023b
+          release: R2023a
           cache: true
       - run:
           name: Verify MATLAB exists in cache
           command: |
             set -e
-            matlabroot="$HOME/matlab_ci/matlab_root/R2023b"
+            matlabroot="$HOME/MATLAB/R2023a"
             if [[ "$(uname)" == "Darwin" ]]; then
-              matlabroot="$matlabroot/MATLAB.app"
+              matlabroot="$matlabroot/MATLAB_r2023a.app"
             fi
             test -x "$matlabroot/bin/matlab" || {
               echo "MATLAB not found in cache."

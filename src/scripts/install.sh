@@ -41,9 +41,7 @@ download() {
 os=$(uname)
 arch=$(uname -m)
 binext=""
-matlabcidir="$HOME/matlab_ci"
-mkdir -p "$matlabcidir"
-rootdir="$matlabcidir/matlab_root/$PARAM_RELEASE"
+rootdir="$HOME/MATLAB/$PARAM_RELEASE"
 tmpdir=$(mktemp -d 2>/dev/null || mktemp -d -t 'install')
 batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
@@ -89,7 +87,7 @@ elif [[ "$os" = "Darwin" ]]; then
      else
          mwarch="maci64"
      fi
-    rootdir="$rootdir/MATLAB.app"
+    rootdir="$rootdir/MATLAB_$mpmrelease.app"
     sudoIfAvailable -c "launchctl limit maxfiles 65536 200000" # g3185941
 else
     mwarch="glnxa64"

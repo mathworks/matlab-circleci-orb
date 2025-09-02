@@ -44,15 +44,15 @@ steps:
               PARAM_RELEASE: <<parameters.release>>
               RESOLVE_RELEASE_SH: <<include(scripts/resolve-release.sh)>>
             command: |
-              mkdir -p ~/.matlab-circleci-orb
+              mkdir -p ~/"${CIRCLE_WORKFLOW_JOB_ID}"
               eval "$RESOLVE_RELEASE_SH"
-              echo "$mpmrelease" > ~/.matlab-circleci-orb/install-metadata.txt
-              echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs >> ~/.matlab-circleci-orb/install-metadata.txt
+              echo "$mpmrelease" > ~/"${CIRCLE_WORKFLOW_JOB_ID}"/install-metadata.txt
+              echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs >> ~/"${CIRCLE_WORKFLOW_JOB_ID}"/install-metadata.txt
             shell: bash
         - restore_cache:
             name: Restore Cache
             keys:
-              - matlab-cache-{{ arch }}-{{ checksum "~/.matlab-circleci-orb/install-metadata.txt" }}
+              - matlab-cache-{{ arch }}-{{ checksum "~/${CIRCLE_WORKFLOW_JOB_ID}/install-metadata.txt" }}
   - run:
       name: Install MATLAB
       environment:
@@ -69,10 +69,10 @@ steps:
       steps:
         - save_cache:
             name: Save Cache
-            key: matlab-cache-{{ arch }}-{{ checksum "~/.matlab-circleci-orb/install-metadata.txt" }}
+            key: matlab-cache-{{ arch }}-{{ checksum "~/${CIRCLE_WORKFLOW_JOB_ID}/install-metadata.txt" }}
             paths:
-              - ~/matlab_ci/matlab_root/<<parameters.release>>
+              - ~/MATLAB/<<parameters.release>>
         - run:
             name: Cleanup metadata
-            command: rm -rf ~/.matlab-circleci-orb
+            command: rm -rf ~/"${CIRCLE_WORKFLOW_JOB_ID}"
             shell: bash
