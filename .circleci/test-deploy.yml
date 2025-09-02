@@ -59,7 +59,7 @@ jobs:
           shell: bash
 
       - run:
-         command: ls
+         command: cd tests && ls && cd filteredTest && ls
 
       # - run:
       #    command: cat test-results/results.xml
