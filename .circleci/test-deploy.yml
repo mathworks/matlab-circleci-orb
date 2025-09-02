@@ -52,9 +52,9 @@ jobs:
             echo "%% FirstTest" >> tests/+basic/mytest.m
             echo "assert(add(1,2)==3)" >> tests/+basic/mytest.m
             mkdir tests/+filteredTest
-            echo "%% simpleTest" >> tests/+filteredTest/mytest.m
-            echo "disp('In tests/+filteredTest/mytest.m')" >> tests/+filteredTest/mytest.m
-            echo "assert(2==2)" >> tests/+filteredTest/mytest.m 
+            echo "%% simpleTest" >> tests/+filteredTest/mytest1.m
+            echo "disp('In tests/+filteredTest/mytest.m')" >> tests/+filteredTest/mytest1.m
+            echo "assert(2==2)" >> tests/+filteredTest/mytest1.m 
             printf "%% FilterByTag\n" >> tests/+filteredTest/TaggedTest.m
             printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/+filteredTest/TaggedTest.m
             printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/+filteredTest/TaggedTest.m
@@ -70,7 +70,7 @@ jobs:
           name: Run the circleci comamnds
           command: |
            # Capture test selection into PARAM_SELECT_BY_NAME
-            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | sort | uniq )
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}'  )
 
             echo "=== PARAM_SELECT_BY_NAME ==="
             echo "$PARAM_SELECT_BY_NAME"
@@ -78,9 +78,9 @@ jobs:
 
             
             # Capture test selection into PARAM_SELECT_BY_NAME
-            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | sort | uniq | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
 
-            echo "=== PARAM_SELECT_BY_NAME ==="
+            echo "=== PARAM_SELECT_BY_NAME BY NAME ==="
             echo "$PARAM_SELECT_BY_NAME"
             echo
 
@@ -98,7 +98,10 @@ jobs:
               echo 'import matlab.unittest.TestRunner;'
               echo "disp('Int scripter.m file')"
               echo "suite = testsuite(pwd, 'IncludeSubfolders', true);"
+              echo "disp('Before SelectIf')"
+              echo "{suite.Name}"
               printf "suite = suite.selectIf('Name', %s );\n" "$selectByName"
+              echo "disp('After SelectIf')"
               echo "{suite.Name}"
             } > scripter.m
 
@@ -110,42 +113,42 @@ jobs:
       - matlab/run-command:
           command: ls, scripter  
 
-      - run:
-          name: Run UPDATED the circleci comamnds
-          command: |
-            # Capture test selection into PARAM_SELECT_BY_NAME
-            PARAM_SELECT_BY_NAME=$(circleci tests glob 'tests/**/*.m' \
-              | circleci tests split --split-by=timings)
+      # - run:
+      #     name: Run UPDATED the circleci comamnds
+      #     command: |
+      #       # Capture test selection into PARAM_SELECT_BY_NAME
+      #       PARAM_SELECT_BY_NAME=$(circleci tests glob 'tests/**/*.m' \
+      #         | circleci tests split --split-by=timings)
 
-            echo "=== PARAM_SELECT_BY_NAME ==="
-            echo "$PARAM_SELECT_BY_NAME"
-            echo
+      #       echo "=== PARAM_SELECT_BY_NAME ==="
+      #       echo "$PARAM_SELECT_BY_NAME"
+      #       echo
 
-            # Transform into MATLAB cell array format
-            selectByName=$( echo "$PARAM_SELECT_BY_NAME" | awk '{
-                for(i=1; i<=NF; i++) {
-                    gsub(/\047/, "\047\047", $i);
-                    printf "\047%s\047%s", $i, (i==NF ? "" : ", ");
-                }
-            }')
-            selectByName="{$selectByName}"
+      #       # Transform into MATLAB cell array format
+      #       selectByName=$( echo "$PARAM_SELECT_BY_NAME" | awk '{
+      #           for(i=1; i<=NF; i++) {
+      #               gsub(/\047/, "\047\047", $i);
+      #               printf "\047%s\047%s", $i, (i==NF ? "" : ", ");
+      #           }
+      #       }')
+      #       selectByName="{$selectByName}"
 
-            # Generate MATLAB script
-            {
-              echo 'import matlab.unittest.TestRunner;'
-              echo "disp('Int scripter.m file')"
-              echo "suite = testsuite(pwd, 'IncludeSubfolders', true);"
-              echo "disp('Before selectIf on Name')"
-              echo "{suite.Name}"
-              printf "suite = suite.selectIf('Name', %s );\n" "$selectByName"
-              echo "disp('After selectIf on Name')"
-              echo "{suite.Name}"
-            } > scripter1.m
+      #       # Generate MATLAB script
+      #       {
+      #         echo 'import matlab.unittest.TestRunner;'
+      #         echo "disp('Int scripter.m file')"
+      #         echo "suite = testsuite(pwd, 'IncludeSubfolders', true);"
+      #         echo "disp('Before selectIf on Name')"
+      #         echo "{suite.Name}"
+      #         printf "suite = suite.selectIf('Name', %s );\n" "$selectByName"
+      #         echo "disp('After selectIf on Name')"
+      #         echo "{suite.Name}"
+      #       } > scripter1.m
 
-            cat scripter1.m
+      #       cat scripter1.m
 
-      - matlab/run-command:
-          command: ls, scripter1    
+      # - matlab/run-command:
+      #     command: ls, scripter1    
 
       - matlab/run-tests:
           select-by-name: $(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | sort | uniq | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
