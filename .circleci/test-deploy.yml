@@ -37,8 +37,8 @@ jobs:
     executor: <<parameters.executor>>
     steps:
     # Setup for Integ tests for matlab/run-tests
-      - matlab/install:
-          no-output-timeout: 30m
+      # - matlab/install:
+      #     no-output-timeout: 30m
       - run:
           command: |
             echo 'myvar = 123' > startup.m
@@ -59,8 +59,8 @@ jobs:
             # printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
           shell: bash
 
-      - run:
-         command: cat test-results/results.xml
+      # - run:
+      #    command: cat test-results/results.xml
       
       - run:
           name: Run the circleci comamnds
