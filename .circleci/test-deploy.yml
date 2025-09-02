@@ -196,15 +196,15 @@ jobs:
           no-output-timeout: 30m
           
       - matlab/run-command:
-          name: Run by timings
+          # name: Run by timings
           command: ls, scripter1  
 
       - matlab/run-command:
-          name: Run by filesize
+          # name: Run by filesize
           command: ls, scripter2  
       
       - matlab/run-command:
-          name: Run by name
+          # name: Run by name
           command: ls, scripter3 
       # - run:
       #     name: Run UPDATED the circleci comamnds
