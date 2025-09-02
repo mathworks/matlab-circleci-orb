@@ -60,7 +60,8 @@ jobs:
           shell: bash
 
       -run:
-         command: ls && cat test-results/results.xml
+         command: cat test-results/results.xml
+      
       - run:
           name: Run the circleci comamnds
           command: |
