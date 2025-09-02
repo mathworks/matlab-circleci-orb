@@ -68,7 +68,7 @@ jobs:
           name: Run the circleci comamnds
           command: |
            # Capture test selection into PARAM_SELECT_BY_NAME
-            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}')
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | sort | uniq )
 
             echo "=== PARAM_SELECT_BY_NAME ==="
             echo "$PARAM_SELECT_BY_NAME"
@@ -76,7 +76,7 @@ jobs:
 
             
             # Capture test selection into PARAM_SELECT_BY_NAME
-            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
+            PARAM_SELECT_BY_NAME=$(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | sort | uniq | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
 
             echo "=== PARAM_SELECT_BY_NAME ==="
             echo "$PARAM_SELECT_BY_NAME"
@@ -146,7 +146,7 @@ jobs:
           command: ls, scripter1    
 
       - matlab/run-tests:
-          select-by-name: $(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
+          select-by-name: $(circleci tests glob "tests/**/*.m" | awk -F'[\\\\/.]' '{print $(NF-1)}' | sort | uniq | circleci tests split --split-by=timings | awk '{print $0 "/*"}')
           source-folder: src
           test-results-junit: test-results/results.xml
       
