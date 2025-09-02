@@ -43,19 +43,19 @@ jobs:
             echo 'myvar = 123' > startup.m
             mkdir src
             echo 'function c=add(a,b);c=a+b;' > src/add.m
-            mkdir tests
-            echo "%% StartupTest" > tests/mytest.m
-            echo "disp('in tests/mytest.m')" > tests/mytest.m
-            echo "evalin('base','assert(myvar==123)')" >> tests/mytest.m
-            echo "%% FirstTest" >> tests/mytest.m
-            echo "assert(add(1,2)==3)" >> tests/mytest.m
-            mkdir tests/filteredTest
-            echo "%% simpleTest" >> tests/filteredTest/mytest.m
-            echo "disp('In tests/filteredTest/mytest.m')" >> tests/filteredTest/mytest.m
-            echo "assert(2==2)" >> tests/filteredTest/mytest.m 
-            printf "%% FilterByTag\n" >> tests/filteredTest/TaggedTest.m
-            printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/filteredTest/TaggedTest.m
-            printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
+            mkdir tests/+basic
+            echo "%% StartupTest" > tests/+basic/mytest.m
+            echo "disp('in tests/+basic/mytest.m')" > tests/+basic/mytest.m
+            echo "evalin('base','assert(myvar==123)')" >> tests/+basic/mytest.m
+            echo "%% FirstTest" >> tests/+basic/mytest.m
+            echo "assert(add(1,2)==3)" >> tests/+basic/mytest.m
+            mkdir tests/+filteredTest
+            echo "%% simpleTest" >> tests/+filteredTest/mytest.m
+            echo "disp('In tests/+filteredTest/mytest.m')" >> tests/+filteredTest/mytest.m
+            echo "assert(2==2)" >> tests/+filteredTest/mytest.m 
+            printf "%% FilterByTag\n" >> tests/+filteredTest/TaggedTest.m
+            printf "classdef (TestTags = {'FILTERED'}) TaggedTest < matlab.unittest.TestCase\n" >> tests/+filteredTest/TaggedTest.m
+            printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/+filteredTest/TaggedTest.m
           shell: bash
 
       - run:
