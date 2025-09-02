@@ -10,7 +10,7 @@ filters: &filters
 
 integration-tests: &integration-tests
   [
-    orb-tools/pack,
+    # orb-tools/pack,
     # integration-test-install,
     # integration-test-install-release,
     # integration-test-run-command,
@@ -59,7 +59,7 @@ jobs:
             # printf "methods (Test)\n function testTag (testCase)\n assert(2==2);\n end\n end\n end" >> tests/filteredTest/TaggedTest.m
           shell: bash
 
-      -run:
+      - run:
          command: cat test-results/results.xml
       
       - run:
