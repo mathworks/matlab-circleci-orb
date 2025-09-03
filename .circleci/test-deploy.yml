@@ -319,9 +319,7 @@ workflows:
       - integration-test-run-tests:
           matrix:
             parameters:
-              executor: [linux]
-          requires:
-            - save-test-metadata              
+              executor: [linux]             
 
       # - integration-test-run-build:
       #     matrix:
