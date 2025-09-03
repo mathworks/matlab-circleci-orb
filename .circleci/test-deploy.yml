@@ -64,7 +64,33 @@ jobs:
         type: executor
     parallelism: 2
     executor: <<parameters.executor>>
-    steps:      
+    steps:
+
+      - run:
+          name: Create JSON metadata file
+          command: |
+            cat > testresults.json <<'EOF'
+            {
+              "file": {
+                "tests/basic/mytest.m": 0.350,
+                "tests/filteredTest/mytest.m": 0.120,
+                "tests/filteredTest/TaggedTest.m": 0.080
+              },
+              "classname": {
+                "mytest": 0.470,
+                "TaggedTest": 0.080
+              },
+              "name": {
+                "StartupTest": 0.200,
+                "FirstTest": 0.150,
+                "simpleTest": 0.120,
+                "testTag": 0.080
+              }
+            }
+            EOF 
+      - store_test_results:
+          path: testresults.json   
+    
       - run:
           command: |
             echo 'myvar = 123' > startup.m
