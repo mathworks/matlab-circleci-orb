@@ -29,18 +29,14 @@ executors:
     win/default
 
 jobs:
-  integration-test-run-tests:
-    parameters:
-      executor:
-        type: executor
-    parallelism: 2
-    executor: <<parameters.executor>>
+  save-test-metadata:
+    machine:
+      image: ubuntu-2204:current
     steps:
-    # Setup for Integ tests for matlab/run-tests
       - run:
-          name: Save test metadata JSON
+          name: Create JSON metadata file
           command: |
-            cat > testresults.json \<<'EOF'
+            cat > testresults.json <<'EOF'
             {
               "file": {
                 "tests/basic/mytest.m": 0.350,
@@ -48,13 +44,27 @@ jobs:
                 "tests/filteredTest/TaggedTest.m": 0.080
               },
               "classname": {
-                "mytest": 0.350,
-                "mytest": 0.120,
+                "mytest": 0.470,
                 "TaggedTest": 0.080
+              },
+              "name": {
+                "StartupTest": 0.200,
+                "FirstTest": 0.150,
+                "simpleTest": 0.120,
+                "testTag": 0.080
               }
             }
-            EOF
-      
+            EOF 
+      - store_test_results:
+          path: testresults.json        
+  
+  integration-test-run-tests:
+    parameters:
+      executor:
+        type: executor
+    parallelism: 2
+    executor: <<parameters.executor>>
+    steps:      
       - run:
           command: |
             echo 'myvar = 123' > startup.m
@@ -313,6 +323,8 @@ workflows:
           matrix:
             parameters:
               executor: [linux]
+          requires:
+            - save-test-metadata              
 
       # - integration-test-run-build:
       #     matrix:
