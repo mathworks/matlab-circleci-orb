@@ -40,7 +40,7 @@ jobs:
       - run:
           name: Create JSON metadata file
           command: |
-            cat > testresults.json <<'EOF'
+            cat > testresults.json \<<'EOF'
             {
               "file": {
                 "tests/basic/mytest.m": 0.350,
