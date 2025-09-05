@@ -114,7 +114,6 @@ cat ~/.matlab-circleci-orb/install-metadata.sh
 echo "DEBUG: End of metadata file"
 echo "DEBUG: mpmrelease='$mpmrelease'"
 echo "DEBUG: releasestatus='$releasestatus'"
-mpmrelease=$(echo "$mpmrelease" | tr -d '[:space:]')
 
 # Short-circuit if MATLAB already exists and PARAM_CACHE is true
 if [[ "$PARAM_CACHE" == "1" && -x "$rootdir/bin/matlab" ]]; then
