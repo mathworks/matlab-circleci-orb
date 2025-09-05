@@ -54,7 +54,6 @@ source ~/.matlab-circleci-orb/install-metadata.sh
 # RELEASE and RELEASE_STATUS are defined in install-metadata.sh
 # shellcheck disable=SC2153
 mpmrelease=$RELEASE
-echo "DEBUG: mpmrelease='$mpmrelease'"
 # shellcheck disable=SC2153
 releasestatus=$RELEASE_STATUS
 
@@ -107,13 +106,6 @@ mkdir -p "$mpmdir"
 # install matlab-batch
 download "$batchbaseurl/$mwarch/matlab-batch$binext" "$batchdir/matlab-batch$binext"
 chmod +x "$batchdir/matlab-batch$binext"
-
-# Debug
-echo "DEBUG: Contents of ~/.matlab-circleci-orb/install-metadata.sh:"
-cat ~/.matlab-circleci-orb/install-metadata.sh
-echo "DEBUG: End of metadata file"
-echo "DEBUG: mpmrelease='$mpmrelease'"
-echo "DEBUG: releasestatus='$releasestatus'"
 
 # Short-circuit if MATLAB already exists and PARAM_CACHE is true
 if [[ "$PARAM_CACHE" == "1" && -x "$rootdir/bin/matlab" ]]; then
