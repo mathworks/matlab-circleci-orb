@@ -9,6 +9,8 @@ elif [[ "$parsedrelease" = "latest-including-prerelease" ]]; then
     fetched=$(stream https://ssd.mathworks.com/supportfiles/ci/matlab-release/v0/latest-including-prerelease)
     if [[ "$fetched" == *prerelease ]]; then
         mpmrelease="${fetched%prerelease}"
+        # releasestatus is used externally in install.sh
+        # shellcheck disable=SC2034
         releasestatus="--release-status=Prerelease"
     else
         mpmrelease="$fetched"
