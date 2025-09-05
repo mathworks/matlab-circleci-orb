@@ -47,9 +47,11 @@ batchdir="$tmpdir/matlab-batch"
 mpmdir="$tmpdir/mpm"
 batchbaseurl="https://ssd.mathworks.com/supportfiles/ci/matlab-batch/v1"
 mpmbaseurl="https://www.mathworks.com/mpm"
-releasestatus=""
 
-eval "$RESOLVE_RELEASE_SH"
+eval "$UTILS"
+source ~/.matlab-circleci-orb/install-metadata.sh
+mpmrelease=$RELEASE
+releasestatus=$RELEASE_STATUS
 
 # install system dependencies
 if [[ "$os" = "Linux" ]]; then
@@ -87,7 +89,7 @@ elif [[ "$os" = "Darwin" ]]; then
      else
          mwarch="maci64"
      fi
-    rootdir="$rootdir/MATLAB_$mpmrelease.app"
+    rootdir="$rootdir/MATLAB.app"
     sudoIfAvailable -c "launchctl limit maxfiles 65536 200000" # g3185941
 else
     mwarch="glnxa64"
@@ -103,7 +105,7 @@ chmod +x "$batchdir/matlab-batch$binext"
 
 # Short-circuit if MATLAB already exists and PARAM_CACHE is true
 if [[ "$PARAM_CACHE" == "1" && -x "$rootdir/bin/matlab" ]]; then
-    echo "Skipping fresh installation and restoring from Cache."
+    echo "Skipping installation because MATLAB already exists at $rootdir."
 else
     # install mpm
     download "$mpmbaseurl/$mwarch/mpm" "$mpmdir/mpm$binext"

@@ -34,32 +34,29 @@ parameters:
     default: false
 
 steps:
+  - run:
+      name: Prepare install metadata
+      environment:
+        PARAM_RELEASE: <<parameters.release>>
+        UTILS: <<include(scripts/utils.sh)>>
+        RESOLVE_RELEASE: <<include(scripts/resolve-release.sh)>>
+      command: <<include(scripts/prepare-install-metadata.sh)>>
+      shell: bash
   - when:
       condition:
         equal: [ << parameters.cache >>, true ]
       steps:
-        - run:
-            name: Prepare cache metadata
-            environment:
-              PARAM_RELEASE: <<parameters.release>>
-              RESOLVE_RELEASE_SH: <<include(scripts/resolve-release.sh)>>
-            command: |
-              mkdir -p ~/.matlab-circleci-orb
-              eval "$RESOLVE_RELEASE_SH"
-              echo "$mpmrelease" > ~/.matlab-circleci-orb/install-metadata.txt
-              echo "<< parameters.products >>" | tr ' ' '\n' | sort | xargs >> ~/.matlab-circleci-orb/install-metadata.txt
-            shell: bash
         - restore_cache:
-            name: Restore Cache
+            name: Restore MATLAB cache
             keys:
-              - matlab-cache-{{ arch }}-{{ checksum "~/.matlab-circleci-orb/install-metadata.txt" }}
+              - matlab-cache-{{ arch }}-{{ checksum "~/.matlab-circleci-orb/install-metadata.sh" }}
   - run:
       name: Install MATLAB
       environment:
         PARAM_RELEASE: <<parameters.release>>
         PARAM_PRODUCTS: <<parameters.products>>
         PARAM_CACHE: <<parameters.cache>>
-        RESOLVE_RELEASE_SH: <<include(scripts/resolve-release.sh)>>
+        UTILS: <<include(scripts/utils.sh)>>
       command: <<include(scripts/install.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
@@ -68,11 +65,7 @@ steps:
         equal: [ << parameters.cache >>, true ]
       steps:
         - save_cache:
-            name: Save Cache
-            key: matlab-cache-{{ arch }}-{{ checksum "~/.matlab-circleci-orb/install-metadata.txt" }}
+            name: Save MATLAB cache
+            key: matlab-cache-{{ arch }}-{{ checksum "~/.matlab-circleci-orb/install-metadata.sh" }}
             paths:
               - ~/MATLAB/<<parameters.release>>
-        - run:
-            name: Cleanup metadata
-            command: rm -rf ~/.matlab-circleci-orb
-            shell: bash

@@ -117,7 +117,7 @@ jobs:
             set -e
             matlabroot="$HOME/MATLAB/R2023a"
             if [[ "$(uname)" == "Darwin" ]]; then
-              matlabroot="$matlabroot/MATLAB_r2023a.app"
+              matlabroot="$matlabroot/MATLAB.app"
             fi
             test -x "$matlabroot/bin/matlab" || {
               echo "MATLAB not found in cache."
