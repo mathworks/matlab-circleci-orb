@@ -103,7 +103,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Clean cache directory before first install
+          name: Clear cache directory before initial installation
           command: rm -rf $HOME/MATLAB
           shell: bash
       - matlab/install:

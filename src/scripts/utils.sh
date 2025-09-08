@@ -9,7 +9,7 @@ stream() {
     elif command -v curl >/dev/null 2>&1; then
         curl --retry 5 --retry-connrefused --retry-delay 5 -sSL "$url" || status=$?
     else
-        echo "Could not find wget or curl command" >&2
+        echo "Unable to find wget or the curl command" >&2
         return 1
     fi
 

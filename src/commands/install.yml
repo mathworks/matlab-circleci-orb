@@ -35,12 +35,11 @@ parameters:
 
 steps:
   - run:
-      name: Prepare install metadata
+      name: Prepare MATLAB installation
       environment:
         PARAM_RELEASE: <<parameters.release>>
         PARAM_PRODUCTS: <<parameters.products>>
         UTILS: <<include(scripts/utils.sh)>>
-        RESOLVE_RELEASE: <<include(scripts/resolve-release.sh)>>
       command: <<include(scripts/prepare-install-metadata.sh)>>
       shell: bash
   - when:
