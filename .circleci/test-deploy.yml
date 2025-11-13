@@ -32,7 +32,7 @@ jobs:
   integration-test-install:
     parameters:
       executor:
-        type: executor
+        type: string
     executor: <<parameters.executor>>
     steps:
       - checkout
@@ -49,6 +49,34 @@ jobs:
               mex -h
             fi
           shell: bash
+      - when:
+          condition: 
+            equal: [ "windows", <<parameters.executor>> ]
+          steps:
+            - run:
+                name: Verify MATLAB Runtime is available in windows system path
+                command: |
+                  set -e
+                  if [[ "${PATH}" == *"runtime"* ]]; then
+                    echo "MATLAB Runtime is correctly set in PATH."
+                  else
+                    echo "MATLAB Runtime is NOT set in windows PATH."
+                    exit 1
+                  fi
+                shell: bash
+      - matlab/run-command:
+          command: version
+
+  integration-test-install-latest-including-prerelease:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
+    steps:
+      - checkout
+      - matlab/install:
+          release: latest-including-prerelease
+          no-output-timeout: 30m
       - matlab/run-command:
           command: version
 
@@ -66,6 +94,39 @@ jobs:
           no-output-timeout: 30m
       - matlab/run-command:
           command: "exp='<<parameters.release>>'; assert(strcmp(version('-release'),exp(2:6)))"
+
+  integration-test-install-with-cache:
+    parameters:
+      executor:
+        type: executor
+    executor: <<parameters.executor>>
+    steps:
+      - checkout
+      - run:
+          name: Clear cache directory before initial installation
+          command: rm -rf $HOME/MATLAB
+          shell: bash
+      - matlab/install:
+          no-output-timeout: 30m
+          products: Simulink
+          release: R2023a
+          cache: true
+      - run:
+          name: Verify MATLAB exists in cache
+          command: |
+            set -e
+            matlabroot="$HOME/MATLAB/R2023a"
+            if [[ "$(uname)" == "Darwin" ]]; then
+              matlabroot="$matlabroot/MATLAB.app"
+            fi
+            test -x "$matlabroot/bin/matlab" || {
+              echo "MATLAB not found in cache."
+              exit 1
+            }
+            echo "MATLAB found in cache."
+          shell: bash
+      - matlab/run-command:
+          command: version
 
   integration-test-run-command:
     parameters:
@@ -230,16 +291,17 @@ jobs:
             grep -q "runner.addPlugin(FailOnWarningsPlugin())" console.log
             rm console.log
           shell: bash
-      - matlab/run-tests:
-          use-parallel: true
-          source-folder: src
-      - run:
-          name: Verify tests ran in parallel
-          command: |
-            set -e
-            grep -q "parallel pool" console.log
-            rm console.log
-          shell: bash
+      # Disable parallel tests until PCT bug is fixed g3416906
+      # - matlab/run-tests:
+      #     use-parallel: true
+      #     source-folder: src
+      # - run:
+      #     name: Verify tests ran in parallel
+      #     command: |
+      #       set -e
+      #       grep -q "parallel pool" console.log
+      #       rm console.log
+      #     shell: bash
       - matlab/run-tests:
           output-detail: Detailed
           source-folder: src
@@ -484,11 +546,21 @@ workflows:
             parameters:
               executor: [linux, windows, macos]
 
+      - integration-test-install-latest-including-prerelease:
+          matrix:
+            parameters:
+              executor: [linux, windows, macos]
+
       - integration-test-install-release:
           matrix:
             parameters:
               executor: [linux, windows, macos]
               release: [R2023bU1]
+
+      - integration-test-install-with-cache:
+          matrix:
+            parameters:
+              executor: [linux, windows, macos]
 
       - integration-test-run-command:
           matrix:
