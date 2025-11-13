@@ -27,13 +27,45 @@ parameters:
       maximum time a job is allowed to run.
     type: string
     default: 10m
+  cache:
+    description: >
+      Option to enable caching, specified as false or true. By default, the value is false and the command does not store MATLAB and the specified products in a cache for future use.
+    type: boolean
+    default: false
 
 steps:
+  - run:
+      name: Prepare MATLAB installation
+      environment:
+        PARAM_RELEASE: <<parameters.release>>
+        PARAM_PRODUCTS: <<parameters.products>>
+        UTILS: <<include(scripts/utils.sh)>>
+      command: <<include(scripts/prepare-install-metadata.sh)>>
+      shell: bash
+  - when:
+      condition:
+        equal: [ << parameters.cache >>, true ]
+      steps:
+        - restore_cache:
+            name: Restore MATLAB cache
+            keys:
+              - matlab-cache-{{ arch }}-{{ checksum "~/.matlab-circleci-orb/install-metadata.sh" }}
   - run:
       name: Install MATLAB
       environment:
         PARAM_RELEASE: <<parameters.release>>
         PARAM_PRODUCTS: <<parameters.products>>
+        PARAM_CACHE: <<parameters.cache>>
+        UTILS: <<include(scripts/utils.sh)>>
       command: <<include(scripts/install.sh)>>
       shell: bash
       no_output_timeout: <<parameters.no-output-timeout>>
+  - when:
+      condition:
+        equal: [ << parameters.cache >>, true ]
+      steps:
+        - save_cache:
+            name: Save MATLAB cache
+            key: matlab-cache-{{ arch }}-{{ checksum "~/.matlab-circleci-orb/install-metadata.sh" }}
+            paths:
+              - ~/MATLAB/<<parameters.release>>
