@@ -78,11 +78,12 @@ fi
 
 selectByName=$(eval echo "$PARAM_SELECT_BY_NAME" | awk '{
     for(i=1; i<=NF; i++) {
-        gsub(/\047/, "\047\047", $i);  
-        printf "\047%s\047%s", $i, (i==NF ? "" : ", "); 
+        gsub(/\047/, "\047\047", $i);
+        gsub(/[{}]/, "\\\\&", $i);
+        printf "\047%s\047%s", $i, (i==NF ? "" : ", ");
     }
 }')
-selectByName="{$selectByName}" 
+selectByName="{$selectByName}"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     addpath('${gendir}/scriptgen');\
