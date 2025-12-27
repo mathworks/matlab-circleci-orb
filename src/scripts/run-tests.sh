@@ -96,7 +96,7 @@ echo "$selectByName"
     'PDFTestReport','${PARAM_TEST_RESULTS_PDF}',\
     'Strict',${PARAM_STRICT},\
     'UseParallel',${PARAM_USE_PARALLEL},\
-    'SelectByName', ${selectByName},\
+    'SelectByName', '${selectByName}',\
     'OutputDetail','${PARAM_OUTPUT_DETAIL}',\
     'LoggingLevel','${PARAM_LOGGING_LEVEL}');\
     disp('Running MATLAB script with contents:');\
