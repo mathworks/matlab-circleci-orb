@@ -77,8 +77,6 @@ if [[ "$os" = CYGWIN* || "$os" = MINGW* || "$os" = MSYS* ]]; then
 fi
 
 selectByName=$(eval echo "$PARAM_SELECT_BY_NAME") 
-echo "SelectByName parameter after eval: "
-echo "$selectByName"
 
 "${tmpdir}/bin/run-matlab-command$binext" "\
     addpath('${gendir}/scriptgen');\
