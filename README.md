@@ -21,7 +21,7 @@ orbs:
 jobs:
   run-matlab-build:    
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2604:current
     steps:
       - checkout
       - matlab/install
@@ -43,7 +43,7 @@ orbs:
 jobs:
   run-matlab-tests:    
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2604:current
     steps:
       - checkout
       - matlab/install
@@ -79,7 +79,7 @@ orbs:
 jobs:
   run-matlab-and-simulink-tests:    
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2604:current
     steps:
       - checkout
       - matlab/install:
@@ -105,7 +105,7 @@ orbs:
 jobs:
   run-matlab-script:    
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2604:current
     steps:
       - checkout
       - matlab/install:
@@ -135,7 +135,7 @@ orbs:
 jobs:
   run-matlab-tests:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2604:current
     steps:
       - checkout
       - matlab/install
@@ -158,14 +158,15 @@ orbs:
 executors:
   linux:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2604:current
   windows:
     resource_class: windows.medium
     machine:
       image: windows-server-2022-gui:current
   macos:
     macos:
-      xcode: 14.2.0
+      xcode: 26.6.0
+    resource_class: m4pro.medium
 
 jobs:
   run-matlab-build:
@@ -203,7 +204,7 @@ orbs:
 jobs:
   run-matlab-tests:    
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2604:current
     parallelism: 4
     steps:
       - checkout

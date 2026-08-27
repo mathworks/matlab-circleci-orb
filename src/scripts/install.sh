@@ -51,11 +51,9 @@ mpmbaseurl="https://www.mathworks.com/mpm"
 eval "$UTILS"
 # shellcheck disable=SC1090
 source ~/.matlab-circleci-orb/install-metadata.sh
-# RELEASE and RELEASE_STATUS are defined in install-metadata.sh
+# RELEASE is defined in install-metadata.sh
 # shellcheck disable=SC2153
 mpmrelease=$RELEASE
-# shellcheck disable=SC2153
-releasestatus=$RELEASE_STATUS
 
 # install system dependencies
 if [[ "$os" = "Linux" ]]; then
@@ -119,7 +117,6 @@ else
     "$mpmdir/mpm$binext" install \
         --release="$mpmrelease" \
         --destination="$rootdir" \
-        ${releasestatus} \
         --products ${PARAM_PRODUCTS} MATLAB
 fi
 
