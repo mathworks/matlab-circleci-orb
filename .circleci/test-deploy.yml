@@ -20,11 +20,11 @@ integration-tests: &integration-tests
 executors:
   linux: &linux-executor
     machine:
-      image: ubuntu-2204:2024.01.1
+      image: ubuntu-2604:2026.07.1
   macos:
     macos:
-      xcode: 15.3.0
-    resource_class: macos.m1.medium.gen1
+      xcode: 26.6.0
+    resource_class: m4pro.medium
   windows:
     win/default
 
