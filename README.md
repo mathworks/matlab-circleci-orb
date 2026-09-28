@@ -33,6 +33,31 @@ workflows:
       - run-matlab-build
 ``` 
 
+### Use Task Output Caching
+Using the latest release of MATLAB, run a build that uses the task output cache to speed up builds. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To enable task output caching, specify the `build-options` parameter of the `run-build` command as `-outputCache` and the `cache` parameter as `true`.
+
+The `-outputCache` build option (_since R2026b_) directs the build tool to cache task outputs in the `.buildtool` folder. With the `cache` parameter set to `true`, the command caches the `.buildtool` folder across pipeline runs so that future builds can reuse the cached outputs. For more information about task output caching, see [Cache Task Outputs](https://www.mathworks.com/help/matlab/matlab_prog/cache-task-outputs.html).
+
+```YAML
+version: 2.1
+orbs:
+  matlab: mathworks/matlab@1
+jobs:
+  run-matlab-build:    
+    machine:
+      image: ubuntu-2604:current
+    steps:
+      - checkout
+      - matlab/install
+      - matlab/run-build:
+          build-options: -outputCache
+          cache: true
+workflows:
+  build:
+    jobs:
+      - run-matlab-build
+```
+
 ### Generate Test and Coverage Artifacts
 Using the latest release of MATLAB, run the tests in your [MATLAB project](https://www.mathworks.com/help/matlab/projects.html) and generate test results in PDF and JUnit-style XML formats and code coverage results in HTML format. Upload the generated artifacts to CircleCI once the test run is complete. To install the latest release of MATLAB on the runner, specify the `install` command in your pipeline. To run the tests and generate the artifacts, specify the `run-tests` command.
 
@@ -263,6 +288,7 @@ Parameter                | Description
 -------------------------| ---------------
 `tasks`                  | <p>(Optional) MATLAB build tasks to run, specified as a list of task names separated by spaces. If a task accepts arguments, enclose them in parentheses. If you do not specify `tasks`, the command runs the default tasks in your build file as well as all the tasks on which they depend.</p><p>MATLAB exits with exit code 0 if the tasks run without error. Otherwise, MATLAB terminates with a nonzero exit code, which causes the command to fail.</p><p>**Example:** `tasks: test`<br/>**Example:** `tasks: compile test`<br/>**Example:** `tasks: check test("myFolder",OutputDetail="concise") archive("source.zip")`</p>
 `build-options`          | <p>(Optional) MATLAB build options, specified as a list of options separated by spaces. The command supports the same [options](https://www.mathworks.com/help/matlab/ref/buildtool.html#mw_50c0f35e-93df-4579-963d-f59f2fba1dba) that you can pass to the `buildtool` function.</p><p>**Example:** `build-options: -continueOnFailure`<br/>**Example:** `build-options: -continueOnFailure -skip test`</p>
+`cache`                  | <p>(Optional) Option to cache the `.buildtool` folder created by the MATLAB build tool, specified as `false` or `true`. By default, the value is `false`. If you specify a value of `true`, the command caches the `.buildtool` folder across pipeline runs to speed up builds. Caching this folder enables the build tool to skip tasks whose inputs, outputs, actions, and arguments have not changed since the last successful build. If you also specify the `-outputCache` build option (_since R2026b_), the build tool can skip tasks by reusing cached outputs from prior builds. For more information, see [Improve Performance with Incremental Builds](https://www.mathworks.com/help/matlab/matlab_prog/improve-performance-with-incremental-builds.html) and [Cache Task Outputs](https://www.mathworks.com/help/matlab/matlab_prog/cache-task-outputs.html).</p><p>When you enable caching, the command generates a cache key using the `matlab-buildtool` prefix and the branch name. The command restores the cache on all branches but saves the cache only on the default branch and only if the build succeeds. For more information about caching in CircleCI, see [Caching dependencies](https://circleci.com/docs/guides/optimize/caching/).</p><p>**Example:** `cache: true`</p>
 `startup-options`        | <p>(Optional) MATLAB startup options, specified as a list of options separated by spaces. For more information about startup options, see [Commonly Used Startup Options](https://www.mathworks.com/help/matlab/matlab_env/commonly-used-startup-options.html).</p><p>Using this parameter to specify the `-batch` or `-r` option is not supported.</p><p>**Example:** `startup-options: -nojvm`<br/>**Example:** `startup-options: -nojvm -logfile output.log`</p>
 `no-output-timeout`      | <p>(Optional) Amount of time the command can run without producing output, specified as a numeric value suffixed with a time unit. By default, the no-output timeout is 10 minutes (`10m`). The maximum value is governed by the [maximum time a job is allowed to run](https://circleci.com/docs/configuration-reference/#jobs).</p><p>**Example:** `no-output-timeout: 30s`<br/>**Example:** `no-output-timeout: 5m`<br/>**Example:** `no-output-timeout: 0.5h`</p>
 
