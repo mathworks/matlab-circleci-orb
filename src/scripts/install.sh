@@ -113,10 +113,17 @@ else
     download "$mpmbaseurl/$mwarch/mpm" "$mpmdir/mpm$binext"
     chmod +x "$mpmdir/mpm$binext"
 
+    # the maci64 mpm predates support for --caller
+    caller="--caller=CI_INTEG:CIRCLECI"
+    if [[ "$mwarch" = "maci64" ]]; then
+        caller=""
+    fi
+
     # install matlab
     "$mpmdir/mpm$binext" install \
         --release="$mpmrelease" \
         --destination="$rootdir" \
+        $caller \
         --products ${PARAM_PRODUCTS} MATLAB
 fi
 
