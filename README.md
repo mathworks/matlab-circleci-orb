@@ -242,6 +242,8 @@ Parameter            | Description
 `cache`              | <p>(Optional) Option to enable caching in CircleCI, specified as `false` or `true`. By default, the value is `false` and the command does not store MATLAB and the specified products in a CircleCI cache for future use. For more information about caching in CircleCI, see [Caching dependencies](https://circleci.com/docs/guides/optimize/caching/).</p><p>**Example**: `cache: true`</p>
 `no-output-timeout`  | <p>(Optional) Amount of time the command can run without producing output, specified as a numeric value suffixed with a time unit. By default, the no-output timeout is 10 minutes (`10m`). The maximum value is governed by the [maximum time a job is allowed to run](https://circleci.com/docs/configuration-reference/#jobs).</p><p>**Example:** `no-output-timeout: 30s`<br/>**Example:** `no-output-timeout: 5m`<br/>**Example:** `no-output-timeout: 0.5h`</p>
 
+>**Note:** Starting in R2026b, the `install` command does not install a Java&reg; Runtime Environment (JRE&trade;) on macOS runners with an Apple silicon processor. A JRE is required for products and features that use Java. To use these products and features, install a compatible JRE on your runner or specify `MATLAB_Support_for_OpenJDK` in the `products` parameter. For more information, see [Versions of OpenJDK Compatible with MATLAB by Release](https://www.mathworks.com/support/requirements/openjdk.html).
+
 #### Licensing
 Product licensing for your pipeline depends on your project visibility as well as the types of products the pipeline uses:
 
