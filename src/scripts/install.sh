@@ -70,10 +70,10 @@ elif [[ "$os" = "Darwin" && "$arch" = "arm64" ]]; then
     if [[ "$mpmrelease" < "r2023b" ]]; then
         # install Rosetta 2
         sudoIfAvailable -c "softwareupdate --install-rosetta --agree-to-license"
-    else
+    elif [[ "$mpmrelease" < "r2026b" ]]; then
         # install Java runtime
         jdkpkg="$tmpdir/jdk.pkg"
-        download https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.pkg "$jdkpkg"
+        download https://corretto.aws/downloads/latest/amazon-corretto-11-aarch64-macos-jdk.pkg "$jdkpkg"
         sudoIfAvailable -c "installer -pkg '$jdkpkg' -target /"
     fi
 fi
